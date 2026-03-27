@@ -1,13 +1,36 @@
+"""Automacao de Rotinas Financeiras e Geracao de Relatorios Gerenciais.
+
+Este modulo processa lancamentos financeiros em CSV, normaliza e limpa os
+dados, e gera relatorios consolidados em CSV, Excel, Markdown e HTML
+(pronto para publicacao no GitHub Pages).
+
+Uso tipico::
+
+    python app.py --gerar-exemplo
+    python app.py --entrada dados/lancamentos_financeiros.csv
+
+"""
+
 from __future__ import annotations
 
 import argparse
+import logging
+import shutil
 from datetime import date
 from pathlib import Path
 
 import pandas as pd
 
 
-COLUNAS_PADRAO = [
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
+
+COLUNAS_PADRAO: list[str] = [
     "data",
     "descricao",
     "categoria",
@@ -16,7 +39,7 @@ COLUNAS_PADRAO = [
     "centro_custo",
 ]
 
-ALIAS_COLUNAS = {
+ALIAS_COLUNAS: dict[str, str] = {
     "data": "data",
     "dt": "data",
     "descricao": "descricao",
@@ -32,19 +55,31 @@ ALIAS_COLUNAS = {
     "centro de custo": "centro_custo",
 }
 
+SINONIMOS_TIPO: dict[str, str] = {
+    "receitas": "receita",
+    "despesas": "despesa",
+    "entrada": "receita",
+    "saida": "despesa",
+    "saída": "despesa",
+}
+
+TEMPO_MANUAL_MIN: float = 2.5
+TEMPO_AUTO_MIN: float = 0.3
+
 
 def formatar_moeda_brl(valor: float) -> str:
+    """Formata um numero no padrao monetario brasileiro."""
     texto = f"{valor:,.2f}"
     texto = texto.replace(",", "X").replace(".", ",").replace("X", ".")
     return f"R$ {texto}"
 
 
 def parse_valor_monetario(valor: object) -> float | None:
+    """Converte uma string monetaria para float."""
     texto = str(valor).strip().replace("R$", "").replace(" ", "")
     if not texto:
         return None
 
-    # Se possui virgula, assume formato brasileiro: 1.234,56
     if "," in texto:
         texto = texto.replace(".", "").replace(",", ".")
 
@@ -55,7 +90,8 @@ def parse_valor_monetario(valor: object) -> float | None:
 
 
 def normalizar_colunas(df: pd.DataFrame) -> pd.DataFrame:
-    rename_map = {}
+    """Renomeia colunas para o padrao canonico e valida obrigatorias."""
+    rename_map: dict[str, str] = {}
     for col in df.columns:
         chave = str(col).strip().lower()
         if chave in ALIAS_COLUNAS:
@@ -63,11 +99,12 @@ def normalizar_colunas(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.rename(columns=rename_map)
 
-    faltantes = [col for col in ["data", "descricao", "categoria", "tipo", "valor"] if col not in df.columns]
+    colunas_obrigatorias = ["data", "descricao", "categoria", "tipo", "valor"]
+    faltantes = [c for c in colunas_obrigatorias if c not in df.columns]
     if faltantes:
         raise ValueError(
             f"Arquivo de entrada sem colunas obrigatorias: {faltantes}. "
-            f"Esperado ao menos: data, descricao, categoria, tipo, valor."
+            f"Esperado ao menos: {', '.join(colunas_obrigatorias)}."
         )
 
     if "centro_custo" not in df.columns:
@@ -76,35 +113,50 @@ def normalizar_colunas(df: pd.DataFrame) -> pd.DataFrame:
     return df[COLUNAS_PADRAO].copy()
 
 
-def limpar_dados(df: pd.DataFrame) -> pd.DataFrame:
-    # Ajusta formatos brasileiros e remove registros incompletos.
+def _converter_tipos(df: pd.DataFrame) -> pd.DataFrame:
+    """Converte colunas data e valor para os tipos corretos."""
     df["data"] = pd.to_datetime(df["data"], errors="coerce", dayfirst=True)
     df["valor"] = df["valor"].map(parse_valor_monetario)
+    return df
 
+
+def _limpar_texto(df: pd.DataFrame) -> pd.DataFrame:
+    """Remove espacos extras das colunas textuais."""
     for col in ["descricao", "categoria", "tipo", "centro_custo"]:
         df[col] = df[col].astype(str).str.strip()
+    return df
 
-    df["tipo"] = df["tipo"].str.lower().replace(
-        {
-            "receitas": "receita",
-            "despesas": "despesa",
-            "entrada": "receita",
-            "saida": "despesa",
-            "saída": "despesa",
-        }
-    )
 
-    validos = df.dropna(subset=["data", "valor"]).copy()
-    validos = validos[validos["tipo"].isin(["receita", "despesa"])]
-    validos["ano_mes"] = validos["data"].dt.to_period("M").astype(str)
-    validos["valor_assinado"] = validos.apply(
-        lambda row: row["valor"] if row["tipo"] == "receita" else -row["valor"], axis=1
+def _normalizar_tipo(df: pd.DataFrame) -> pd.DataFrame:
+    """Padroniza os valores da coluna tipo."""
+    df["tipo"] = df["tipo"].str.lower().replace(SINONIMOS_TIPO)
+    return df
+
+
+def _filtrar_e_enriquecer(df: pd.DataFrame) -> pd.DataFrame:
+    """Remove registros invalidos e adiciona colunas derivadas."""
+    df = df.dropna(subset=["data", "valor"]).copy()
+    df = df[df["tipo"].isin(["receita", "despesa"])]
+    df["ano_mes"] = df["data"].dt.to_period("M").astype(str)
+    df["valor_assinado"] = df.apply(
+        lambda row: row["valor"] if row["tipo"] == "receita" else -row["valor"],
+        axis=1,
     )
-    return validos.sort_values(["data", "descricao"]).reset_index(drop=True)
+    return df
+
+
+def limpar_dados(df: pd.DataFrame) -> pd.DataFrame:
+    """Executa o pipeline de limpeza e enriquecimento dos dados."""
+    df = _converter_tipos(df)
+    df = _limpar_texto(df)
+    df = _normalizar_tipo(df)
+    df = _filtrar_e_enriquecer(df)
+    return df.sort_values(["data", "descricao"]).reset_index(drop=True)
 
 
 def gerar_resumo_mensal(df: pd.DataFrame) -> pd.DataFrame:
-    mensal_tipo = (
+    """Agrega lancamentos por mes, separando receitas e despesas."""
+    mensal = (
         df.groupby(["ano_mes", "tipo"], as_index=False)["valor"]
         .sum()
         .pivot(index="ano_mes", columns="tipo", values="valor")
@@ -112,46 +164,100 @@ def gerar_resumo_mensal(df: pd.DataFrame) -> pd.DataFrame:
         .reset_index()
     )
 
-    if "receita" not in mensal_tipo.columns:
-        mensal_tipo["receita"] = 0.0
-    if "despesa" not in mensal_tipo.columns:
-        mensal_tipo["despesa"] = 0.0
+    if "receita" not in mensal.columns:
+        mensal["receita"] = 0.0
+    if "despesa" not in mensal.columns:
+        mensal["despesa"] = 0.0
 
-    mensal_tipo["saldo"] = mensal_tipo["receita"] - mensal_tipo["despesa"]
-    mensal_tipo = mensal_tipo.rename(
+    mensal["saldo"] = mensal["receita"] - mensal["despesa"]
+    mensal = mensal.rename(
         columns={"receita": "total_receita", "despesa": "total_despesa"}
     )
-    return mensal_tipo.sort_values("ano_mes")
+    return mensal.sort_values("ano_mes").reset_index(drop=True)
 
 
 def gerar_resumo_categoria(df: pd.DataFrame) -> pd.DataFrame:
+    """Agrega lancamentos por mes, categoria e tipo."""
     resumo = (
         df.groupby(["ano_mes", "categoria", "tipo"], as_index=False)["valor"]
         .sum()
-        .sort_values(["ano_mes", "tipo", "valor"], ascending=[True, True, False])
     )
-    return resumo
+    registros = sorted(
+        list(resumo.itertuples(index=False, name=None)),
+        key=lambda row: (str(row[0]), str(row[2]), -float(row[3])),
+    )
+    return pd.DataFrame(registros, columns=resumo.columns).reset_index(drop=True)
 
 
-def gerar_indicadores(df: pd.DataFrame, tempo_manual_min: float = 2.5, tempo_auto_min: float = 0.3) -> pd.DataFrame:
-    total_lancamentos = len(df)
-    horas_manuais = (total_lancamentos * tempo_manual_min) / 60
-    horas_automatizadas = (total_lancamentos * tempo_auto_min) / 60
+def gerar_indicadores(
+    df: pd.DataFrame,
+    tempo_manual_min: float = TEMPO_MANUAL_MIN,
+    tempo_auto_min: float = TEMPO_AUTO_MIN,
+) -> pd.DataFrame:
+    """Calcula indicadores de eficiencia da automacao."""
+    total = len(df)
+    horas_manuais = (total * tempo_manual_min) / 60
+    horas_automatizadas = (total * tempo_auto_min) / 60
     horas_economizadas = max(horas_manuais - horas_automatizadas, 0)
-    reducao_percentual = 0.0
-    if horas_manuais > 0:
-        reducao_percentual = (horas_economizadas / horas_manuais) * 100
+    reducao_percentual = (
+        (horas_economizadas / horas_manuais * 100) if horas_manuais > 0 else 0.0
+    )
 
-    indicadores = pd.DataFrame(
+    return pd.DataFrame(
         [
-            {"indicador": "total_lancamentos", "valor": total_lancamentos},
+            {"indicador": "total_lancamentos", "valor": total},
             {"indicador": "horas_manuais_estimadas", "valor": round(horas_manuais, 2)},
             {"indicador": "horas_automatizadas_estimadas", "valor": round(horas_automatizadas, 2)},
             {"indicador": "horas_economizadas", "valor": round(horas_economizadas, 2)},
             {"indicador": "reducao_tempo_percentual", "valor": round(reducao_percentual, 2)},
         ]
     )
-    return indicadores
+
+
+def _extrair_kpis(mensal: pd.DataFrame, indicadores: pd.DataFrame) -> dict[str, float]:
+    """Extrai os KPIs principais em um dicionario."""
+    mapa = dict(zip(indicadores["indicador"], indicadores["valor"]))
+    return {
+        "receita_total": float(mensal["total_receita"].sum()),
+        "despesa_total": float(mensal["total_despesa"].sum()),
+        "saldo_total": float(mensal["saldo"].sum()),
+        "meses_positivos": int((mensal["saldo"] > 0).sum()),
+        "meses_total": len(mensal),
+        "reducao_tempo": float(mapa.get("reducao_tempo_percentual", 0.0)),
+        "horas_economizadas": float(mapa.get("horas_economizadas", 0.0)),
+    }
+
+
+def _top_despesas_por_categoria(categoria: pd.DataFrame, n: int = 5) -> pd.DataFrame:
+    """Retorna as n categorias com maior volume de despesas."""
+    top = (
+        categoria[categoria["tipo"] == "despesa"]
+        .groupby("categoria", as_index=False)["valor"]
+        .sum()
+    )
+    registros = sorted(
+        list(top.itertuples(index=False, name=None)),
+        key=lambda row: float(row[1]),
+        reverse=True,
+    )[:n]
+    return pd.DataFrame(registros, columns=top.columns).reset_index(drop=True)
+
+
+def _preparar_logo_site(logo_path: str, pasta_site: Path) -> str:
+    """Copia o logo para dentro do site publicado e retorna o caminho relativo."""
+    origem = Path(logo_path)
+    if not origem.is_absolute():
+        origem = Path.cwd() / origem
+
+    if not origem.exists():
+        logger.warning("Logo nao encontrado em %s. O HTML usara o caminho informado.", origem)
+        return logo_path
+
+    pasta_assets = pasta_site / "assets"
+    pasta_assets.mkdir(parents=True, exist_ok=True)
+    destino = pasta_assets / origem.name
+    shutil.copyfile(origem, destino)
+    return f"assets/{origem.name}"
 
 
 def gerar_relatorio_executivo_markdown(
@@ -165,48 +271,32 @@ def gerar_relatorio_executivo_markdown(
     empresa: str,
     logo_path: str,
 ) -> Path:
+    """Gera o relatorio executivo em formato Markdown."""
     pasta_saida.mkdir(parents=True, exist_ok=True)
     arquivo_md = pasta_saida / "05_relatorio_executivo.md"
 
-    receita_total = float(mensal["total_receita"].sum())
-    despesa_total = float(mensal["total_despesa"].sum())
-    saldo_total = float(mensal["saldo"].sum())
-    meses_positivos = int((mensal["saldo"] > 0).sum())
-    meses_total = len(mensal)
-
-    mapa_indicadores = dict(zip(indicadores["indicador"], indicadores["valor"]))
-    reducao_tempo = float(mapa_indicadores.get("reducao_tempo_percentual", 0.0))
-    horas_economizadas = float(mapa_indicadores.get("horas_economizadas", 0.0))
-
-    top_despesas = (
-        categoria[categoria["tipo"] == "despesa"]
-        .groupby("categoria", as_index=False)["valor"]
-        .sum()
-        .sort_values("valor", ascending=False)
-        .head(5)
-    )
-
-    linhas_despesas = []
-    for _, row in top_despesas.iterrows():
-        linhas_despesas.append(f"- {row['categoria']}: {formatar_moeda_brl(float(row['valor']))}")
-
-    linhas_mensal = []
-    for _, row in mensal.iterrows():
-        linhas_mensal.append(
-            "| "
-            f"{row['ano_mes']} | "
-            f"{formatar_moeda_brl(float(row['total_receita']))} | "
-            f"{formatar_moeda_brl(float(row['total_despesa']))} | "
-            f"{formatar_moeda_brl(float(row['saldo']))} |"
-        )
-
+    kpis = _extrair_kpis(mensal, indicadores)
+    top_desp = _top_despesas_por_categoria(categoria)
     hoje = date.today().strftime("%d/%m/%Y")
 
-    texto = [
+    linhas_despesas = [
+        f"- {row['categoria']}: {formatar_moeda_brl(float(row['valor']))}"
+        for _, row in top_desp.iterrows()
+    ]
+
+    linhas_mensal = [
+        f"| {row['ano_mes']} | "
+        f"{formatar_moeda_brl(float(row['total_receita']))} | "
+        f"{formatar_moeda_brl(float(row['total_despesa']))} | "
+        f"{formatar_moeda_brl(float(row['saldo']))} |"
+        for _, row in mensal.iterrows()
+    ]
+
+    conteudo = [
         "<div align='center'>",
         f"  <img src='{logo_path}' alt='Logotipo' width='180'>",
         f"  <h1>{titulo}</h1>",
-        "  <p><strong>Entrega Executiva de Automacao Financeira</strong></p>",
+        "  <p><strong>Case de Portfolio | Automacao Financeira com foco em eficiencia operacional</strong></p>",
         f"  <p>{nome_profissional} | {cargo_profissional}</p>",
         f"  <p>{empresa}</p>",
         f"  <p>Data de emissao: {hoje}</p>",
@@ -216,16 +306,26 @@ def gerar_relatorio_executivo_markdown(
         "",
         f"# {titulo}",
         "",
+        "## Resumo Executivo",
+        (
+            "Projeto de portfolio desenvolvido para demonstrar capacidade de estruturar "
+            "rotinas financeiras automatizadas, reduzir tempo operacional e transformar "
+            "dados transacionais em relatorios gerenciais padronizados."
+        ),
+        "",
         "## 1. Objetivo",
-        "Demonstrar automacao de rotinas operacionais financeiras com foco em ganho de produtividade e padronizacao da gestao.",
+        (
+            "Demonstrar dominio em automacao de processos financeiros, consolidacao de "
+            "dados e comunicacao executiva de indicadores para suporte a tomada de decisao."
+        ),
         "",
         "## 2. Indicadores-Chave",
-        f"- Receita total consolidada: {formatar_moeda_brl(receita_total)}",
-        f"- Despesa total consolidada: {formatar_moeda_brl(despesa_total)}",
-        f"- Saldo acumulado: {formatar_moeda_brl(saldo_total)}",
-        f"- Meses com saldo positivo: {meses_positivos} de {meses_total}",
-        f"- Reducao estimada de tempo operacional: {reducao_tempo:.2f}%",
-        f"- Horas economizadas no periodo: {horas_economizadas:.2f}h",
+        f"- Receita total consolidada: {formatar_moeda_brl(kpis['receita_total'])}",
+        f"- Despesa total consolidada: {formatar_moeda_brl(kpis['despesa_total'])}",
+        f"- Saldo acumulado: {formatar_moeda_brl(kpis['saldo_total'])}",
+        f"- Meses com saldo positivo: {kpis['meses_positivos']} de {kpis['meses_total']}",
+        f"- Reducao estimada de tempo operacional: {kpis['reducao_tempo']:.2f}%",
+        f"- Horas economizadas no periodo: {kpis['horas_economizadas']:.2f}h",
         "",
         "## 3. Painel Mensal Padronizado",
         "| Mes | Receita | Despesa | Saldo |",
@@ -236,72 +336,74 @@ def gerar_relatorio_executivo_markdown(
         *linhas_despesas,
         "",
         "## 5. Resultado do Projeto",
-        "A automatizacao elimina consolidacoes manuais, reduz retrabalho e garante consistencia de indicadores em todos os ciclos de fechamento.",
+        (
+            "A solucao reduz dependencia de consolidacoes manuais, aumenta a confiabilidade "
+            "dos dados e acelera a geracao de visoes executivas para acompanhamento financeiro."
+        ),
         "",
-        "## 6. Entregaveis",
+        "## 6. Competencias Demonstradas",
+        "- Automacao de rotinas operacionais com Python",
+        "- Padronizacao de relatorios gerenciais",
+        "- Tratamento e validacao de dados financeiros",
+        "- Geracao de entregaveis executivos em multiplos formatos",
+        "- Preparacao de publicacao web para portfolio profissional",
+        "",
+        "## 7. Entregaveis",
         "- 01_base_padronizada.csv",
         "- 02_resumo_mensal.csv",
         "- 03_resumo_categoria.csv",
         "- 04_indicadores_eficiencia.csv",
         "- 05_relatorio_executivo.md",
+        "- docs/index.html",
     ]
 
-    arquivo_md.write_text("\n".join(texto), encoding="utf-8")
+    arquivo_md.write_text("\n".join(conteudo), encoding="utf-8")
+    logger.info("Relatorio Markdown gerado: %s", arquivo_md)
     return arquivo_md
 
 
 def gerar_relatorio_executivo_html(
-        mensal: pd.DataFrame,
-        categoria: pd.DataFrame,
-        indicadores: pd.DataFrame,
-        pasta_site: Path,
-        titulo: str,
-        nome_profissional: str,
-        cargo_profissional: str,
-        empresa: str,
-        logo_path: str,
+    mensal: pd.DataFrame,
+    categoria: pd.DataFrame,
+    indicadores: pd.DataFrame,
+    pasta_site: Path,
+    titulo: str,
+    nome_profissional: str,
+    cargo_profissional: str,
+    empresa: str,
+    logo_path: str,
 ) -> Path:
-        pasta_site.mkdir(parents=True, exist_ok=True)
-        arquivo_html = pasta_site / "index.html"
+    """Gera o relatorio executivo em HTML para GitHub Pages."""
+    pasta_site.mkdir(parents=True, exist_ok=True)
+    arquivo_html = pasta_site / "index.html"
 
-        receita_total = float(mensal["total_receita"].sum())
-        despesa_total = float(mensal["total_despesa"].sum())
-        saldo_total = float(mensal["saldo"].sum())
-        meses_positivos = int((mensal["saldo"] > 0).sum())
+    kpis = _extrair_kpis(mensal, indicadores)
+    top_desp = _top_despesas_por_categoria(categoria)
+    hoje = date.today().strftime("%d/%m/%Y")
+    logo_site = _preparar_logo_site(logo_path, pasta_site)
 
-        mapa_indicadores = dict(zip(indicadores["indicador"], indicadores["valor"]))
-        reducao_tempo = float(mapa_indicadores.get("reducao_tempo_percentual", 0.0))
-        horas_economizadas = float(mapa_indicadores.get("horas_economizadas", 0.0))
+    linhas_mensal = "".join(
+        "<tr>"
+        f"<td>{row['ano_mes']}</td>"
+        f"<td>{formatar_moeda_brl(float(row['total_receita']))}</td>"
+        f"<td>{formatar_moeda_brl(float(row['total_despesa']))}</td>"
+        f"<td>{formatar_moeda_brl(float(row['saldo']))}</td>"
+        "</tr>"
+        for _, row in mensal.iterrows()
+    )
 
-        top_despesas = (
-                categoria[categoria["tipo"] == "despesa"]
-                .groupby("categoria", as_index=False)["valor"]
-                .sum()
-                .sort_values("valor", ascending=False)
-                .head(5)
-        )
+    linhas_despesa = "".join(
+        f"<li><strong>{row['categoria']}</strong>: {formatar_moeda_brl(float(row['valor']))}</li>"
+        for _, row in top_desp.iterrows()
+    )
 
-        linhas_mensal = []
-        for _, row in mensal.iterrows():
-                linhas_mensal.append(
-                        "<tr>"
-                        f"<td>{row['ano_mes']}</td>"
-                        f"<td>{formatar_moeda_brl(float(row['total_receita']))}</td>"
-                        f"<td>{formatar_moeda_brl(float(row['total_despesa']))}</td>"
-                        f"<td>{formatar_moeda_brl(float(row['saldo']))}</td>"
-                        "</tr>"
-                )
+    classe_saldo = "saldo-ok" if kpis["saldo_total"] >= 0 else "saldo-alerta"
 
-        linhas_despesa = []
-        for _, row in top_despesas.iterrows():
-                linhas_despesa.append(f"<li><strong>{row['categoria']}</strong>: {formatar_moeda_brl(float(row['valor']))}</li>")
-
-        hoje = date.today().strftime("%d/%m/%Y")
-        html = f"""<!doctype html>
-<html lang=\"pt-BR\">
+    html = f"""<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset=\"utf-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{titulo}</title>
     <style>
         :root {{
@@ -326,11 +428,7 @@ def gerar_relatorio_executivo_html(
                 var(--bg);
             line-height: 1.5;
         }}
-        .container {{
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 24px 16px 48px;
-        }}
+        .container {{ max-width: 1040px; margin: 0 auto; padding: 24px 16px 48px; }}
         .hero {{
             background: linear-gradient(135deg, #0b3c5d, #328cc1);
             color: #fff;
@@ -373,63 +471,91 @@ def gerar_relatorio_executivo_html(
     </style>
 </head>
 <body>
-    <main class=\"container\">
-        <section class=\"hero\">
-            <img src=\"{logo_path}\" alt=\"Logotipo\">
+    <main class="container">
+        <section class="hero">
+            <img src="{logo_site}" alt="Logotipo">
             <h1>{titulo}</h1>
-            <p><strong>Entrega Executiva de Automacao Financeira</strong></p>
+            <p><strong>Case de Portfolio | Automacao Financeira com foco em eficiencia operacional</strong></p>
             <p>{nome_profissional} | {cargo_profissional}</p>
             <p>{empresa}</p>
             <p>Data de emissao: {hoje}</p>
         </section>
 
-        <section class=\"grid\">
-            <article class=\"kpi\"><small>Receita Total</small><strong>{formatar_moeda_brl(receita_total)}</strong></article>
-            <article class=\"kpi\"><small>Despesa Total</small><strong>{formatar_moeda_brl(despesa_total)}</strong></article>
-            <article class=\"kpi\"><small>Saldo Acumulado</small><strong class=\"{'saldo-ok' if saldo_total >= 0 else 'saldo-alerta'}\">{formatar_moeda_brl(saldo_total)}</strong></article>
-            <article class=\"kpi\"><small>Meses Positivos</small><strong>{meses_positivos}</strong></article>
-            <article class=\"kpi\"><small>Reducao de Tempo</small><strong>{reducao_tempo:.2f}%</strong></article>
-            <article class=\"kpi\"><small>Horas Economizadas</small><strong>{horas_economizadas:.2f}h</strong></article>
+        <section class="panel">
+            <h2>Resumo Executivo</h2>
+            <p>
+                Projeto de portfolio desenvolvido para demonstrar capacidade de automatizar
+                rotinas financeiras, reduzir esforco manual e transformar dados operacionais
+                em relatorios executivos padronizados para acompanhamento gerencial.
+            </p>
         </section>
 
-        <section class=\"panel\">
+        <section class="grid">
+            <article class="kpi"><small>Receita Total</small><strong>{formatar_moeda_brl(kpis['receita_total'])}</strong></article>
+            <article class="kpi"><small>Despesa Total</small><strong>{formatar_moeda_brl(kpis['despesa_total'])}</strong></article>
+            <article class="kpi"><small>Saldo Acumulado</small><strong class="{classe_saldo}">{formatar_moeda_brl(kpis['saldo_total'])}</strong></article>
+            <article class="kpi"><small>Meses Positivos</small><strong>{kpis['meses_positivos']}</strong></article>
+            <article class="kpi"><small>Reducao de Tempo</small><strong>{kpis['reducao_tempo']:.2f}%</strong></article>
+            <article class="kpi"><small>Horas Economizadas</small><strong>{kpis['horas_economizadas']:.2f}h</strong></article>
+        </section>
+
+        <section class="panel">
             <h2>Painel Mensal Padronizado</h2>
             <table>
                 <thead>
                     <tr><th>Mes</th><th>Receita</th><th>Despesa</th><th>Saldo</th></tr>
                 </thead>
                 <tbody>
-                    {''.join(linhas_mensal)}
+                    {linhas_mensal}
                 </tbody>
             </table>
         </section>
 
-        <section class=\"panel\">
+        <section class="panel">
             <h2>Top 5 Categorias de Despesa</h2>
-            <ul>{''.join(linhas_despesa)}</ul>
+            <ul>{linhas_despesa}</ul>
         </section>
 
-        <section class=\"panel\">
+        <section class="panel">
             <h2>Resultado do Projeto</h2>
-            <p>A automacao elimina consolidacoes manuais, reduz retrabalho e padroniza indicadores para tomada de decisao em ciclos de fechamento.</p>
-            <p class=\"foot\">Publicacao web pronta para GitHub Pages a partir da pasta docs.</p>
+            <p>
+                A solucao reduz dependencia de consolidacoes manuais, eleva a confiabilidade
+                da informacao e acelera a entrega de indicadores para apoio a decisoes gerenciais.
+            </p>
+            <p>
+                O projeto evidencia competencias praticas em Python, modelagem de dados,
+                padronizacao de relatorios e construcao de entregaveis prontos para ambiente web.
+            </p>
+            <p class="foot">Publicacao web pronta para GitHub Pages a partir da pasta docs.</p>
         </section>
     </main>
 </body>
 </html>
 """
 
-        arquivo_html.write_text(html, encoding="utf-8")
-        return arquivo_html
+    arquivo_html.write_text(html, encoding="utf-8")
+    logger.info("Relatorio HTML gerado: %s", arquivo_html)
+    return arquivo_html
 
 
-def salvar_relatorios(base: pd.DataFrame, mensal: pd.DataFrame, categoria: pd.DataFrame, indicadores: pd.DataFrame, pasta_saida: Path) -> bool:
+def salvar_relatorios(
+    base: pd.DataFrame,
+    mensal: pd.DataFrame,
+    categoria: pd.DataFrame,
+    indicadores: pd.DataFrame,
+    pasta_saida: Path,
+) -> bool:
+    """Exporta DataFrames para CSV e, opcionalmente, para Excel."""
     pasta_saida.mkdir(parents=True, exist_ok=True)
 
-    base.to_csv(pasta_saida / "01_base_padronizada.csv", index=False)
-    mensal.to_csv(pasta_saida / "02_resumo_mensal.csv", index=False)
-    categoria.to_csv(pasta_saida / "03_resumo_categoria.csv", index=False)
-    indicadores.to_csv(pasta_saida / "04_indicadores_eficiencia.csv", index=False)
+    arquivos_csv = {
+        "01_base_padronizada.csv": base,
+        "02_resumo_mensal.csv": mensal,
+        "03_resumo_categoria.csv": categoria,
+        "04_indicadores_eficiencia.csv": indicadores,
+    }
+    for nome, df in arquivos_csv.items():
+        df.to_csv(pasta_saida / nome, index=False)
 
     arquivo_excel = pasta_saida / "relatorio_gerencial_padronizado.xlsx"
     try:
@@ -438,27 +564,29 @@ def salvar_relatorios(base: pd.DataFrame, mensal: pd.DataFrame, categoria: pd.Da
             mensal.to_excel(writer, sheet_name="resumo_mensal", index=False)
             categoria.to_excel(writer, sheet_name="resumo_categoria", index=False)
             indicadores.to_excel(writer, sheet_name="indicadores", index=False)
+        logger.info("Arquivo Excel gerado: %s", arquivo_excel)
         return True
     except ModuleNotFoundError:
-        print("Aviso: openpyxl nao instalado. Arquivo Excel nao foi gerado.")
-        print("Para habilitar, instale com: pip install openpyxl")
+        logger.warning(
+            "openpyxl nao instalado. Arquivo Excel nao foi gerado. "
+            "Para habilitar, execute: pip install openpyxl"
+        )
         return False
 
 
 def imprimir_painel(mensal: pd.DataFrame, indicadores: pd.DataFrame) -> None:
-    print("\n" + "=" * 72)
-    print("AUTOMACAO DE RELATORIOS FINANCEIROS")
-    print("=" * 72)
-
-    print("\nResumo mensal:")
-    print(mensal.to_string(index=False))
-
-    print("\nIndicadores de eficiencia:")
-    print(indicadores.to_string(index=False))
-    print("=" * 72)
+    """Exibe um resumo do processamento no terminal."""
+    separador = "=" * 72
+    logger.info(separador)
+    logger.info("AUTOMACAO DE RELATORIOS FINANCEIROS")
+    logger.info(separador)
+    logger.info("Resumo mensal:\n%s", mensal.to_string(index=False))
+    logger.info("Indicadores de eficiencia:\n%s", indicadores.to_string(index=False))
+    logger.info(separador)
 
 
 def criar_exemplo(arquivo: Path) -> None:
+    """Cria um arquivo CSV de exemplo com lancamentos ficticios."""
     exemplo = pd.DataFrame(
         [
             ["01/02/2026", "Venda projeto A", "vendas", "receita", 15000.00, "comercial"],
@@ -473,61 +601,65 @@ def criar_exemplo(arquivo: Path) -> None:
     )
     arquivo.parent.mkdir(parents=True, exist_ok=True)
     exemplo.to_csv(arquivo, index=False)
+    logger.info("Arquivo de exemplo criado em: %s", arquivo)
 
 
 def parse_args() -> argparse.Namespace:
+    """Analisa os argumentos da linha de comando."""
     parser = argparse.ArgumentParser(
-        description="Portfolio: automacao de rotinas financeiras e padronizacao de relatorios gerenciais"
+        description="Automacao de rotinas financeiras e padronizacao de relatorios gerenciais.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "--entrada",
         default="dados/lancamentos_financeiros.csv",
-        help="Arquivo CSV com lancamentos financeiros",
+        help="Arquivo CSV com lancamentos financeiros.",
     )
     parser.add_argument(
         "--saida",
         default="relatorios",
-        help="Diretorio de saida dos relatorios",
+        help="Diretorio de saida dos relatorios.",
     )
     parser.add_argument(
         "--gerar-exemplo",
         action="store_true",
-        help="Gera um arquivo de exemplo caso ainda nao exista",
+        help="Gera um arquivo de exemplo caso ainda nao exista.",
     )
     parser.add_argument(
         "--titulo-relatorio",
         default="Portfolio Executivo - Sara",
-        help="Titulo do relatorio executivo em Markdown",
+        help="Titulo do relatorio executivo.",
     )
     parser.add_argument(
         "--nome-profissional",
         default="Sara",
-        help="Nome para capa do relatorio",
+        help="Nome para a capa do relatorio.",
     )
     parser.add_argument(
         "--cargo-profissional",
         default="Analista de Automacao Financeira",
-        help="Cargo para capa do relatorio",
+        help="Cargo para a capa do relatorio.",
     )
     parser.add_argument(
         "--empresa",
         default="Analise Criterio",
-        help="Empresa ou projeto para capa do relatorio",
+        help="Empresa ou projeto para a capa do relatorio.",
     )
     parser.add_argument(
         "--logo",
-        default="../assets/logo.svg",
-        help="Caminho do logotipo usado na capa do markdown",
+        default="assets/logo.svg",
+        help="Caminho do logotipo usado na capa.",
     )
     parser.add_argument(
         "--site-dir",
         default="docs",
-        help="Diretorio para site HTML publicado no GitHub Pages",
+        help="Diretorio para site HTML publicado no GitHub Pages.",
     )
     return parser.parse_args()
 
 
 def main() -> None:
+    """Ponto de entrada principal do script."""
     args = parse_args()
     arquivo_entrada = Path(args.entrada)
     pasta_saida = Path(args.saida)
@@ -535,7 +667,6 @@ def main() -> None:
 
     if args.gerar_exemplo and not arquivo_entrada.exists():
         criar_exemplo(arquivo_entrada)
-        print(f"Arquivo de exemplo criado em: {arquivo_entrada}")
 
     if not arquivo_entrada.exists():
         raise FileNotFoundError(
@@ -543,6 +674,7 @@ def main() -> None:
             "Use --gerar-exemplo para criar uma base inicial."
         )
 
+    logger.info("Lendo arquivo de entrada: %s", arquivo_entrada)
     bruto = pd.read_csv(arquivo_entrada)
     base = limpar_dados(normalizar_colunas(bruto))
 
@@ -553,7 +685,14 @@ def main() -> None:
     resumo_categoria = gerar_resumo_categoria(base)
     indicadores = gerar_indicadores(base)
 
-    excel_gerado = salvar_relatorios(base, resumo_mensal, resumo_categoria, indicadores, pasta_saida)
+    excel_gerado = salvar_relatorios(
+        base,
+        resumo_mensal,
+        resumo_categoria,
+        indicadores,
+        pasta_saida,
+    )
+
     arquivo_md = gerar_relatorio_executivo_markdown(
         resumo_mensal,
         resumo_categoria,
@@ -576,17 +715,22 @@ def main() -> None:
         args.empresa,
         args.logo,
     )
+
     imprimir_painel(resumo_mensal, indicadores)
 
-    print("\nRelatorios gerados com sucesso:")
-    print(f"- {pasta_saida / '01_base_padronizada.csv'}")
-    print(f"- {pasta_saida / '02_resumo_mensal.csv'}")
-    print(f"- {pasta_saida / '03_resumo_categoria.csv'}")
-    print(f"- {pasta_saida / '04_indicadores_eficiencia.csv'}")
-    print(f"- {arquivo_md}")
-    print(f"- {arquivo_html}")
+    logger.info("Relatorios gerados com sucesso:")
+    for arq in [
+        pasta_saida / "01_base_padronizada.csv",
+        pasta_saida / "02_resumo_mensal.csv",
+        pasta_saida / "03_resumo_categoria.csv",
+        pasta_saida / "04_indicadores_eficiencia.csv",
+        arquivo_md,
+        arquivo_html,
+    ]:
+        logger.info("  - %s", arq)
+
     if excel_gerado:
-        print(f"- {pasta_saida / 'relatorio_gerencial_padronizado.xlsx'}")
+        logger.info("  - %s", pasta_saida / "relatorio_gerencial_padronizado.xlsx")
 
 
 if __name__ == "__main__":

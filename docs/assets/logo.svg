@@ -1,0 +1,13 @@
+<svg width="640" height="180" viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Portfolio Financeiro">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B3C5D"/>
+      <stop offset="100%" stop-color="#328CC1"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="640" height="180" rx="20" fill="#F6FAFD"/>
+  <rect x="20" y="20" width="140" height="140" rx="20" fill="url(#g)"/>
+  <path d="M50 120 L50 90 L75 90 L75 60 L100 60 L100 100 L125 100 L125 120 Z" fill="#FFFFFF"/>
+  <text x="185" y="78" font-family="Verdana, sans-serif" font-size="34" fill="#0B3C5D" font-weight="700">Portfolio Financeiro</text>
+  <text x="185" y="114" font-family="Verdana, sans-serif" font-size="20" fill="#328CC1">Automacao e Padronizacao de Relatorios</text>
+</svg>

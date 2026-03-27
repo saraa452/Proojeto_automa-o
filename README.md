@@ -1,6 +1,6 @@
 # Portfolio Executivo de Relatorios Financeiros
 
-Projeto em Python para automacao de rotinas operacionais, reducao de tempo manual e padronizacao de relatorios gerenciais.
+Case de portfolio em Python para demonstrar automacao de rotinas operacionais financeiras, reducao de tempo manual e padronizacao de relatorios gerenciais com entrega executiva pronta para web.
 
 ## Entregaveis gerados
 
@@ -21,30 +21,51 @@ Projeto em Python para automacao de rotinas operacionais, reducao de tempo manua
 
 3. Abra a versao web em docs/index.html.
 
+## Competencias demonstradas
+
+- Automacao de processos financeiros com Python
+- Tratamento, limpeza e padronizacao de dados
+- Geracao de relatorios em CSV, Excel, Markdown e HTML
+- Comunicacao executiva orientada a indicadores
+- Publicacao de portfolio tecnico no GitHub Pages
+
 ## Publicar no GitHub Pages (Linux)
 
-1. Inicialize o Git e faça commit:
+1. Configure sua identidade Git:
 
-   git init
-   git add .
-   git commit -m "Portfolio executivo de relatorios financeiros"
+```bash
+git config --global user.name "Sara"
+git config --global user.email "seu-email@exemplo.com"
+```
 
-2. Crie o repositório no GitHub e conecte remoto:
+1. Inicialize o Git, adicione os arquivos e faça commit:
 
-   git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-   git branch -M main
-   git push -u origin main
+```bash
+git init
+git add .
+git commit -m "Portfolio executivo de relatorios financeiros"
+git branch -M main
+```
 
-3. No GitHub:
+1. Crie o repositório no GitHub e conecte remoto:
+
+```bash
+git remote add origin "https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git"
+git push -u origin main
+```
+
+1. No GitHub:
    - Abra Settings > Pages
    - Em Build and deployment, selecione Deploy from a branch
    - Branch: main
    - Folder: /docs
    - Salve
 
-4. A URL final fica assim:
+1. A URL final fica assim:
 
-   https://SEU_USUARIO.github.io/SEU_REPOSITORIO/
+```text
+https://SEU_USUARIO.github.io/SEU_REPOSITORIO/
+```
 
 ## Personalizacao
 

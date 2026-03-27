@@ -1,7 +1,7 @@
 <div align='center'>
-  <img src='../assets/logo.svg' alt='Logotipo' width='180'>
+  <img src='assets/logo.svg' alt='Logotipo' width='180'>
   <h1>Portfolio Executivo - Sara</h1>
-  <p><strong>Entrega Executiva de Automacao Financeira</strong></p>
+  <p><strong>Case de Portfolio | Automacao Financeira com foco em eficiencia operacional</strong></p>
   <p>Sara | Analista de Automacao Financeira</p>
   <p>Analise Criterio</p>
   <p>Data de emissao: 27/03/2026</p>
@@ -11,8 +11,11 @@
 
 # Portfolio Executivo - Sara
 
+## Resumo Executivo
+Projeto de portfolio desenvolvido para demonstrar capacidade de estruturar rotinas financeiras automatizadas, reduzir tempo operacional e transformar dados transacionais em relatorios gerenciais padronizados.
+
 ## 1. Objetivo
-Demonstrar automacao de rotinas operacionais financeiras com foco em ganho de produtividade e padronizacao da gestao.
+Demonstrar dominio em automacao de processos financeiros, consolidacao de dados e comunicacao executiva de indicadores para suporte a tomada de decisao.
 
 ## 2. Indicadores-Chave
 - Receita total consolidada: R$ 28.300,00
@@ -35,11 +38,19 @@ Demonstrar automacao de rotinas operacionais financeiras com foco em ganho de pr
 - infraestrutura: R$ 740,31
 
 ## 5. Resultado do Projeto
-A automatizacao elimina consolidacoes manuais, reduz retrabalho e garante consistencia de indicadores em todos os ciclos de fechamento.
+A solucao reduz dependencia de consolidacoes manuais, aumenta a confiabilidade dos dados e acelera a geracao de visoes executivas para acompanhamento financeiro.
 
-## 6. Entregaveis
+## 6. Competencias Demonstradas
+- Automacao de rotinas operacionais com Python
+- Padronizacao de relatorios gerenciais
+- Tratamento e validacao de dados financeiros
+- Geracao de entregaveis executivos em multiplos formatos
+- Preparacao de publicacao web para portfolio profissional
+
+## 7. Entregaveis
 - 01_base_padronizada.csv
 - 02_resumo_mensal.csv
 - 03_resumo_categoria.csv
 - 04_indicadores_eficiencia.csv
 - 05_relatorio_executivo.md
+- docs/index.html
