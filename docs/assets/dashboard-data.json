@@ -684,6 +684,306 @@
       "valor": 820.0,
       "centro_custo": "comercial",
       "valor_assinado": -820.0
+    },
+    {
+      "data": "2027-01-08",
+      "ano_mes": "2027-01",
+      "descricao": "Renovacao enterprise janeiro",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 12400.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 12400.0
+    },
+    {
+      "data": "2027-01-13",
+      "ano_mes": "2027-01",
+      "descricao": "Projeto performance lambda",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 23100.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 23100.0
+    },
+    {
+      "data": "2027-01-19",
+      "ano_mes": "2027-01",
+      "descricao": "Campanha digital janeiro",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2750.0,
+      "centro_custo": "marketing",
+      "valor_assinado": -2750.0
+    },
+    {
+      "data": "2027-01-24",
+      "ano_mes": "2027-01",
+      "descricao": "Operacao distribuida janeiro",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 2460.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -2460.0
+    },
+    {
+      "data": "2027-01-30",
+      "ano_mes": "2027-01",
+      "descricao": "Desconto comercial janeiro 2027",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 690.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -690.0
+    },
+    {
+      "data": "2027-02-06",
+      "ano_mes": "2027-02",
+      "descricao": "Pacote premium fevereiro",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 12900.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 12900.0
+    },
+    {
+      "data": "2027-02-10",
+      "ano_mes": "2027-02",
+      "descricao": "Projeto transformacao mu",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 23800.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 23800.0
+    },
+    {
+      "data": "2027-02-16",
+      "ano_mes": "2027-02",
+      "descricao": "Licencas e dados fevereiro",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1890.0,
+      "centro_custo": "ti",
+      "valor_assinado": -1890.0
+    },
+    {
+      "data": "2027-02-22",
+      "ano_mes": "2027-02",
+      "descricao": "Folha operacional fevereiro",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 7680.0,
+      "centro_custo": "rh",
+      "valor_assinado": -7680.0
+    },
+    {
+      "data": "2027-02-27",
+      "ano_mes": "2027-02",
+      "descricao": "Desconto campanha fevereiro 2027",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 710.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -710.0
+    },
+    {
+      "data": "2027-03-05",
+      "ano_mes": "2027-03",
+      "descricao": "Receita onboarding corporativo",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 8200.0,
+      "centro_custo": "educacao",
+      "valor_assinado": 8200.0
+    },
+    {
+      "data": "2027-03-11",
+      "ano_mes": "2027-03",
+      "descricao": "Projeto analytics nu",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 24500.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 24500.0
+    },
+    {
+      "data": "2027-03-17",
+      "ano_mes": "2027-03",
+      "descricao": "Midia de aquisicao marco",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2860.0,
+      "centro_custo": "marketing",
+      "valor_assinado": -2860.0
+    },
+    {
+      "data": "2027-03-23",
+      "ano_mes": "2027-03",
+      "descricao": "Infraestrutura cloud marco",
+      "categoria": "infraestrutura",
+      "tipo": "despesa",
+      "valor": 1760.0,
+      "centro_custo": "adm",
+      "valor_assinado": -1760.0
+    },
+    {
+      "data": "2027-03-29",
+      "ano_mes": "2027-03",
+      "descricao": "Desconto negociacao marco 2027",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 730.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -730.0
+    },
+    {
+      "data": "2027-04-07",
+      "ano_mes": "2027-04",
+      "descricao": "Receita suporte premium abril",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 8600.0,
+      "centro_custo": "sucesso_cliente",
+      "valor_assinado": 8600.0
+    },
+    {
+      "data": "2027-04-12",
+      "ano_mes": "2027-04",
+      "descricao": "Projeto expansao xi",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 25200.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 25200.0
+    },
+    {
+      "data": "2027-04-18",
+      "ano_mes": "2027-04",
+      "descricao": "Compliance e auditoria abril",
+      "categoria": "infraestrutura",
+      "tipo": "despesa",
+      "valor": 1690.0,
+      "centro_custo": "adm",
+      "valor_assinado": -1690.0
+    },
+    {
+      "data": "2027-04-24",
+      "ano_mes": "2027-04",
+      "descricao": "Operacao de campo abril",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 2590.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -2590.0
+    },
+    {
+      "data": "2027-04-29",
+      "ano_mes": "2027-04",
+      "descricao": "Desconto upgrade abril 2027",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 760.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -760.0
+    },
+    {
+      "data": "2027-05-06",
+      "ano_mes": "2027-05",
+      "descricao": "Renovacao carteira maio",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 13300.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 13300.0
+    },
+    {
+      "data": "2027-05-10",
+      "ano_mes": "2027-05",
+      "descricao": "Projeto dados omicron",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 26100.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 26100.0
+    },
+    {
+      "data": "2027-05-16",
+      "ano_mes": "2027-05",
+      "descricao": "Eventos e comunidade maio",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2980.0,
+      "centro_custo": "marketing",
+      "valor_assinado": -2980.0
+    },
+    {
+      "data": "2027-05-21",
+      "ano_mes": "2027-05",
+      "descricao": "Folha e encargos maio",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 7890.0,
+      "centro_custo": "rh",
+      "valor_assinado": -7890.0
+    },
+    {
+      "data": "2027-05-28",
+      "ano_mes": "2027-05",
+      "descricao": "Desconto promocional maio 2027",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 780.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -780.0
+    },
+    {
+      "data": "2027-06-04",
+      "ano_mes": "2027-06",
+      "descricao": "Receita servicos especiais junho",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 9100.0,
+      "centro_custo": "educacao",
+      "valor_assinado": 9100.0
+    },
+    {
+      "data": "2027-06-09",
+      "ano_mes": "2027-06",
+      "descricao": "Projeto consolidacao pi",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 26800.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 26800.0
+    },
+    {
+      "data": "2027-06-15",
+      "ano_mes": "2027-06",
+      "descricao": "Monitoramento de plataforma junho",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1980.0,
+      "centro_custo": "ti",
+      "valor_assinado": -1980.0
+    },
+    {
+      "data": "2027-06-22",
+      "ano_mes": "2027-06",
+      "descricao": "Parceiros estrategicos junho",
+      "categoria": "fornecedores",
+      "tipo": "despesa",
+      "valor": 4360.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -4360.0
+    },
+    {
+      "data": "2027-06-29",
+      "ano_mes": "2027-06",
+      "descricao": "Desconto renovacao junho 2027",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 820.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -820.0
     }
   ]
 }

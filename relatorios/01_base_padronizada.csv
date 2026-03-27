@@ -67,3 +67,33 @@ data,descricao,categoria,tipo,valor,centro_custo,ano_mes,valor_assinado
 2026-12-16,Campanha institucional,marketing,despesa,2480.0,marketing,2026-12,-2480.0
 2026-12-22,Operacao e logistica dezembro,operacoes,despesa,2320.0,operacoes,2026-12,-2320.0
 2026-12-29,Desconto fechamento dezembro,descontos_comerciais,despesa,820.0,comercial,2026-12,-820.0
+2027-01-08,Renovacao enterprise janeiro,assinaturas,receita,12400.0,comercial,2027-01,12400.0
+2027-01-13,Projeto performance lambda,projetos,receita,23100.0,consultoria,2027-01,23100.0
+2027-01-19,Campanha digital janeiro,marketing,despesa,2750.0,marketing,2027-01,-2750.0
+2027-01-24,Operacao distribuida janeiro,operacoes,despesa,2460.0,operacoes,2027-01,-2460.0
+2027-01-30,Desconto comercial janeiro 2027,descontos_comerciais,despesa,690.0,comercial,2027-01,-690.0
+2027-02-06,Pacote premium fevereiro,assinaturas,receita,12900.0,comercial,2027-02,12900.0
+2027-02-10,Projeto transformacao mu,projetos,receita,23800.0,consultoria,2027-02,23800.0
+2027-02-16,Licencas e dados fevereiro,tecnologia,despesa,1890.0,ti,2027-02,-1890.0
+2027-02-22,Folha operacional fevereiro,pessoal,despesa,7680.0,rh,2027-02,-7680.0
+2027-02-27,Desconto campanha fevereiro 2027,descontos_comerciais,despesa,710.0,comercial,2027-02,-710.0
+2027-03-05,Receita onboarding corporativo,servicos,receita,8200.0,educacao,2027-03,8200.0
+2027-03-11,Projeto analytics nu,projetos,receita,24500.0,consultoria,2027-03,24500.0
+2027-03-17,Midia de aquisicao marco,marketing,despesa,2860.0,marketing,2027-03,-2860.0
+2027-03-23,Infraestrutura cloud marco,infraestrutura,despesa,1760.0,adm,2027-03,-1760.0
+2027-03-29,Desconto negociacao marco 2027,descontos_comerciais,despesa,730.0,comercial,2027-03,-730.0
+2027-04-07,Receita suporte premium abril,servicos,receita,8600.0,sucesso_cliente,2027-04,8600.0
+2027-04-12,Projeto expansao xi,projetos,receita,25200.0,consultoria,2027-04,25200.0
+2027-04-18,Compliance e auditoria abril,infraestrutura,despesa,1690.0,adm,2027-04,-1690.0
+2027-04-24,Operacao de campo abril,operacoes,despesa,2590.0,operacoes,2027-04,-2590.0
+2027-04-29,Desconto upgrade abril 2027,descontos_comerciais,despesa,760.0,comercial,2027-04,-760.0
+2027-05-06,Renovacao carteira maio,assinaturas,receita,13300.0,comercial,2027-05,13300.0
+2027-05-10,Projeto dados omicron,projetos,receita,26100.0,consultoria,2027-05,26100.0
+2027-05-16,Eventos e comunidade maio,marketing,despesa,2980.0,marketing,2027-05,-2980.0
+2027-05-21,Folha e encargos maio,pessoal,despesa,7890.0,rh,2027-05,-7890.0
+2027-05-28,Desconto promocional maio 2027,descontos_comerciais,despesa,780.0,comercial,2027-05,-780.0
+2027-06-04,Receita servicos especiais junho,servicos,receita,9100.0,educacao,2027-06,9100.0
+2027-06-09,Projeto consolidacao pi,projetos,receita,26800.0,consultoria,2027-06,26800.0
+2027-06-15,Monitoramento de plataforma junho,tecnologia,despesa,1980.0,ti,2027-06,-1980.0
+2027-06-22,Parceiros estrategicos junho,fornecedores,despesa,4360.0,operacoes,2027-06,-4360.0
+2027-06-29,Desconto renovacao junho 2027,descontos_comerciais,despesa,820.0,comercial,2027-06,-820.0

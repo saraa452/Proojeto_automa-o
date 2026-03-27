@@ -18,12 +18,12 @@ Projeto de portfolio desenvolvido para demonstrar capacidade de estruturar rotin
 Demonstrar dominio em automacao de processos financeiros, consolidacao de dados e comunicacao executiva de indicadores para suporte a tomada de decisao.
 
 ## 2. Indicadores-Chave
-- Receita total consolidada: R$ 276.750,00
-- Despesa total consolidada: R$ 100.284,80
-- Saldo acumulado: R$ 176.465,20
-- Meses com saldo positivo: 12 de 12
+- Receita total consolidada: R$ 490.750,00
+- Despesa total consolidada: R$ 145.664,80
+- Saldo acumulado: R$ 345.085,20
+- Meses com saldo positivo: 18 de 18
 - Reducao estimada de tempo operacional: 88.00%
-- Horas economizadas no periodo: 2.49h
+- Horas economizadas no periodo: 3.59h
 
 ## 3. Painel Mensal Padronizado
 | Mes | Receita | Despesa | Saldo |
@@ -40,13 +40,19 @@ Demonstrar dominio em automacao de processos financeiros, consolidacao de dados 
 | 2026-10 | R$ 25.500,00 | R$ 4.490,00 | R$ 21.010,00 |
 | 2026-11 | R$ 31.900,00 | R$ 9.760,00 | R$ 22.140,00 |
 | 2026-12 | R$ 29.200,00 | R$ 5.620,00 | R$ 23.580,00 |
+| 2027-01 | R$ 35.500,00 | R$ 5.900,00 | R$ 29.600,00 |
+| 2027-02 | R$ 36.700,00 | R$ 10.280,00 | R$ 26.420,00 |
+| 2027-03 | R$ 32.700,00 | R$ 5.350,00 | R$ 27.350,00 |
+| 2027-04 | R$ 33.800,00 | R$ 5.040,00 | R$ 28.760,00 |
+| 2027-05 | R$ 39.400,00 | R$ 11.650,00 | R$ 27.750,00 |
+| 2027-06 | R$ 35.900,00 | R$ 7.160,00 | R$ 28.740,00 |
 
 ## 4. Top 5 Categorias de Despesa
-- pessoal: R$ 42.215,20
-- marketing: R$ 13.754,65
-- fornecedores: R$ 12.520,80
-- operacoes: R$ 10.445,80
-- tecnologia: R$ 8.692,45
+- pessoal: R$ 57.785,20
+- marketing: R$ 22.344,65
+- fornecedores: R$ 16.880,80
+- operacoes: R$ 15.495,80
+- tecnologia: R$ 12.562,45
 
 ## 5. Resultado do Projeto
 A solucao reduz dependencia de consolidacoes manuais, aumenta a confiabilidade dos dados e acelera a geracao de visoes executivas para acompanhamento financeiro.

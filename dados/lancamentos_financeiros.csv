@@ -67,3 +67,33 @@ data,descricao,categoria,tipo,valor,centro_custo
 16/12/2026,Campanha institucional,marketing,despesa,2480.0,marketing
 22/12/2026,Operacao e logistica dezembro,operacoes,despesa,2320.0,operacoes
 29/12/2026,Desconto fechamento dezembro,descontos_comerciais,despesa,820.0,comercial
+08/01/2027,Renovacao enterprise janeiro,assinaturas,receita,12400.0,comercial
+13/01/2027,Projeto performance lambda,projetos,receita,23100.0,consultoria
+19/01/2027,Campanha digital janeiro,marketing,despesa,2750.0,marketing
+24/01/2027,Operacao distribuida janeiro,operacoes,despesa,2460.0,operacoes
+30/01/2027,Desconto comercial janeiro 2027,descontos_comerciais,despesa,690.0,comercial
+06/02/2027,Pacote premium fevereiro,assinaturas,receita,12900.0,comercial
+10/02/2027,Projeto transformacao mu,projetos,receita,23800.0,consultoria
+16/02/2027,Licencas e dados fevereiro,tecnologia,despesa,1890.0,ti
+22/02/2027,Folha operacional fevereiro,pessoal,despesa,7680.0,rh
+27/02/2027,Desconto campanha fevereiro 2027,descontos_comerciais,despesa,710.0,comercial
+05/03/2027,Receita onboarding corporativo,servicos,receita,8200.0,educacao
+11/03/2027,Projeto analytics nu,projetos,receita,24500.0,consultoria
+17/03/2027,Midia de aquisicao marco,marketing,despesa,2860.0,marketing
+23/03/2027,Infraestrutura cloud marco,infraestrutura,despesa,1760.0,adm
+29/03/2027,Desconto negociacao marco 2027,descontos_comerciais,despesa,730.0,comercial
+07/04/2027,Receita suporte premium abril,servicos,receita,8600.0,sucesso_cliente
+12/04/2027,Projeto expansao xi,projetos,receita,25200.0,consultoria
+18/04/2027,Compliance e auditoria abril,infraestrutura,despesa,1690.0,adm
+24/04/2027,Operacao de campo abril,operacoes,despesa,2590.0,operacoes
+29/04/2027,Desconto upgrade abril 2027,descontos_comerciais,despesa,760.0,comercial
+06/05/2027,Renovacao carteira maio,assinaturas,receita,13300.0,comercial
+10/05/2027,Projeto dados omicron,projetos,receita,26100.0,consultoria
+16/05/2027,Eventos e comunidade maio,marketing,despesa,2980.0,marketing
+21/05/2027,Folha e encargos maio,pessoal,despesa,7890.0,rh
+28/05/2027,Desconto promocional maio 2027,descontos_comerciais,despesa,780.0,comercial
+04/06/2027,Receita servicos especiais junho,servicos,receita,9100.0,educacao
+09/06/2027,Projeto consolidacao pi,projetos,receita,26800.0,consultoria
+15/06/2027,Monitoramento de plataforma junho,tecnologia,despesa,1980.0,ti
+22/06/2027,Parceiros estrategicos junho,fornecedores,despesa,4360.0,operacoes
+29/06/2027,Desconto renovacao junho 2027,descontos_comerciais,despesa,820.0,comercial
