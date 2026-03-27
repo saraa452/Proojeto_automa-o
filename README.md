@@ -41,16 +41,15 @@ git config --global user.email "seu-email@exemplo.com"
 1. Inicialize o Git, adicione os arquivos e faça commit:
 
 ```bash
-git init
 git add .
 git commit -m "Portfolio executivo de relatorios financeiros"
 git branch -M main
 ```
 
-1. Crie o repositório no GitHub e conecte remoto:
+1. Configure o remoto e envie para GitHub:
 
 ```bash
-git remote add origin "https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git"
+git remote add origin "https://github.com/saraa452/Proojeto_automa-o.git"
 git push -u origin main
 ```
 
@@ -63,8 +62,8 @@ git push -u origin main
 
 1. A URL final fica assim:
 
-```text
-https://SEU_USUARIO.github.io/SEU_REPOSITORIO/
+```
+https://saraa452.github.io/Proojeto_automa-o/
 ```
 
 ## Personalizacao
