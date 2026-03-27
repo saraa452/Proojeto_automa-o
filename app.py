@@ -108,6 +108,34 @@ EXEMPLO_LANCAMENTOS: list[list[object]] = [
     ["14/08/2026", "Operacao de campo", "operacoes", "despesa", 1985.25, "operacoes"],
     ["20/08/2026", "Compliance e auditoria", "infraestrutura", "despesa", 1320.00, "adm"],
     ["27/08/2026", "Folha variavel e bonus", "pessoal", "despesa", 7210.00, "rh"],
+    ["30/01/2026", "Desconto comercial campanha janeiro", "descontos_comerciais", "despesa", 420.00, "comercial"],
+    ["27/02/2026", "Desconto promocional fevereiro", "descontos_comerciais", "despesa", 390.00, "comercial"],
+    ["30/03/2026", "Desconto negociacao marco", "descontos_comerciais", "despesa", 430.00, "comercial"],
+    ["29/04/2026", "Desconto upgrade abril", "descontos_comerciais", "despesa", 410.00, "comercial"],
+    ["30/05/2026", "Desconto pacote maio", "descontos_comerciais", "despesa", 395.00, "comercial"],
+    ["29/06/2026", "Desconto renovacao junho", "descontos_comerciais", "despesa", 460.00, "comercial"],
+    ["30/07/2026", "Desconto volume julho", "descontos_comerciais", "despesa", 450.00, "comercial"],
+    ["29/08/2026", "Desconto sazonal agosto", "descontos_comerciais", "despesa", 470.00, "comercial"],
+    ["03/09/2026", "Projeto de expansao zeta", "projetos", "receita", 18200.00, "consultoria"],
+    ["09/09/2026", "Pacote premium anual", "assinaturas", "receita", 11200.00, "comercial"],
+    ["16/09/2026", "Midia performance", "marketing", "despesa", 2380.00, "marketing"],
+    ["22/09/2026", "Operacao de suporte", "operacoes", "despesa", 2140.00, "operacoes"],
+    ["29/09/2026", "Desconto proposta setembro", "descontos_comerciais", "despesa", 520.00, "comercial"],
+    ["07/10/2026", "Projeto enterprise eta", "projetos", "receita", 19400.00, "consultoria"],
+    ["12/10/2026", "Receita de sucesso do cliente", "servicos", "receita", 6100.00, "sucesso_cliente"],
+    ["18/10/2026", "Licencas e compliance", "tecnologia", "despesa", 1650.00, "ti"],
+    ["24/10/2026", "Despesa operacional outubro", "operacoes", "despesa", 2260.00, "operacoes"],
+    ["30/10/2026", "Desconto contratual outubro", "descontos_comerciais", "despesa", 580.00, "comercial"],
+    ["05/11/2026", "Projeto analytics theta", "projetos", "receita", 20100.00, "consultoria"],
+    ["11/11/2026", "Renovacao carteira enterprise", "assinaturas", "receita", 11800.00, "comercial"],
+    ["17/11/2026", "Folha e encargos novembro", "pessoal", "despesa", 7420.00, "rh"],
+    ["23/11/2026", "Infraestrutura e energia", "infraestrutura", "despesa", 1580.00, "adm"],
+    ["29/11/2026", "Desconto black november", "descontos_comerciais", "despesa", 760.00, "comercial"],
+    ["04/12/2026", "Projeto fechamento anual iota", "projetos", "receita", 22300.00, "consultoria"],
+    ["10/12/2026", "Receita adicional de servicos", "servicos", "receita", 6900.00, "educacao"],
+    ["16/12/2026", "Campanha institucional", "marketing", "despesa", 2480.00, "marketing"],
+    ["22/12/2026", "Operacao e logistica dezembro", "operacoes", "despesa", 2320.00, "operacoes"],
+    ["29/12/2026", "Desconto fechamento dezembro", "descontos_comerciais", "despesa", 820.00, "comercial"],
 ]
 
 
@@ -730,6 +758,12 @@ def gerar_relatorio_executivo_html(
         th, td {{ border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; white-space: nowrap; }}
         th {{ background: #f7eee4; color: var(--brand); }}
         .summary-text {{ color: var(--muted); max-width: 760px; }}
+        .narrative {{ display: grid; gap: 14px; }}
+        .narrative h3 {{ margin: 0; color: var(--brand); font-size: 1.03rem; }}
+        .narrative p {{ margin: 6px 0 0; color: var(--muted); }}
+        .narrative ul {{ margin: 6px 0 0; color: var(--muted); }}
+        .narrative li {{ margin: 4px 0; }}
+        .divider {{ height: 1px; background: var(--line); margin: 4px 0; }}
         .highlight {{ margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: rgba(196, 106, 47, 0.08); border-radius: 14px; color: var(--brand); }}
         .foot {{ margin-top: 18px; color: var(--muted); font-size: 0.92rem; }}
         .status {{ margin-top: 10px; color: var(--muted); font-size: 0.9rem; }}
@@ -746,13 +780,13 @@ def gerar_relatorio_executivo_html(
         <section class="hero">
             <div class="hero-top">
                 <div class="hero-copy">
-                    <div class="eyebrow">Analise de criterio orientada por dados</div>
-                    <h1>{titulo}</h1>
-                    <p><strong>Dashboard executivo com troca de etapa e indice em tempo real</strong></p>
-                    <p>{nome_profissional} | {cargo_profissional}</p>
+                    <div class="eyebrow">Portfolio profissional | nivel consultoria</div>
+                    <h1>Transformando dados em decisoes estrategicas</h1>
+                    <p><strong>Projeto de automacao e analise financeira com foco em eficiencia operacional e suporte a tomada de decisao</strong></p>
+                    <p>Sara Nascimento | Analista Administrativo e Financeiro</p>
                     <p>{empresa}</p>
                     <div class="hero-meta">
-                        <div class="hero-chip">Base ampliada com multiplos meses e centros de custo</div>
+                        <div class="hero-chip">Consolidacao automatizada por periodo, categoria e centro de custo</div>
                         <div class="hero-chip">Saldo total: <span class="{classe_saldo}">{formatar_moeda_brl(kpis['saldo_total'])}</span></div>
                         <div class="hero-chip">Data de emissao: {hoje}</div>
                     </div>
@@ -764,13 +798,45 @@ def gerar_relatorio_executivo_html(
         <section class="panel">
             <div class="panel-head">
                 <div>
-                    <h2>Resumo Executivo</h2>
-                    <p class="summary-text">
-                        O site agora usa uma base de dados mais rica e permite trocar a etapa de analise e o indice exibido sem regenerar a pagina.
-                        Isso deixa a leitura mais exploratoria: voce pode navegar entre panorama geral, evolucao mensal, categorias, centros de custo e eficiencia operacional.
-                    </p>
+                    <h2>Sobre o Projeto</h2>
+                    <p class="summary-text">Estrutura de apresentacao focada em contexto de negocio, problema, solucao e resultados.</p>
                 </div>
             </div>
+            <div class="narrative">
+                <section>
+                    <h3>Contexto de negocio</h3>
+                    <p>Este projeto foi desenvolvido para automatizar a consolidacao de dados financeiros e administrativos, reduzindo processos manuais e aumentando a confiabilidade das informacoes. A solucao integra dados de diferentes periodos e centros de custo, permitindo analise estruturada e geracao de indicadores estrategicos para apoio a tomada de decisao.</p>
+                </section>
+                <section>
+                    <h3>Problema de negocio</h3>
+                    <p>Antes da implementacao, a analise era manual, com alto risco de inconsistencias, retrabalho e baixa agilidade na geracao de relatorios. A ausencia de padronizacao dificultava comparacoes entre periodos e comprometia a visao estrategica das informacoes.</p>
+                </section>
+                <section>
+                    <h3>Solucao desenvolvida</h3>
+                    <p>Foi estruturado um fluxo automatizado de tratamento e analise de dados em etapas de transformacao, padronizacao e consolidacao. Em paralelo, foi construido um dashboard interativo para navegacao entre visoes analiticas e exploracao de indicadores sem reprocessamento.</p>
+                </section>
+                <section>
+                    <h3>Tecnologias utilizadas</h3>
+                    <ul>
+                        <li>Python para tratamento e automacao de dados</li>
+                        <li>Estrutura ETL (Extracao, Transformacao e Carga)</li>
+                        <li>Modelagem de dados e agregacoes analiticas</li>
+                        <li>Dashboard interativo (HTML, JavaScript, Canvas e SVG)</li>
+                        <li>Git e GitHub para versionamento e publicacao</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Principais analises</h3>
+                    <ul>
+                        <li>Receita bruta, receita liquida e descontos</li>
+                        <li>Evolucao mensal de indicadores</li>
+                        <li>Analise por categoria</li>
+                        <li>Analise por centro de custo</li>
+                        <li>Identificacao de padroes e variacoes</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="divider"></div>
             <div class="controls">
                 <div class="field">
                     <label for="stage-select">Etapa de analise</label>
@@ -837,14 +903,15 @@ def gerar_relatorio_executivo_html(
         </section>
 
         <section class="panel">
-            <h2>Resultado do Projeto</h2>
+            <h2>Resultados e Diferencial</h2>
             <p>
-                A solucao reduz dependencia de consolidacoes manuais, eleva a confiabilidade
-                da informacao e acelera a entrega de indicadores para apoio a decisoes gerenciais.
+                A solucao proporcionou reducao significativa de atividades manuais, aumento da confiabilidade dos dados, maior rapidez na geracao de relatorios e melhor suporte a tomada de decisao.
             </p>
             <p>
-                O projeto evidencia competencias praticas em Python, modelagem de dados,
-                padronizacao de relatorios e construcao de entregaveis prontos para ambiente web.
+                Diferente de analises estaticas, o dashboard permite interacao dinamica com multiplas visoes sem necessidade de reprocessamento. A estrutura foi desenhada para escalar e ser adaptada a diferentes contextos empresariais.
+            </p>
+            <p>
+                Estou em busca de oportunidades como Analista Administrativo, Financeiro ou de Dados para aplicar habilidades em analise, automacao e geracao de insights estrategicos.
             </p>
             <p class="foot">Publicacao web pronta para GitHub Pages a partir da pasta docs.</p>
         </section>
@@ -941,6 +1008,38 @@ def gerar_relatorio_executivo_html(
                 }}));
         }}
 
+        function agruparReceitaDetalhada(records) {{
+            const mapa = new Map();
+            records.forEach((item) => {{
+                const chave = item.ano_mes;
+                if (!mapa.has(chave)) {{
+                    mapa.set(chave, {{
+                        ano_mes: chave,
+                        receita_bruta: 0,
+                        descontos: 0,
+                        receita_liquida: 0,
+                        taxa_desconto: 0,
+                    }});
+                }}
+
+                const atual = mapa.get(chave);
+                const valor = Number(item.valor || 0);
+                if (item.tipo === "receita") {{
+                    atual.receita_bruta += valor;
+                }}
+                if (item.tipo === "despesa" && String(item.categoria || "").toLowerCase().includes("desconto")) {{
+                    atual.descontos += valor;
+                }}
+                atual.receita_liquida = atual.receita_bruta - atual.descontos;
+                atual.taxa_desconto = atual.receita_bruta > 0
+                    ? Number(((atual.descontos / atual.receita_bruta) * 100).toFixed(2))
+                    : 0;
+            }});
+
+            return Array.from(mapa.values())
+                .sort((a, b) => a.ano_mes.localeCompare(b.ano_mes));
+        }}
+
         function agruparPor(records, chave) {{
             const mapa = new Map();
             records.forEach((item) => {{
@@ -1027,10 +1126,11 @@ def gerar_relatorio_executivo_html(
             if (!records.length) {{
                 const vazio = criarStageVazio();
                 return {{
-                    stageOrder: ["visao_geral", "mensal", "categorias", "centros", "eficiencia"],
+                    stageOrder: ["visao_geral", "mensal", "receitas", "categorias", "centros", "eficiencia"],
                     stages: {{
                         visao_geral: vazio,
                         mensal: vazio,
+                        receitas: vazio,
                         categorias: vazio,
                         centros: vazio,
                         eficiencia: vazio,
@@ -1039,27 +1139,32 @@ def gerar_relatorio_executivo_html(
             }}
 
             const mensal = agruparMensal(records);
+            const receitasDetalhadas = agruparReceitaDetalhada(records);
             const categorias = agruparPor(records, "categoria");
             const centros = agruparPor(records, "centro_custo");
             const eficiencia = montarEficiencia(mensal, sourceData.tempos || {{}});
             const metricas = calcularMetricasBase(records);
             const melhorMes = mensal.reduce((prev, atual) => atual.saldo > prev.saldo ? atual : prev, mensal[0]);
+            const totalBruta = receitasDetalhadas.reduce((acc, item) => acc + item.receita_bruta, 0);
+            const totalDescontos = receitasDetalhadas.reduce((acc, item) => acc + item.descontos, 0);
+            const totalLiquida = receitasDetalhadas.reduce((acc, item) => acc + item.receita_liquida, 0);
+            const taxaMediaDesconto = totalBruta > 0 ? Number(((totalDescontos / totalBruta) * 100).toFixed(2)) : 0;
             const categoriaTop = categorias[0];
             const centroTop = centros[0];
 
-            const stageOrder = ["visao_geral", "mensal", "categorias", "centros", "eficiencia"];
+            const stageOrder = ["visao_geral", "mensal", "receitas", "categorias", "centros", "eficiencia"];
             const stages = {{
                 visao_geral: {{
                     label: "Visao geral",
                     title: "Panorama consolidado da operacao",
-                    description: "Leitura executiva do recorte filtrado.",
+                    description: "Leitura executiva do recorte filtrado para suporte a decisao.",
                     cards: [
                         {{ label: "Receita total", value: metricas.receita, format: "currency" }},
                         {{ label: "Despesa total", value: metricas.despesa, format: "currency" }},
                         {{ label: "Saldo acumulado", value: metricas.saldo, format: "currency" }},
+                        {{ label: "Receita liquida", value: totalLiquida, format: "currency" }},
                         {{ label: "Meses positivos", value: mensal.filter((item) => item.saldo > 0).length, format: "int" }},
-                        {{ label: "Categorias ativas", value: new Set(records.map((item) => item.categoria)).size, format: "int" }},
-                        {{ label: "Centros ativos", value: new Set(records.map((item) => item.centro_custo)).size, format: "int" }},
+                        {{ label: "Taxa media de desconto", value: taxaMediaDesconto, format: "percent" }},
                     ],
                     indices: [
                         {{ id: "saldo", label: "Saldo por mes", format: "currency", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.saldo }})) }},
@@ -1104,6 +1209,34 @@ def gerar_relatorio_executivo_html(
                         rows: mensal,
                     }},
                     highlight: "Troque o indice para ler cada etapa mensal por perspectiva financeira.",
+                }},
+                receitas: {{
+                    label: "Receitas e descontos",
+                    title: "Receita bruta, descontos e receita liquida",
+                    description: "Analise financeira focada no comportamento de receita e impacto de descontos comerciais.",
+                    cards: [
+                        {{ label: "Receita bruta", value: totalBruta, format: "currency" }},
+                        {{ label: "Descontos", value: totalDescontos, format: "currency" }},
+                        {{ label: "Receita liquida", value: totalLiquida, format: "currency" }},
+                        {{ label: "Taxa media de desconto", value: taxaMediaDesconto, format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "bruta", label: "Receita bruta por mes", format: "currency", items: receitasDetalhadas.map((item) => ({{ label: item.ano_mes, value: item.receita_bruta }})) }},
+                        {{ id: "descontos", label: "Descontos por mes", format: "currency", items: receitasDetalhadas.map((item) => ({{ label: item.ano_mes, value: item.descontos }})) }},
+                        {{ id: "liquida", label: "Receita liquida por mes", format: "currency", items: receitasDetalhadas.map((item) => ({{ label: item.ano_mes, value: item.receita_liquida }})) }},
+                        {{ id: "taxa", label: "Taxa de desconto", format: "percent", items: receitasDetalhadas.map((item) => ({{ label: item.ano_mes, value: item.taxa_desconto }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "receita_bruta", label: "Receita bruta", format: "currency" }},
+                            {{ key: "descontos", label: "Descontos", format: "currency" }},
+                            {{ key: "receita_liquida", label: "Receita liquida", format: "currency" }},
+                            {{ key: "taxa_desconto", label: "Taxa desconto", format: "percent" }},
+                        ],
+                        rows: receitasDetalhadas,
+                    }},
+                    highlight: "A leitura de receita liquida evidencia o impacto direto dos descontos sobre o resultado.",
                 }},
                 categorias: {{
                     label: "Categorias",

@@ -56,6 +56,16 @@
       "valor_assinado": -5400.0
     },
     {
+      "data": "2026-01-30",
+      "ano_mes": "2026-01",
+      "descricao": "Desconto comercial campanha janeiro",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 420.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -420.0
+    },
+    {
       "data": "2026-02-05",
       "ano_mes": "2026-02",
       "descricao": "Renovacao contratos B2B",
@@ -104,6 +114,16 @@
       "valor": 2890.0,
       "centro_custo": "comercial",
       "valor_assinado": -2890.0
+    },
+    {
+      "data": "2026-02-27",
+      "ano_mes": "2026-02",
+      "descricao": "Desconto promocional fevereiro",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 390.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -390.0
     },
     {
       "data": "2026-03-04",
@@ -156,6 +176,16 @@
       "valor_assinado": -6120.0
     },
     {
+      "data": "2026-03-30",
+      "ano_mes": "2026-03",
+      "descricao": "Desconto negociacao marco",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 430.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -430.0
+    },
+    {
       "data": "2026-04-02",
       "ano_mes": "2026-04",
       "descricao": "Pacote de consultoria recorrente",
@@ -204,6 +234,16 @@
       "valor": 860.9,
       "centro_custo": "adm",
       "valor_assinado": -860.9
+    },
+    {
+      "data": "2026-04-29",
+      "ano_mes": "2026-04",
+      "descricao": "Desconto upgrade abril",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 410.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -410.0
     },
     {
       "data": "2026-05-06",
@@ -256,6 +296,16 @@
       "valor_assinado": -6335.2
     },
     {
+      "data": "2026-05-30",
+      "ano_mes": "2026-05",
+      "descricao": "Desconto pacote maio",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 395.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -395.0
+    },
+    {
       "data": "2026-06-03",
       "ano_mes": "2026-06",
       "descricao": "Projeto analytics gamma",
@@ -304,6 +354,16 @@
       "valor": 2790.0,
       "centro_custo": "adm",
       "valor_assinado": -2790.0
+    },
+    {
+      "data": "2026-06-29",
+      "ano_mes": "2026-06",
+      "descricao": "Desconto renovacao junho",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 460.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -460.0
     },
     {
       "data": "2026-07-07",
@@ -356,6 +416,16 @@
       "valor_assinado": -1495.35
     },
     {
+      "data": "2026-07-30",
+      "ano_mes": "2026-07",
+      "descricao": "Desconto volume julho",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 450.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -450.0
+    },
+    {
       "data": "2026-08-05",
       "ano_mes": "2026-08",
       "descricao": "Renovacao base enterprise",
@@ -404,6 +474,216 @@
       "valor": 7210.0,
       "centro_custo": "rh",
       "valor_assinado": -7210.0
+    },
+    {
+      "data": "2026-08-29",
+      "ano_mes": "2026-08",
+      "descricao": "Desconto sazonal agosto",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 470.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -470.0
+    },
+    {
+      "data": "2026-09-03",
+      "ano_mes": "2026-09",
+      "descricao": "Projeto de expansao zeta",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 18200.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 18200.0
+    },
+    {
+      "data": "2026-09-09",
+      "ano_mes": "2026-09",
+      "descricao": "Pacote premium anual",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 11200.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 11200.0
+    },
+    {
+      "data": "2026-09-16",
+      "ano_mes": "2026-09",
+      "descricao": "Midia performance",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2380.0,
+      "centro_custo": "marketing",
+      "valor_assinado": -2380.0
+    },
+    {
+      "data": "2026-09-22",
+      "ano_mes": "2026-09",
+      "descricao": "Operacao de suporte",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 2140.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -2140.0
+    },
+    {
+      "data": "2026-09-29",
+      "ano_mes": "2026-09",
+      "descricao": "Desconto proposta setembro",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 520.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -520.0
+    },
+    {
+      "data": "2026-10-07",
+      "ano_mes": "2026-10",
+      "descricao": "Projeto enterprise eta",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 19400.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 19400.0
+    },
+    {
+      "data": "2026-10-12",
+      "ano_mes": "2026-10",
+      "descricao": "Receita de sucesso do cliente",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 6100.0,
+      "centro_custo": "sucesso_cliente",
+      "valor_assinado": 6100.0
+    },
+    {
+      "data": "2026-10-18",
+      "ano_mes": "2026-10",
+      "descricao": "Licencas e compliance",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1650.0,
+      "centro_custo": "ti",
+      "valor_assinado": -1650.0
+    },
+    {
+      "data": "2026-10-24",
+      "ano_mes": "2026-10",
+      "descricao": "Despesa operacional outubro",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 2260.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -2260.0
+    },
+    {
+      "data": "2026-10-30",
+      "ano_mes": "2026-10",
+      "descricao": "Desconto contratual outubro",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 580.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -580.0
+    },
+    {
+      "data": "2026-11-05",
+      "ano_mes": "2026-11",
+      "descricao": "Projeto analytics theta",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 20100.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 20100.0
+    },
+    {
+      "data": "2026-11-11",
+      "ano_mes": "2026-11",
+      "descricao": "Renovacao carteira enterprise",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 11800.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 11800.0
+    },
+    {
+      "data": "2026-11-17",
+      "ano_mes": "2026-11",
+      "descricao": "Folha e encargos novembro",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 7420.0,
+      "centro_custo": "rh",
+      "valor_assinado": -7420.0
+    },
+    {
+      "data": "2026-11-23",
+      "ano_mes": "2026-11",
+      "descricao": "Infraestrutura e energia",
+      "categoria": "infraestrutura",
+      "tipo": "despesa",
+      "valor": 1580.0,
+      "centro_custo": "adm",
+      "valor_assinado": -1580.0
+    },
+    {
+      "data": "2026-11-29",
+      "ano_mes": "2026-11",
+      "descricao": "Desconto black november",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 760.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -760.0
+    },
+    {
+      "data": "2026-12-04",
+      "ano_mes": "2026-12",
+      "descricao": "Projeto fechamento anual iota",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 22300.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 22300.0
+    },
+    {
+      "data": "2026-12-10",
+      "ano_mes": "2026-12",
+      "descricao": "Receita adicional de servicos",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 6900.0,
+      "centro_custo": "educacao",
+      "valor_assinado": 6900.0
+    },
+    {
+      "data": "2026-12-16",
+      "ano_mes": "2026-12",
+      "descricao": "Campanha institucional",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2480.0,
+      "centro_custo": "marketing",
+      "valor_assinado": -2480.0
+    },
+    {
+      "data": "2026-12-22",
+      "ano_mes": "2026-12",
+      "descricao": "Operacao e logistica dezembro",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 2320.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -2320.0
+    },
+    {
+      "data": "2026-12-29",
+      "ano_mes": "2026-12",
+      "descricao": "Desconto fechamento dezembro",
+      "categoria": "descontos_comerciais",
+      "tipo": "despesa",
+      "valor": 820.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -820.0
     }
   ]
 }

@@ -4,38 +4,66 @@ data,descricao,categoria,tipo,valor,centro_custo,ano_mes,valor_assinado
 2026-01-15,Midia de aquisicao,marketing,despesa,1850.45,marketing,2026-01,-1850.45
 2026-01-20,Infraestrutura em nuvem,tecnologia,despesa,920.3,ti,2026-01,-920.3
 2026-01-28,Folha operacional,pessoal,despesa,5400.0,operacoes,2026-01,-5400.0
+2026-01-30,Desconto comercial campanha janeiro,descontos_comerciais,despesa,420.0,comercial,2026-01,-420.0
 2026-02-05,Renovacao contratos B2B,assinaturas,receita,9100.0,comercial,2026-02,9100.0
 2026-02-09,Treinamento corporativo,servicos,receita,5200.0,educacao,2026-02,5200.0
 2026-02-13,Fornecedor homologado,fornecedores,despesa,4100.8,operacoes,2026-02,-4100.8
 2026-02-18,Ferramentas analiticas,tecnologia,despesa,1180.25,ti,2026-02,-1180.25
 2026-02-26,Comissao comercial,pessoal,despesa,2890.0,comercial,2026-02,-2890.0
+2026-02-27,Desconto promocional fevereiro,descontos_comerciais,despesa,390.0,comercial,2026-02,-390.0
 2026-03-04,Projeto de integracao beta,projetos,receita,14850.0,consultoria,2026-03,14850.0
 2026-03-11,Receita de suporte premium,servicos,receita,4650.0,sucesso_cliente,2026-03,4650.0
 2026-03-14,Campanha de retencao,marketing,despesa,2310.1,marketing,2026-03,-2310.1
 2026-03-19,Licencas de software,tecnologia,despesa,1340.6,ti,2026-03,-1340.6
 2026-03-27,Folha salarial,pessoal,despesa,6120.0,rh,2026-03,-6120.0
+2026-03-30,Desconto negociacao marco,descontos_comerciais,despesa,430.0,comercial,2026-03,-430.0
 2026-04-02,Pacote de consultoria recorrente,servicos,receita,6900.0,consultoria,2026-04,6900.0
 2026-04-08,Expansao de contas enterprise,vendas,receita,11800.0,comercial,2026-04,11800.0
 2026-04-15,Viagens comerciais,operacoes,despesa,1740.55,comercial,2026-04,-1740.55
 2026-04-18,Servicos terceirizados,fornecedores,despesa,4525.0,operacoes,2026-04,-4525.0
 2026-04-24,Energia e utilidades,infraestrutura,despesa,860.9,adm,2026-04,-860.9
+2026-04-29,Desconto upgrade abril,descontos_comerciais,despesa,410.0,comercial,2026-04,-410.0
 2026-05-06,Novos contratos SMB,vendas,receita,9700.0,comercial,2026-05,9700.0
 2026-05-10,Receita de onboarding,servicos,receita,4300.0,educacao,2026-05,4300.0
 2026-05-13,Eventos e comunidade,marketing,despesa,2088.4,marketing,2026-05,-2088.4
 2026-05-19,Upgrade de seguranca,tecnologia,despesa,980.15,ti,2026-05,-980.15
 2026-05-28,Beneficios e encargos,pessoal,despesa,6335.2,rh,2026-05,-6335.2
+2026-05-30,Desconto pacote maio,descontos_comerciais,despesa,395.0,comercial,2026-05,-395.0
 2026-06-03,Projeto analytics gamma,projetos,receita,16300.0,consultoria,2026-06,16300.0
 2026-06-09,Receita de renovacao anual,assinaturas,receita,8800.0,comercial,2026-06,8800.0
 2026-06-12,Parceiros estrategicos,fornecedores,despesa,3895.0,operacoes,2026-06,-3895.0
 2026-06-17,Monitoramento de plataforma,tecnologia,despesa,1125.8,ti,2026-06,-1125.8
 2026-06-26,Aluguel escritorio,infraestrutura,despesa,2790.0,adm,2026-06,-2790.0
+2026-06-29,Desconto renovacao junho,descontos_comerciais,despesa,460.0,comercial,2026-06,-460.0
 2026-07-07,Squad dedicado delta,projetos,receita,17150.0,consultoria,2026-07,17150.0
 2026-07-11,Pacote de suporte enterprise,servicos,receita,5400.0,sucesso_cliente,2026-07,5400.0
 2026-07-15,Recrutamento especializado,pessoal,despesa,6840.0,rh,2026-07,-6840.0
 2026-07-21,Campanha ABM,marketing,despesa,2645.7,marketing,2026-07,-2645.7
 2026-07-29,Automacao de backoffice,tecnologia,despesa,1495.35,ti,2026-07,-1495.35
+2026-07-30,Desconto volume julho,descontos_comerciais,despesa,450.0,comercial,2026-07,-450.0
 2026-08-05,Renovacao base enterprise,assinaturas,receita,10200.0,comercial,2026-08,10200.0
 2026-08-08,Projeto de performance epsilon,projetos,receita,15400.0,consultoria,2026-08,15400.0
 2026-08-14,Operacao de campo,operacoes,despesa,1985.25,operacoes,2026-08,-1985.25
 2026-08-20,Compliance e auditoria,infraestrutura,despesa,1320.0,adm,2026-08,-1320.0
 2026-08-27,Folha variavel e bonus,pessoal,despesa,7210.0,rh,2026-08,-7210.0
+2026-08-29,Desconto sazonal agosto,descontos_comerciais,despesa,470.0,comercial,2026-08,-470.0
+2026-09-03,Projeto de expansao zeta,projetos,receita,18200.0,consultoria,2026-09,18200.0
+2026-09-09,Pacote premium anual,assinaturas,receita,11200.0,comercial,2026-09,11200.0
+2026-09-16,Midia performance,marketing,despesa,2380.0,marketing,2026-09,-2380.0
+2026-09-22,Operacao de suporte,operacoes,despesa,2140.0,operacoes,2026-09,-2140.0
+2026-09-29,Desconto proposta setembro,descontos_comerciais,despesa,520.0,comercial,2026-09,-520.0
+2026-10-07,Projeto enterprise eta,projetos,receita,19400.0,consultoria,2026-10,19400.0
+2026-10-12,Receita de sucesso do cliente,servicos,receita,6100.0,sucesso_cliente,2026-10,6100.0
+2026-10-18,Licencas e compliance,tecnologia,despesa,1650.0,ti,2026-10,-1650.0
+2026-10-24,Despesa operacional outubro,operacoes,despesa,2260.0,operacoes,2026-10,-2260.0
+2026-10-30,Desconto contratual outubro,descontos_comerciais,despesa,580.0,comercial,2026-10,-580.0
+2026-11-05,Projeto analytics theta,projetos,receita,20100.0,consultoria,2026-11,20100.0
+2026-11-11,Renovacao carteira enterprise,assinaturas,receita,11800.0,comercial,2026-11,11800.0
+2026-11-17,Folha e encargos novembro,pessoal,despesa,7420.0,rh,2026-11,-7420.0
+2026-11-23,Infraestrutura e energia,infraestrutura,despesa,1580.0,adm,2026-11,-1580.0
+2026-11-29,Desconto black november,descontos_comerciais,despesa,760.0,comercial,2026-11,-760.0
+2026-12-04,Projeto fechamento anual iota,projetos,receita,22300.0,consultoria,2026-12,22300.0
+2026-12-10,Receita adicional de servicos,servicos,receita,6900.0,educacao,2026-12,6900.0
+2026-12-16,Campanha institucional,marketing,despesa,2480.0,marketing,2026-12,-2480.0
+2026-12-22,Operacao e logistica dezembro,operacoes,despesa,2320.0,operacoes,2026-12,-2320.0
+2026-12-29,Desconto fechamento dezembro,descontos_comerciais,despesa,820.0,comercial,2026-12,-820.0

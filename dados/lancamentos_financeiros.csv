@@ -39,3 +39,31 @@ data,descricao,categoria,tipo,valor,centro_custo
 14/08/2026,Operacao de campo,operacoes,despesa,1985.25,operacoes
 20/08/2026,Compliance e auditoria,infraestrutura,despesa,1320.0,adm
 27/08/2026,Folha variavel e bonus,pessoal,despesa,7210.0,rh
+30/01/2026,Desconto comercial campanha janeiro,descontos_comerciais,despesa,420.0,comercial
+27/02/2026,Desconto promocional fevereiro,descontos_comerciais,despesa,390.0,comercial
+30/03/2026,Desconto negociacao marco,descontos_comerciais,despesa,430.0,comercial
+29/04/2026,Desconto upgrade abril,descontos_comerciais,despesa,410.0,comercial
+30/05/2026,Desconto pacote maio,descontos_comerciais,despesa,395.0,comercial
+29/06/2026,Desconto renovacao junho,descontos_comerciais,despesa,460.0,comercial
+30/07/2026,Desconto volume julho,descontos_comerciais,despesa,450.0,comercial
+29/08/2026,Desconto sazonal agosto,descontos_comerciais,despesa,470.0,comercial
+03/09/2026,Projeto de expansao zeta,projetos,receita,18200.0,consultoria
+09/09/2026,Pacote premium anual,assinaturas,receita,11200.0,comercial
+16/09/2026,Midia performance,marketing,despesa,2380.0,marketing
+22/09/2026,Operacao de suporte,operacoes,despesa,2140.0,operacoes
+29/09/2026,Desconto proposta setembro,descontos_comerciais,despesa,520.0,comercial
+07/10/2026,Projeto enterprise eta,projetos,receita,19400.0,consultoria
+12/10/2026,Receita de sucesso do cliente,servicos,receita,6100.0,sucesso_cliente
+18/10/2026,Licencas e compliance,tecnologia,despesa,1650.0,ti
+24/10/2026,Despesa operacional outubro,operacoes,despesa,2260.0,operacoes
+30/10/2026,Desconto contratual outubro,descontos_comerciais,despesa,580.0,comercial
+05/11/2026,Projeto analytics theta,projetos,receita,20100.0,consultoria
+11/11/2026,Renovacao carteira enterprise,assinaturas,receita,11800.0,comercial
+17/11/2026,Folha e encargos novembro,pessoal,despesa,7420.0,rh
+23/11/2026,Infraestrutura e energia,infraestrutura,despesa,1580.0,adm
+29/11/2026,Desconto black november,descontos_comerciais,despesa,760.0,comercial
+04/12/2026,Projeto fechamento anual iota,projetos,receita,22300.0,consultoria
+10/12/2026,Receita adicional de servicos,servicos,receita,6900.0,educacao
+16/12/2026,Campanha institucional,marketing,despesa,2480.0,marketing
+22/12/2026,Operacao e logistica dezembro,operacoes,despesa,2320.0,operacoes
+29/12/2026,Desconto fechamento dezembro,descontos_comerciais,despesa,820.0,comercial
