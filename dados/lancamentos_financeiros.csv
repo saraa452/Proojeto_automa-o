@@ -1,0 +1,8 @@
+data,descricao,categoria,tipo,valor,centro_custo
+01/02/2026,Venda projeto A,vendas,receita,15000.0,comercial
+03/02/2026,Pagamento fornecedor X,fornecedores,despesa,4200.5,operacoes
+10/02/2026,Assinatura software,tecnologia,despesa,899.9,ti
+15/02/2026,Venda projeto B,vendas,receita,8700.0,comercial
+05/03/2026,Folha salarial,pessoal,despesa,6800.0,rh
+14/03/2026,Recebimento consultoria,servicos,receita,4600.0,consultoria
+20/03/2026,Energia eletrica,infraestrutura,despesa,740.31,adm

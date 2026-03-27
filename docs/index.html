@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portfolio Executivo - Sara</title>
+    <style>
+        :root {
+            --bg: #f4f8fb;
+            --card: #ffffff;
+            --ink: #102a43;
+            --muted: #486581;
+            --brand: #0b3c5d;
+            --accent: #328cc1;
+            --line: #d9e2ec;
+            --ok: #166534;
+            --warn: #9a3412;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 10% 10%, #d9ecf7 0%, transparent 35%),
+                radial-gradient(circle at 90% 20%, #dceff9 0%, transparent 40%),
+                var(--bg);
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 24px 16px 48px;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0b3c5d, #328cc1);
+            color: #fff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 14px 32px rgba(11, 60, 93, 0.2);
+        }
+        .hero img { width: 120px; background: #fff; border-radius: 12px; padding: 8px; }
+        .hero h1 { margin: 14px 0 6px; font-size: clamp(1.5rem, 3.2vw, 2.3rem); }
+        .hero p { margin: 4px 0; opacity: 0.95; }
+        .grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            margin-top: 18px;
+        }
+        .kpi {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+        }
+        .kpi small { color: var(--muted); display: block; }
+        .kpi strong { font-size: 1.1rem; }
+        .panel {
+            margin-top: 18px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        h2 { margin-top: 4px; color: var(--brand); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border-bottom: 1px solid var(--line); padding: 10px; text-align: left; }
+        th { background: #f0f4f8; }
+        ul { margin: 0; padding-left: 20px; }
+        .foot { margin-top: 18px; color: var(--muted); font-size: 0.92rem; }
+        .saldo-ok { color: var(--ok); }
+        .saldo-alerta { color: var(--warn); }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <section class="hero">
+            <img src="../assets/logo.svg" alt="Logotipo">
+            <h1>Portfolio Executivo - Sara</h1>
+            <p><strong>Entrega Executiva de Automacao Financeira</strong></p>
+            <p>Sara | Analista de Automacao Financeira</p>
+            <p>Analise Criterio</p>
+            <p>Data de emissao: 27/03/2026</p>
+        </section>
+
+        <section class="grid">
+            <article class="kpi"><small>Receita Total</small><strong>R$ 28.300,00</strong></article>
+            <article class="kpi"><small>Despesa Total</small><strong>R$ 12.640,71</strong></article>
+            <article class="kpi"><small>Saldo Acumulado</small><strong class="saldo-ok">R$ 15.659,29</strong></article>
+            <article class="kpi"><small>Meses Positivos</small><strong>1</strong></article>
+            <article class="kpi"><small>Reducao de Tempo</small><strong>88.00%</strong></article>
+            <article class="kpi"><small>Horas Economizadas</small><strong>0.26h</strong></article>
+        </section>
+
+        <section class="panel">
+            <h2>Painel Mensal Padronizado</h2>
+            <table>
+                <thead>
+                    <tr><th>Mes</th><th>Receita</th><th>Despesa</th><th>Saldo</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>2026-02</td><td>R$ 23.700,00</td><td>R$ 5.100,40</td><td>R$ 18.599,60</td></tr><tr><td>2026-03</td><td>R$ 4.600,00</td><td>R$ 7.540,31</td><td>R$ -2.940,31</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="panel">
+            <h2>Top 5 Categorias de Despesa</h2>
+            <ul><li><strong>pessoal</strong>: R$ 6.800,00</li><li><strong>fornecedores</strong>: R$ 4.200,50</li><li><strong>tecnologia</strong>: R$ 899,90</li><li><strong>infraestrutura</strong>: R$ 740,31</li></ul>
+        </section>
+
+        <section class="panel">
+            <h2>Resultado do Projeto</h2>
+            <p>A automacao elimina consolidacoes manuais, reduz retrabalho e padroniza indicadores para tomada de decisao em ciclos de fechamento.</p>
+            <p class="foot">Publicacao web pronta para GitHub Pages a partir da pasta docs.</p>
+        </section>
+    </main>
+</body>
+</html>
