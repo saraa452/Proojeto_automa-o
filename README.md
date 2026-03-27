@@ -31,7 +31,7 @@ Projeto em Python para automacao de rotinas operacionais, reducao de tempo manua
 
 2. Crie o repositório no GitHub e conecte remoto:
 
-   git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
+   git remote add origin https://github.com/saraa452/Proojeto_automa-o.git
    git branch -M main
    git push -u origin main
 
@@ -44,7 +44,7 @@ Projeto em Python para automacao de rotinas operacionais, reducao de tempo manua
 
 4. A URL final fica assim:
 
-   https://SEU_USUARIO.github.io/SEU_REPOSITORIO/
+   https://saraa452.github.io/Proojeto_automa-o/
 
 ## Personalizacao
 
