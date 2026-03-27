@@ -1,8 +1,41 @@
 data,descricao,categoria,tipo,valor,centro_custo
-01/02/2026,Venda projeto A,vendas,receita,15000.0,comercial
-03/02/2026,Pagamento fornecedor X,fornecedores,despesa,4200.5,operacoes
-10/02/2026,Assinatura software,tecnologia,despesa,899.9,ti
-15/02/2026,Venda projeto B,vendas,receita,8700.0,comercial
-05/03/2026,Folha salarial,pessoal,despesa,6800.0,rh
-14/03/2026,Recebimento consultoria,servicos,receita,4600.0,consultoria
-20/03/2026,Energia eletrica,infraestrutura,despesa,740.31,adm
+08/01/2026,Mensalidade carteira premium,assinaturas,receita,8400.0,comercial
+12/01/2026,Projeto de implantacao alfa,projetos,receita,12600.0,consultoria
+15/01/2026,Midia de aquisicao,marketing,despesa,1850.45,marketing
+20/01/2026,Infraestrutura em nuvem,tecnologia,despesa,920.3,ti
+28/01/2026,Folha operacional,pessoal,despesa,5400.0,operacoes
+05/02/2026,Renovacao contratos B2B,assinaturas,receita,9100.0,comercial
+09/02/2026,Treinamento corporativo,servicos,receita,5200.0,educacao
+13/02/2026,Fornecedor homologado,fornecedores,despesa,4100.8,operacoes
+18/02/2026,Ferramentas analiticas,tecnologia,despesa,1180.25,ti
+26/02/2026,Comissao comercial,pessoal,despesa,2890.0,comercial
+04/03/2026,Projeto de integracao beta,projetos,receita,14850.0,consultoria
+11/03/2026,Receita de suporte premium,servicos,receita,4650.0,sucesso_cliente
+14/03/2026,Campanha de retencao,marketing,despesa,2310.1,marketing
+19/03/2026,Licencas de software,tecnologia,despesa,1340.6,ti
+27/03/2026,Folha salarial,pessoal,despesa,6120.0,rh
+02/04/2026,Pacote de consultoria recorrente,servicos,receita,6900.0,consultoria
+08/04/2026,Expansao de contas enterprise,vendas,receita,11800.0,comercial
+15/04/2026,Viagens comerciais,operacoes,despesa,1740.55,comercial
+18/04/2026,Servicos terceirizados,fornecedores,despesa,4525.0,operacoes
+24/04/2026,Energia e utilidades,infraestrutura,despesa,860.9,adm
+06/05/2026,Novos contratos SMB,vendas,receita,9700.0,comercial
+10/05/2026,Receita de onboarding,servicos,receita,4300.0,educacao
+13/05/2026,Eventos e comunidade,marketing,despesa,2088.4,marketing
+19/05/2026,Upgrade de seguranca,tecnologia,despesa,980.15,ti
+28/05/2026,Beneficios e encargos,pessoal,despesa,6335.2,rh
+03/06/2026,Projeto analytics gamma,projetos,receita,16300.0,consultoria
+09/06/2026,Receita de renovacao anual,assinaturas,receita,8800.0,comercial
+12/06/2026,Parceiros estrategicos,fornecedores,despesa,3895.0,operacoes
+17/06/2026,Monitoramento de plataforma,tecnologia,despesa,1125.8,ti
+26/06/2026,Aluguel escritorio,infraestrutura,despesa,2790.0,adm
+07/07/2026,Squad dedicado delta,projetos,receita,17150.0,consultoria
+11/07/2026,Pacote de suporte enterprise,servicos,receita,5400.0,sucesso_cliente
+15/07/2026,Recrutamento especializado,pessoal,despesa,6840.0,rh
+21/07/2026,Campanha ABM,marketing,despesa,2645.7,marketing
+29/07/2026,Automacao de backoffice,tecnologia,despesa,1495.35,ti
+05/08/2026,Renovacao base enterprise,assinaturas,receita,10200.0,comercial
+08/08/2026,Projeto de performance epsilon,projetos,receita,15400.0,consultoria
+14/08/2026,Operacao de campo,operacoes,despesa,1985.25,operacoes
+20/08/2026,Compliance e auditoria,infraestrutura,despesa,1320.0,adm
+27/08/2026,Folha variavel e bonus,pessoal,despesa,7210.0,rh

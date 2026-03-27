@@ -1,0 +1,409 @@
+{
+  "generatedAt": "2026-03-27",
+  "tempos": {
+    "manual_min": 2.5,
+    "auto_min": 0.3
+  },
+  "records": [
+    {
+      "data": "2026-01-08",
+      "ano_mes": "2026-01",
+      "descricao": "Mensalidade carteira premium",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 8400.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 8400.0
+    },
+    {
+      "data": "2026-01-12",
+      "ano_mes": "2026-01",
+      "descricao": "Projeto de implantacao alfa",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 12600.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 12600.0
+    },
+    {
+      "data": "2026-01-15",
+      "ano_mes": "2026-01",
+      "descricao": "Midia de aquisicao",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 1850.45,
+      "centro_custo": "marketing",
+      "valor_assinado": -1850.45
+    },
+    {
+      "data": "2026-01-20",
+      "ano_mes": "2026-01",
+      "descricao": "Infraestrutura em nuvem",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 920.3,
+      "centro_custo": "ti",
+      "valor_assinado": -920.3
+    },
+    {
+      "data": "2026-01-28",
+      "ano_mes": "2026-01",
+      "descricao": "Folha operacional",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 5400.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -5400.0
+    },
+    {
+      "data": "2026-02-05",
+      "ano_mes": "2026-02",
+      "descricao": "Renovacao contratos B2B",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 9100.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 9100.0
+    },
+    {
+      "data": "2026-02-09",
+      "ano_mes": "2026-02",
+      "descricao": "Treinamento corporativo",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 5200.0,
+      "centro_custo": "educacao",
+      "valor_assinado": 5200.0
+    },
+    {
+      "data": "2026-02-13",
+      "ano_mes": "2026-02",
+      "descricao": "Fornecedor homologado",
+      "categoria": "fornecedores",
+      "tipo": "despesa",
+      "valor": 4100.8,
+      "centro_custo": "operacoes",
+      "valor_assinado": -4100.8
+    },
+    {
+      "data": "2026-02-18",
+      "ano_mes": "2026-02",
+      "descricao": "Ferramentas analiticas",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1180.25,
+      "centro_custo": "ti",
+      "valor_assinado": -1180.25
+    },
+    {
+      "data": "2026-02-26",
+      "ano_mes": "2026-02",
+      "descricao": "Comissao comercial",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 2890.0,
+      "centro_custo": "comercial",
+      "valor_assinado": -2890.0
+    },
+    {
+      "data": "2026-03-04",
+      "ano_mes": "2026-03",
+      "descricao": "Projeto de integracao beta",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 14850.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 14850.0
+    },
+    {
+      "data": "2026-03-11",
+      "ano_mes": "2026-03",
+      "descricao": "Receita de suporte premium",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 4650.0,
+      "centro_custo": "sucesso_cliente",
+      "valor_assinado": 4650.0
+    },
+    {
+      "data": "2026-03-14",
+      "ano_mes": "2026-03",
+      "descricao": "Campanha de retencao",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2310.1,
+      "centro_custo": "marketing",
+      "valor_assinado": -2310.1
+    },
+    {
+      "data": "2026-03-19",
+      "ano_mes": "2026-03",
+      "descricao": "Licencas de software",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1340.6,
+      "centro_custo": "ti",
+      "valor_assinado": -1340.6
+    },
+    {
+      "data": "2026-03-27",
+      "ano_mes": "2026-03",
+      "descricao": "Folha salarial",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 6120.0,
+      "centro_custo": "rh",
+      "valor_assinado": -6120.0
+    },
+    {
+      "data": "2026-04-02",
+      "ano_mes": "2026-04",
+      "descricao": "Pacote de consultoria recorrente",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 6900.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 6900.0
+    },
+    {
+      "data": "2026-04-08",
+      "ano_mes": "2026-04",
+      "descricao": "Expansao de contas enterprise",
+      "categoria": "vendas",
+      "tipo": "receita",
+      "valor": 11800.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 11800.0
+    },
+    {
+      "data": "2026-04-15",
+      "ano_mes": "2026-04",
+      "descricao": "Viagens comerciais",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 1740.55,
+      "centro_custo": "comercial",
+      "valor_assinado": -1740.55
+    },
+    {
+      "data": "2026-04-18",
+      "ano_mes": "2026-04",
+      "descricao": "Servicos terceirizados",
+      "categoria": "fornecedores",
+      "tipo": "despesa",
+      "valor": 4525.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -4525.0
+    },
+    {
+      "data": "2026-04-24",
+      "ano_mes": "2026-04",
+      "descricao": "Energia e utilidades",
+      "categoria": "infraestrutura",
+      "tipo": "despesa",
+      "valor": 860.9,
+      "centro_custo": "adm",
+      "valor_assinado": -860.9
+    },
+    {
+      "data": "2026-05-06",
+      "ano_mes": "2026-05",
+      "descricao": "Novos contratos SMB",
+      "categoria": "vendas",
+      "tipo": "receita",
+      "valor": 9700.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 9700.0
+    },
+    {
+      "data": "2026-05-10",
+      "ano_mes": "2026-05",
+      "descricao": "Receita de onboarding",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 4300.0,
+      "centro_custo": "educacao",
+      "valor_assinado": 4300.0
+    },
+    {
+      "data": "2026-05-13",
+      "ano_mes": "2026-05",
+      "descricao": "Eventos e comunidade",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2088.4,
+      "centro_custo": "marketing",
+      "valor_assinado": -2088.4
+    },
+    {
+      "data": "2026-05-19",
+      "ano_mes": "2026-05",
+      "descricao": "Upgrade de seguranca",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 980.15,
+      "centro_custo": "ti",
+      "valor_assinado": -980.15
+    },
+    {
+      "data": "2026-05-28",
+      "ano_mes": "2026-05",
+      "descricao": "Beneficios e encargos",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 6335.2,
+      "centro_custo": "rh",
+      "valor_assinado": -6335.2
+    },
+    {
+      "data": "2026-06-03",
+      "ano_mes": "2026-06",
+      "descricao": "Projeto analytics gamma",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 16300.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 16300.0
+    },
+    {
+      "data": "2026-06-09",
+      "ano_mes": "2026-06",
+      "descricao": "Receita de renovacao anual",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 8800.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 8800.0
+    },
+    {
+      "data": "2026-06-12",
+      "ano_mes": "2026-06",
+      "descricao": "Parceiros estrategicos",
+      "categoria": "fornecedores",
+      "tipo": "despesa",
+      "valor": 3895.0,
+      "centro_custo": "operacoes",
+      "valor_assinado": -3895.0
+    },
+    {
+      "data": "2026-06-17",
+      "ano_mes": "2026-06",
+      "descricao": "Monitoramento de plataforma",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1125.8,
+      "centro_custo": "ti",
+      "valor_assinado": -1125.8
+    },
+    {
+      "data": "2026-06-26",
+      "ano_mes": "2026-06",
+      "descricao": "Aluguel escritorio",
+      "categoria": "infraestrutura",
+      "tipo": "despesa",
+      "valor": 2790.0,
+      "centro_custo": "adm",
+      "valor_assinado": -2790.0
+    },
+    {
+      "data": "2026-07-07",
+      "ano_mes": "2026-07",
+      "descricao": "Squad dedicado delta",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 17150.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 17150.0
+    },
+    {
+      "data": "2026-07-11",
+      "ano_mes": "2026-07",
+      "descricao": "Pacote de suporte enterprise",
+      "categoria": "servicos",
+      "tipo": "receita",
+      "valor": 5400.0,
+      "centro_custo": "sucesso_cliente",
+      "valor_assinado": 5400.0
+    },
+    {
+      "data": "2026-07-15",
+      "ano_mes": "2026-07",
+      "descricao": "Recrutamento especializado",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 6840.0,
+      "centro_custo": "rh",
+      "valor_assinado": -6840.0
+    },
+    {
+      "data": "2026-07-21",
+      "ano_mes": "2026-07",
+      "descricao": "Campanha ABM",
+      "categoria": "marketing",
+      "tipo": "despesa",
+      "valor": 2645.7,
+      "centro_custo": "marketing",
+      "valor_assinado": -2645.7
+    },
+    {
+      "data": "2026-07-29",
+      "ano_mes": "2026-07",
+      "descricao": "Automacao de backoffice",
+      "categoria": "tecnologia",
+      "tipo": "despesa",
+      "valor": 1495.35,
+      "centro_custo": "ti",
+      "valor_assinado": -1495.35
+    },
+    {
+      "data": "2026-08-05",
+      "ano_mes": "2026-08",
+      "descricao": "Renovacao base enterprise",
+      "categoria": "assinaturas",
+      "tipo": "receita",
+      "valor": 10200.0,
+      "centro_custo": "comercial",
+      "valor_assinado": 10200.0
+    },
+    {
+      "data": "2026-08-08",
+      "ano_mes": "2026-08",
+      "descricao": "Projeto de performance epsilon",
+      "categoria": "projetos",
+      "tipo": "receita",
+      "valor": 15400.0,
+      "centro_custo": "consultoria",
+      "valor_assinado": 15400.0
+    },
+    {
+      "data": "2026-08-14",
+      "ano_mes": "2026-08",
+      "descricao": "Operacao de campo",
+      "categoria": "operacoes",
+      "tipo": "despesa",
+      "valor": 1985.25,
+      "centro_custo": "operacoes",
+      "valor_assinado": -1985.25
+    },
+    {
+      "data": "2026-08-20",
+      "ano_mes": "2026-08",
+      "descricao": "Compliance e auditoria",
+      "categoria": "infraestrutura",
+      "tipo": "despesa",
+      "valor": 1320.0,
+      "centro_custo": "adm",
+      "valor_assinado": -1320.0
+    },
+    {
+      "data": "2026-08-27",
+      "ano_mes": "2026-08",
+      "descricao": "Folha variavel e bonus",
+      "categoria": "pessoal",
+      "tipo": "despesa",
+      "valor": 7210.0,
+      "centro_custo": "rh",
+      "valor_assinado": -7210.0
+    }
+  ]
+}

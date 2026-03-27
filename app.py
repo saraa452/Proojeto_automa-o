@@ -14,6 +14,7 @@ Uso tipico::
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import shutil
 from datetime import date
@@ -65,6 +66,49 @@ SINONIMOS_TIPO: dict[str, str] = {
 
 TEMPO_MANUAL_MIN: float = 2.5
 TEMPO_AUTO_MIN: float = 0.3
+
+EXEMPLO_LANCAMENTOS: list[list[object]] = [
+    ["08/01/2026", "Mensalidade carteira premium", "assinaturas", "receita", 8400.00, "comercial"],
+    ["12/01/2026", "Projeto de implantacao alfa", "projetos", "receita", 12600.00, "consultoria"],
+    ["15/01/2026", "Midia de aquisicao", "marketing", "despesa", 1850.45, "marketing"],
+    ["20/01/2026", "Infraestrutura em nuvem", "tecnologia", "despesa", 920.30, "ti"],
+    ["28/01/2026", "Folha operacional", "pessoal", "despesa", 5400.00, "operacoes"],
+    ["05/02/2026", "Renovacao contratos B2B", "assinaturas", "receita", 9100.00, "comercial"],
+    ["09/02/2026", "Treinamento corporativo", "servicos", "receita", 5200.00, "educacao"],
+    ["13/02/2026", "Fornecedor homologado", "fornecedores", "despesa", 4100.80, "operacoes"],
+    ["18/02/2026", "Ferramentas analiticas", "tecnologia", "despesa", 1180.25, "ti"],
+    ["26/02/2026", "Comissao comercial", "pessoal", "despesa", 2890.00, "comercial"],
+    ["04/03/2026", "Projeto de integracao beta", "projetos", "receita", 14850.00, "consultoria"],
+    ["11/03/2026", "Receita de suporte premium", "servicos", "receita", 4650.00, "sucesso_cliente"],
+    ["14/03/2026", "Campanha de retencao", "marketing", "despesa", 2310.10, "marketing"],
+    ["19/03/2026", "Licencas de software", "tecnologia", "despesa", 1340.60, "ti"],
+    ["27/03/2026", "Folha salarial", "pessoal", "despesa", 6120.00, "rh"],
+    ["02/04/2026", "Pacote de consultoria recorrente", "servicos", "receita", 6900.00, "consultoria"],
+    ["08/04/2026", "Expansao de contas enterprise", "vendas", "receita", 11800.00, "comercial"],
+    ["15/04/2026", "Viagens comerciais", "operacoes", "despesa", 1740.55, "comercial"],
+    ["18/04/2026", "Servicos terceirizados", "fornecedores", "despesa", 4525.00, "operacoes"],
+    ["24/04/2026", "Energia e utilidades", "infraestrutura", "despesa", 860.90, "adm"],
+    ["06/05/2026", "Novos contratos SMB", "vendas", "receita", 9700.00, "comercial"],
+    ["10/05/2026", "Receita de onboarding", "servicos", "receita", 4300.00, "educacao"],
+    ["13/05/2026", "Eventos e comunidade", "marketing", "despesa", 2088.40, "marketing"],
+    ["19/05/2026", "Upgrade de seguranca", "tecnologia", "despesa", 980.15, "ti"],
+    ["28/05/2026", "Beneficios e encargos", "pessoal", "despesa", 6335.20, "rh"],
+    ["03/06/2026", "Projeto analytics gamma", "projetos", "receita", 16300.00, "consultoria"],
+    ["09/06/2026", "Receita de renovacao anual", "assinaturas", "receita", 8800.00, "comercial"],
+    ["12/06/2026", "Parceiros estrategicos", "fornecedores", "despesa", 3895.00, "operacoes"],
+    ["17/06/2026", "Monitoramento de plataforma", "tecnologia", "despesa", 1125.80, "ti"],
+    ["26/06/2026", "Aluguel escritorio", "infraestrutura", "despesa", 2790.00, "adm"],
+    ["07/07/2026", "Squad dedicado delta", "projetos", "receita", 17150.00, "consultoria"],
+    ["11/07/2026", "Pacote de suporte enterprise", "servicos", "receita", 5400.00, "sucesso_cliente"],
+    ["15/07/2026", "Recrutamento especializado", "pessoal", "despesa", 6840.00, "rh"],
+    ["21/07/2026", "Campanha ABM", "marketing", "despesa", 2645.70, "marketing"],
+    ["29/07/2026", "Automacao de backoffice", "tecnologia", "despesa", 1495.35, "ti"],
+    ["05/08/2026", "Renovacao base enterprise", "assinaturas", "receita", 10200.00, "comercial"],
+    ["08/08/2026", "Projeto de performance epsilon", "projetos", "receita", 15400.00, "consultoria"],
+    ["14/08/2026", "Operacao de campo", "operacoes", "despesa", 1985.25, "operacoes"],
+    ["20/08/2026", "Compliance e auditoria", "infraestrutura", "despesa", 1320.00, "adm"],
+    ["27/08/2026", "Folha variavel e bonus", "pessoal", "despesa", 7210.00, "rh"],
+]
 
 
 def formatar_moeda_brl(valor: float) -> str:
@@ -189,6 +233,90 @@ def gerar_resumo_categoria(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(registros, columns=resumo.columns).reset_index(drop=True)
 
 
+def _agrupar_financeiro(df: pd.DataFrame, dimensoes: list[str]) -> pd.DataFrame:
+    """Agrupa receitas e despesas em torno de uma ou mais dimensoes."""
+    resumo = (
+        df.groupby([*dimensoes, "tipo"], as_index=False)["valor"]
+        .sum()
+        .pivot(index=dimensoes, columns="tipo", values="valor")
+        .fillna(0)
+        .reset_index()
+    )
+
+    if "receita" not in resumo.columns:
+        resumo["receita"] = 0.0
+    if "despesa" not in resumo.columns:
+        resumo["despesa"] = 0.0
+
+    resumo = resumo.rename(
+        columns={"receita": "total_receita", "despesa": "total_despesa"}
+    )
+    resumo["saldo"] = resumo["total_receita"] - resumo["total_despesa"]
+    return resumo.reset_index(drop=True)
+
+
+def gerar_resumo_categoria_analitico(df: pd.DataFrame) -> pd.DataFrame:
+    """Consolida indicadores por categoria para analise interativa."""
+    resumo = _agrupar_financeiro(df, ["categoria"])
+    transacoes = df.groupby("categoria", as_index=False).size().rename(
+        columns={"size": "transacoes"}
+    )
+    total_movimentado = df.groupby("categoria", as_index=False).agg(
+        total_movimentado=("valor", "sum")
+    )
+    resumo = resumo.merge(transacoes, on="categoria").merge(total_movimentado, on="categoria")
+    resumo["ticket_medio"] = (resumo["total_movimentado"] / resumo["transacoes"]).round(2)
+
+    total_despesa = float(resumo["total_despesa"].sum())
+    resumo["participacao_despesa"] = resumo["total_despesa"].apply(
+        lambda valor: round((valor / total_despesa) * 100, 2) if total_despesa > 0 else 0.0
+    )
+    return resumo.sort_values(["total_despesa", "saldo"], ascending=[False, False]).reset_index(drop=True)
+
+
+def gerar_resumo_centro_custo(df: pd.DataFrame) -> pd.DataFrame:
+    """Consolida indicadores por centro de custo para analise interativa."""
+    resumo = _agrupar_financeiro(df, ["centro_custo"])
+    transacoes = df.groupby("centro_custo", as_index=False).size().rename(
+        columns={"size": "transacoes"}
+    )
+    resumo = resumo.merge(transacoes, on="centro_custo")
+    resumo["ticket_medio"] = (
+        (resumo["total_receita"] + resumo["total_despesa"]) / resumo["transacoes"]
+    ).round(2)
+    return resumo.sort_values(["total_despesa", "saldo"], ascending=[False, False]).reset_index(drop=True)
+
+
+def gerar_eficiencia_mensal(
+    df: pd.DataFrame,
+    tempo_manual_min: float = TEMPO_MANUAL_MIN,
+    tempo_auto_min: float = TEMPO_AUTO_MIN,
+) -> pd.DataFrame:
+    """Calcula produtividade operacional por mes."""
+    eficiencia = df.groupby("ano_mes", as_index=False).size().rename(
+        columns={"size": "lancamentos"}
+    )
+    eficiencia["horas_manuais"] = (
+        eficiencia["lancamentos"] * tempo_manual_min / 60
+    ).round(2)
+    eficiencia["horas_automatizadas"] = (
+        eficiencia["lancamentos"] * tempo_auto_min / 60
+    ).round(2)
+    eficiencia["horas_economizadas"] = (
+        eficiencia["horas_manuais"] - eficiencia["horas_automatizadas"]
+    ).round(2)
+    eficiencia["ganho_percentual"] = eficiencia.apply(
+        lambda row: round(
+            (row["horas_economizadas"] / row["horas_manuais"]) * 100,
+            2,
+        )
+        if row["horas_manuais"] > 0
+        else 0.0,
+        axis=1,
+    )
+    return eficiencia.sort_values("ano_mes").reset_index(drop=True)
+
+
 def gerar_indicadores(
     df: pd.DataFrame,
     tempo_manual_min: float = TEMPO_MANUAL_MIN,
@@ -241,6 +369,52 @@ def _top_despesas_por_categoria(categoria: pd.DataFrame, n: int = 5) -> pd.DataF
         reverse=True,
     )[:n]
     return pd.DataFrame(registros, columns=top.columns).reset_index(drop=True)
+
+
+def montar_payload_site(
+    base: pd.DataFrame,
+    mensal: pd.DataFrame,
+    categoria: pd.DataFrame,
+    indicadores: pd.DataFrame,
+) -> dict[str, object]:
+    """Monta os dados-base serializados para o dashboard interativo."""
+    registros = base.copy()
+    registros["data"] = registros["data"].dt.strftime("%Y-%m-%d")
+    registros["valor"] = registros["valor"].astype(float).round(2)
+    registros["valor_assinado"] = registros["valor_assinado"].astype(float).round(2)
+
+    return {
+        "generatedAt": date.today().isoformat(),
+        "tempos": {
+            "manual_min": TEMPO_MANUAL_MIN,
+            "auto_min": TEMPO_AUTO_MIN,
+        },
+        "records": registros[
+            [
+                "data",
+                "ano_mes",
+                "descricao",
+                "categoria",
+                "tipo",
+                "valor",
+                "centro_custo",
+                "valor_assinado",
+            ]
+        ].to_dict(orient="records"),
+    }
+
+
+def salvar_payload_site(payload: dict[str, object], pasta_site: Path) -> Path:
+    """Salva o payload externo consumido pela pagina HTML."""
+    pasta_assets = pasta_site / "assets"
+    pasta_assets.mkdir(parents=True, exist_ok=True)
+    arquivo_json = pasta_assets / "dashboard-data.json"
+    arquivo_json.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    logger.info("Payload JSON do site gerado: %s", arquivo_json)
+    return arquivo_json
 
 
 def _preparar_logo_site(logo_path: str, pasta_site: Path) -> str:
@@ -363,6 +537,7 @@ def gerar_relatorio_executivo_markdown(
 
 
 def gerar_relatorio_executivo_html(
+    base: pd.DataFrame,
     mensal: pd.DataFrame,
     categoria: pd.DataFrame,
     indicadores: pd.DataFrame,
@@ -378,25 +553,15 @@ def gerar_relatorio_executivo_html(
     arquivo_html = pasta_site / "index.html"
 
     kpis = _extrair_kpis(mensal, indicadores)
-    top_desp = _top_despesas_por_categoria(categoria)
     hoje = date.today().strftime("%d/%m/%Y")
     logo_site = _preparar_logo_site(logo_path, pasta_site)
-
-    linhas_mensal = "".join(
-        "<tr>"
-        f"<td>{row['ano_mes']}</td>"
-        f"<td>{formatar_moeda_brl(float(row['total_receita']))}</td>"
-        f"<td>{formatar_moeda_brl(float(row['total_despesa']))}</td>"
-        f"<td>{formatar_moeda_brl(float(row['saldo']))}</td>"
-        "</tr>"
-        for _, row in mensal.iterrows()
+    payload_site = montar_payload_site(
+        base=base,
+        mensal=mensal,
+        categoria=categoria,
+        indicadores=indicadores,
     )
-
-    linhas_despesa = "".join(
-        f"<li><strong>{row['categoria']}</strong>: {formatar_moeda_brl(float(row['valor']))}</li>"
-        for _, row in top_desp.iterrows()
-    )
-
+    salvar_payload_site(payload_site, pasta_site)
     classe_saldo = "saldo-ok" if kpis["saldo_total"] >= 0 else "saldo-alerta"
 
     html = f"""<!doctype html>
@@ -407,113 +572,268 @@ def gerar_relatorio_executivo_html(
     <title>{titulo}</title>
     <style>
         :root {{
-            --bg: #f4f8fb;
-            --card: #ffffff;
-            --ink: #102a43;
-            --muted: #486581;
-            --brand: #0b3c5d;
-            --accent: #328cc1;
-            --line: #d9e2ec;
+            --bg: #f4efe6;
+            --surface: rgba(255, 251, 245, 0.82);
+            --card: #fffdf8;
+            --ink: #1b1b1b;
+            --muted: #6e6258;
+            --brand: #17313e;
+            --accent: #c46a2f;
+            --accent-soft: #f0d2b8;
+            --line: rgba(23, 49, 62, 0.12);
             --ok: #166534;
             --warn: #9a3412;
+            --shadow: 0 18px 40px rgba(23, 49, 62, 0.14);
         }}
         * {{ box-sizing: border-box; }}
         body {{
             margin: 0;
-            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            font-family: "Aptos", "Trebuchet MS", "Segoe UI", sans-serif;
             color: var(--ink);
             background:
-                radial-gradient(circle at 10% 10%, #d9ecf7 0%, transparent 35%),
-                radial-gradient(circle at 90% 20%, #dceff9 0%, transparent 40%),
+                radial-gradient(circle at 12% 18%, rgba(196, 106, 47, 0.18) 0%, transparent 33%),
+                radial-gradient(circle at 88% 8%, rgba(23, 49, 62, 0.14) 0%, transparent 28%),
+                linear-gradient(180deg, #f7f1e7 0%, #f4efe6 42%, #efe3d2 100%),
                 var(--bg);
             line-height: 1.5;
         }}
-        .container {{ max-width: 1040px; margin: 0 auto; padding: 24px 16px 48px; }}
+        .container {{ max-width: 1180px; margin: 0 auto; padding: 28px 18px 56px; }}
         .hero {{
-            background: linear-gradient(135deg, #0b3c5d, #328cc1);
-            color: #fff;
-            border-radius: 18px;
-            padding: 28px;
-            box-shadow: 0 14px 32px rgba(11, 60, 93, 0.2);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(140deg, #17313e 0%, #28586c 52%, #c46a2f 100%);
+            color: #fff7f0;
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: var(--shadow);
         }}
-        .hero img {{ width: 120px; background: #fff; border-radius: 12px; padding: 8px; }}
-        .hero h1 {{ margin: 14px 0 6px; font-size: clamp(1.5rem, 3.2vw, 2.3rem); }}
-        .hero p {{ margin: 4px 0; opacity: 0.95; }}
+        .hero::after {{
+            content: "";
+            position: absolute;
+            inset: auto -40px -60px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            filter: blur(4px);
+        }}
+        .hero-top {{ display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }}
+        .hero-copy {{ max-width: 760px; position: relative; z-index: 1; }}
+        .hero img {{ width: 124px; background: #fff8f1; border-radius: 16px; padding: 10px; }}
+        .eyebrow {{ text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.76rem; opacity: 0.8; }}
+        .hero h1 {{ margin: 10px 0 8px; font-size: clamp(1.9rem, 4vw, 3.25rem); line-height: 1.04; max-width: 11ch; }}
+        .hero p {{ margin: 5px 0; opacity: 0.96; }}
+        .hero-meta {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }}
+        .hero-chip {{
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.09);
+            backdrop-filter: blur(8px);
+        }}
         .grid {{
             display: grid;
             gap: 14px;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            margin-top: 18px;
         }}
         .kpi {{
-            background: var(--card);
+            background: linear-gradient(180deg, #fffdf8 0%, #fff7ef 100%);
             border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 8px 20px rgba(23, 49, 62, 0.06);
         }}
-        .kpi small {{ color: var(--muted); display: block; }}
-        .kpi strong {{ font-size: 1.1rem; }}
+        .kpi small {{ color: var(--muted); display: block; margin-bottom: 8px; }}
+        .kpi strong {{ font-size: 1.2rem; line-height: 1.2; }}
         .panel {{
             margin-top: 18px;
+            background: var(--surface);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }}
+        h2 {{ margin: 0 0 8px; color: var(--brand); font-size: clamp(1.25rem, 2vw, 1.7rem); }}
+        .panel-head {{ display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 18px; }}
+        .panel-head p {{ margin: 0; max-width: 720px; color: var(--muted); }}
+        .controls {{ display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 18px; }}
+        .field {{ display: flex; flex-direction: column; gap: 8px; }}
+        .field label {{ font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }}
+        .filter-grid {{
+            margin-top: 14px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }}
+        select {{
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: #fffaf4;
+            color: var(--ink);
+            font: inherit;
+        }}
+        .stage-nav {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }}
+        .stage-button {{
+            border: 0;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font: inherit;
+            background: rgba(23, 49, 62, 0.08);
+            color: var(--brand);
+            cursor: pointer;
+            transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+        }}
+        .stage-button:hover {{ transform: translateY(-1px); }}
+        .stage-button.active {{ background: var(--brand); color: #fff8f2; }}
+        .dashboard-layout {{ display: grid; gap: 18px; grid-template-columns: 1.2fr 0.8fr; align-items: start; }}
+        .chart-card {{
             background: var(--card);
             border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 20px;
+            padding: 18px;
         }}
-        h2 {{ margin-top: 4px; color: var(--brand); }}
+        .canvas-wrap {{
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: #fffaf4;
+            padding: 10px;
+        }}
+        #bars-canvas {{
+            width: 100%;
+            height: 320px;
+            display: block;
+        }}
+        .trend-box {{
+            margin-top: 12px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 10px;
+            background: #fffaf4;
+        }}
+        .trend-title {{ font-size: 0.84rem; color: var(--muted); margin-bottom: 6px; }}
+        #trend-svg {{ width: 100%; height: 120px; display: block; }}
+        .chart-meta {{ display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 14px; }}
+        .chart-meta h3, .table-card h3 {{ margin: 0; color: var(--brand); font-size: 1.05rem; }}
+        .chart-meta p {{ margin: 0; color: var(--muted); font-size: 0.93rem; }}
+        .table-card {{
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 18px;
+            overflow: hidden;
+        }}
+        .table-wrap {{ overflow-x: auto; }}
         table {{ width: 100%; border-collapse: collapse; }}
-        th, td {{ border-bottom: 1px solid var(--line); padding: 10px; text-align: left; }}
-        th {{ background: #f0f4f8; }}
-        ul {{ margin: 0; padding-left: 20px; }}
+        th, td {{ border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; white-space: nowrap; }}
+        th {{ background: #f7eee4; color: var(--brand); }}
+        .summary-text {{ color: var(--muted); max-width: 760px; }}
+        .highlight {{ margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: rgba(196, 106, 47, 0.08); border-radius: 14px; color: var(--brand); }}
         .foot {{ margin-top: 18px; color: var(--muted); font-size: 0.92rem; }}
+        .status {{ margin-top: 10px; color: var(--muted); font-size: 0.9rem; }}
         .saldo-ok {{ color: var(--ok); }}
         .saldo-alerta {{ color: var(--warn); }}
+        @media (max-width: 840px) {{
+            .hero-top {{ flex-direction: column-reverse; }}
+            .dashboard-layout {{ grid-template-columns: 1fr; }}
+        }}
     </style>
 </head>
 <body>
     <main class="container">
         <section class="hero">
-            <img src="{logo_site}" alt="Logotipo">
-            <h1>{titulo}</h1>
-            <p><strong>Case de Portfolio | Automacao Financeira com foco em eficiencia operacional</strong></p>
-            <p>{nome_profissional} | {cargo_profissional}</p>
-            <p>{empresa}</p>
-            <p>Data de emissao: {hoje}</p>
+            <div class="hero-top">
+                <div class="hero-copy">
+                    <div class="eyebrow">Analise de criterio orientada por dados</div>
+                    <h1>{titulo}</h1>
+                    <p><strong>Dashboard executivo com troca de etapa e indice em tempo real</strong></p>
+                    <p>{nome_profissional} | {cargo_profissional}</p>
+                    <p>{empresa}</p>
+                    <div class="hero-meta">
+                        <div class="hero-chip">Base ampliada com multiplos meses e centros de custo</div>
+                        <div class="hero-chip">Saldo total: <span class="{classe_saldo}">{formatar_moeda_brl(kpis['saldo_total'])}</span></div>
+                        <div class="hero-chip">Data de emissao: {hoje}</div>
+                    </div>
+                </div>
+                <img src="{logo_site}" alt="Logotipo">
+            </div>
         </section>
 
         <section class="panel">
-            <h2>Resumo Executivo</h2>
-            <p>
-                Projeto de portfolio desenvolvido para demonstrar capacidade de automatizar
-                rotinas financeiras, reduzir esforco manual e transformar dados operacionais
-                em relatorios executivos padronizados para acompanhamento gerencial.
-            </p>
-        </section>
-
-        <section class="grid">
-            <article class="kpi"><small>Receita Total</small><strong>{formatar_moeda_brl(kpis['receita_total'])}</strong></article>
-            <article class="kpi"><small>Despesa Total</small><strong>{formatar_moeda_brl(kpis['despesa_total'])}</strong></article>
-            <article class="kpi"><small>Saldo Acumulado</small><strong class="{classe_saldo}">{formatar_moeda_brl(kpis['saldo_total'])}</strong></article>
-            <article class="kpi"><small>Meses Positivos</small><strong>{kpis['meses_positivos']}</strong></article>
-            <article class="kpi"><small>Reducao de Tempo</small><strong>{kpis['reducao_tempo']:.2f}%</strong></article>
-            <article class="kpi"><small>Horas Economizadas</small><strong>{kpis['horas_economizadas']:.2f}h</strong></article>
+            <div class="panel-head">
+                <div>
+                    <h2>Resumo Executivo</h2>
+                    <p class="summary-text">
+                        O site agora usa uma base de dados mais rica e permite trocar a etapa de analise e o indice exibido sem regenerar a pagina.
+                        Isso deixa a leitura mais exploratoria: voce pode navegar entre panorama geral, evolucao mensal, categorias, centros de custo e eficiencia operacional.
+                    </p>
+                </div>
+            </div>
+            <div class="controls">
+                <div class="field">
+                    <label for="stage-select">Etapa de analise</label>
+                    <select id="stage-select"></select>
+                </div>
+                <div class="field">
+                    <label for="index-select">Indice exibido</label>
+                    <select id="index-select"></select>
+                </div>
+            </div>
+            <div class="filter-grid">
+                <div class="field">
+                    <label for="mes-filter">Filtro de mes</label>
+                    <select id="mes-filter"></select>
+                </div>
+                <div class="field">
+                    <label for="categoria-filter">Filtro de categoria</label>
+                    <select id="categoria-filter"></select>
+                </div>
+                <div class="field">
+                    <label for="centro-filter">Filtro de centro de custo</label>
+                    <select id="centro-filter"></select>
+                </div>
+            </div>
+            <div class="stage-nav" id="stage-nav"></div>
+            <p class="status" id="dataset-status">Carregando base externa...</p>
         </section>
 
         <section class="panel">
-            <h2>Painel Mensal Padronizado</h2>
-            <table>
-                <thead>
-                    <tr><th>Mes</th><th>Receita</th><th>Despesa</th><th>Saldo</th></tr>
-                </thead>
-                <tbody>
-                    {linhas_mensal}
-                </tbody>
-            </table>
-        </section>
-
-        <section class="panel">
-            <h2>Top 5 Categorias de Despesa</h2>
-            <ul>{linhas_despesa}</ul>
+            <div class="panel-head">
+                <div>
+                    <h2 id="stage-title"></h2>
+                    <p id="stage-description"></p>
+                </div>
+            </div>
+            <section class="grid" id="cards-grid"></section>
+            <div class="dashboard-layout" style="margin-top: 18px;">
+                <article class="chart-card">
+                    <div class="chart-meta">
+                        <div>
+                            <h3 id="chart-title"></h3>
+                            <p id="chart-caption"></p>
+                        </div>
+                    </div>
+                    <div class="canvas-wrap">
+                        <canvas id="bars-canvas"></canvas>
+                    </div>
+                    <div class="trend-box">
+                        <div class="trend-title">Leitura complementar em SVG</div>
+                        <svg id="trend-svg" viewBox="0 0 540 120" preserveAspectRatio="none"></svg>
+                    </div>
+                    <div class="highlight" id="highlight"></div>
+                </article>
+                <article class="table-card">
+                    <h3>Detalhamento da etapa</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
         </section>
 
         <section class="panel">
@@ -529,6 +849,618 @@ def gerar_relatorio_executivo_html(
             <p class="foot">Publicacao web pronta para GitHub Pages a partir da pasta docs.</p>
         </section>
     </main>
+    <script>
+        const DATA_URL = "assets/dashboard-data.json";
+        const state = {{
+            stageId: "visao_geral",
+            indexId: null,
+            mes: "todos",
+            categoria: "todos",
+            centro: "todos",
+        }};
+        const chartHeight = 320;
+        let sourceData = null;
+        let currentStages = null;
+        let rawRecords = [];
+
+        const stageSelect = document.getElementById("stage-select");
+        const indexSelect = document.getElementById("index-select");
+        const mesFilter = document.getElementById("mes-filter");
+        const categoriaFilter = document.getElementById("categoria-filter");
+        const centroFilter = document.getElementById("centro-filter");
+        const datasetStatus = document.getElementById("dataset-status");
+        const stageNav = document.getElementById("stage-nav");
+        const stageTitle = document.getElementById("stage-title");
+        const stageDescription = document.getElementById("stage-description");
+        const cardsGrid = document.getElementById("cards-grid");
+        const chartTitle = document.getElementById("chart-title");
+        const chartCaption = document.getElementById("chart-caption");
+        const barsCanvas = document.getElementById("bars-canvas");
+        const trendSvg = document.getElementById("trend-svg");
+        const tableHead = document.getElementById("table-head");
+        const tableBody = document.getElementById("table-body");
+        const highlight = document.getElementById("highlight");
+
+        const formatters = {{
+            currency: (value) => new Intl.NumberFormat("pt-BR", {{ style: "currency", currency: "BRL" }}).format(Number(value) || 0),
+            percent: (value) => `${{Number(value || 0).toFixed(2)}}%`,
+            hours: (value) => `${{Number(value || 0).toFixed(2)}}h`,
+            int: (value) => new Intl.NumberFormat("pt-BR", {{ maximumFractionDigits: 0 }}).format(Number(value) || 0),
+            text: (value) => value ?? "-",
+        }};
+
+        function formatValue(value, format) {{
+            return (formatters[format] || formatters.text)(value);
+        }}
+
+        function calcularMetricasBase(records) {{
+            const receita = records
+                .filter((item) => item.tipo === "receita")
+                .reduce((acc, item) => acc + Number(item.valor || 0), 0);
+            const despesa = records
+                .filter((item) => item.tipo === "despesa")
+                .reduce((acc, item) => acc + Number(item.valor || 0), 0);
+            return {{
+                receita,
+                despesa,
+                saldo: receita - despesa,
+            }};
+        }}
+
+        function agruparMensal(records) {{
+            const mapa = new Map();
+            records.forEach((item) => {{
+                const chave = item.ano_mes;
+                if (!mapa.has(chave)) {{
+                    mapa.set(chave, {{
+                        ano_mes: chave,
+                        total_receita: 0,
+                        total_despesa: 0,
+                        saldo: 0,
+                        lancamentos: 0,
+                    }});
+                }}
+
+                const atual = mapa.get(chave);
+                atual.lancamentos += 1;
+                if (item.tipo === "receita") {{
+                    atual.total_receita += Number(item.valor || 0);
+                }} else {{
+                    atual.total_despesa += Number(item.valor || 0);
+                }}
+                atual.saldo = atual.total_receita - atual.total_despesa;
+            }});
+
+            return Array.from(mapa.values())
+                .sort((a, b) => a.ano_mes.localeCompare(b.ano_mes))
+                .map((item) => ({{
+                    ...item,
+                    margem_percentual: item.total_receita > 0
+                        ? Number(((item.saldo / item.total_receita) * 100).toFixed(2))
+                        : 0,
+                }}));
+        }}
+
+        function agruparPor(records, chave) {{
+            const mapa = new Map();
+            records.forEach((item) => {{
+                const key = item[chave];
+                if (!mapa.has(key)) {{
+                    mapa.set(key, {{
+                        [chave]: key,
+                        total_receita: 0,
+                        total_despesa: 0,
+                        saldo: 0,
+                        transacoes: 0,
+                        total_movimentado: 0,
+                    }});
+                }}
+
+                const atual = mapa.get(key);
+                const valor = Number(item.valor || 0);
+                atual.transacoes += 1;
+                atual.total_movimentado += valor;
+                if (item.tipo === "receita") {{
+                    atual.total_receita += valor;
+                }} else {{
+                    atual.total_despesa += valor;
+                }}
+                atual.saldo = atual.total_receita - atual.total_despesa;
+            }});
+
+            const resultado = Array.from(mapa.values())
+                .map((item) => ({{
+                    ...item,
+                    ticket_medio: item.transacoes > 0
+                        ? Number((item.total_movimentado / item.transacoes).toFixed(2))
+                        : 0,
+                }}))
+                .sort((a, b) => {{
+                    const porDespesa = b.total_despesa - a.total_despesa;
+                    return porDespesa !== 0 ? porDespesa : b.saldo - a.saldo;
+                }});
+
+            const totalDespesa = resultado.reduce((acc, item) => acc + item.total_despesa, 0);
+            return resultado.map((item) => ({{
+                ...item,
+                participacao_despesa: totalDespesa > 0
+                    ? Number(((item.total_despesa / totalDespesa) * 100).toFixed(2))
+                    : 0,
+            }}));
+        }}
+
+        function montarEficiencia(mensal, tempos) {{
+            const tempoManual = Number(tempos?.manual_min || 2.5);
+            const tempoAuto = Number(tempos?.auto_min || 0.3);
+            return mensal.map((item) => {{
+                const horasManuais = Number(((item.lancamentos * tempoManual) / 60).toFixed(2));
+                const horasAuto = Number(((item.lancamentos * tempoAuto) / 60).toFixed(2));
+                const horasEconomizadas = Number((horasManuais - horasAuto).toFixed(2));
+                return {{
+                    ano_mes: item.ano_mes,
+                    lancamentos: item.lancamentos,
+                    horas_manuais: horasManuais,
+                    horas_automatizadas: horasAuto,
+                    horas_economizadas: horasEconomizadas,
+                    ganho_percentual: horasManuais > 0
+                        ? Number(((horasEconomizadas / horasManuais) * 100).toFixed(2))
+                        : 0,
+                }};
+            }});
+        }}
+
+        function criarStageVazio() {{
+            const vazio = {{ label: "Sem dados", value: 0, format: "int" }};
+            const index = {{ id: "sem_dados", label: "Sem dados", format: "int", items: [{{ label: "Sem dados", value: 0 }}] }};
+            return {{
+                label: "Sem dados",
+                title: "Sem dados para os filtros selecionados",
+                description: "Ajuste os filtros de mes/categoria/centro de custo para visualizar os indicadores.",
+                cards: [vazio],
+                indices: [index],
+                table: {{ columns: [{{ key: "mensagem", label: "Observacao", format: "text" }}], rows: [{{ mensagem: "Nenhum lancamento encontrado" }}] }},
+                highlight: "Os filtros atuais nao retornaram registros.",
+            }};
+        }}
+
+        function construirStages(records) {{
+            if (!records.length) {{
+                const vazio = criarStageVazio();
+                return {{
+                    stageOrder: ["visao_geral", "mensal", "categorias", "centros", "eficiencia"],
+                    stages: {{
+                        visao_geral: vazio,
+                        mensal: vazio,
+                        categorias: vazio,
+                        centros: vazio,
+                        eficiencia: vazio,
+                    }},
+                }};
+            }}
+
+            const mensal = agruparMensal(records);
+            const categorias = agruparPor(records, "categoria");
+            const centros = agruparPor(records, "centro_custo");
+            const eficiencia = montarEficiencia(mensal, sourceData.tempos || {{}});
+            const metricas = calcularMetricasBase(records);
+            const melhorMes = mensal.reduce((prev, atual) => atual.saldo > prev.saldo ? atual : prev, mensal[0]);
+            const categoriaTop = categorias[0];
+            const centroTop = centros[0];
+
+            const stageOrder = ["visao_geral", "mensal", "categorias", "centros", "eficiencia"];
+            const stages = {{
+                visao_geral: {{
+                    label: "Visao geral",
+                    title: "Panorama consolidado da operacao",
+                    description: "Leitura executiva do recorte filtrado.",
+                    cards: [
+                        {{ label: "Receita total", value: metricas.receita, format: "currency" }},
+                        {{ label: "Despesa total", value: metricas.despesa, format: "currency" }},
+                        {{ label: "Saldo acumulado", value: metricas.saldo, format: "currency" }},
+                        {{ label: "Meses positivos", value: mensal.filter((item) => item.saldo > 0).length, format: "int" }},
+                        {{ label: "Categorias ativas", value: new Set(records.map((item) => item.categoria)).size, format: "int" }},
+                        {{ label: "Centros ativos", value: new Set(records.map((item) => item.centro_custo)).size, format: "int" }},
+                    ],
+                    indices: [
+                        {{ id: "saldo", label: "Saldo por mes", format: "currency", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.saldo }})) }},
+                        {{ id: "receita", label: "Receita por mes", format: "currency", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.total_receita }})) }},
+                        {{ id: "despesa", label: "Despesa por mes", format: "currency", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.total_despesa }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "total_receita", label: "Receita", format: "currency" }},
+                            {{ key: "total_despesa", label: "Despesa", format: "currency" }},
+                            {{ key: "saldo", label: "Saldo", format: "currency" }},
+                            {{ key: "margem_percentual", label: "Margem", format: "percent" }},
+                        ],
+                        rows: mensal,
+                    }},
+                    highlight: `Melhor mes de saldo: ${{melhorMes.ano_mes}} com ${{formatValue(melhorMes.saldo, "currency")}}.`,
+                }},
+                mensal: {{
+                    label: "Evolucao mensal",
+                    title: "Leitura por periodo",
+                    description: "Evolucao de receita, despesa, saldo e margem.",
+                    cards: [
+                        {{ label: "Meses analisados", value: mensal.length, format: "int" }},
+                        {{ label: "Media de receita", value: mensal.reduce((acc, item) => acc + item.total_receita, 0) / mensal.length, format: "currency" }},
+                        {{ label: "Media de despesa", value: mensal.reduce((acc, item) => acc + item.total_despesa, 0) / mensal.length, format: "currency" }},
+                        {{ label: "Melhor margem", value: Math.max(...mensal.map((item) => item.margem_percentual)), format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "margem", label: "Margem por mes", format: "percent", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.margem_percentual }})) }},
+                        {{ id: "saldo", label: "Saldo por mes", format: "currency", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.saldo }})) }},
+                        {{ id: "receita", label: "Receita por mes", format: "currency", items: mensal.map((item) => ({{ label: item.ano_mes, value: item.total_receita }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "total_receita", label: "Receita", format: "currency" }},
+                            {{ key: "total_despesa", label: "Despesa", format: "currency" }},
+                            {{ key: "saldo", label: "Saldo", format: "currency" }},
+                            {{ key: "margem_percentual", label: "Margem", format: "percent" }},
+                        ],
+                        rows: mensal,
+                    }},
+                    highlight: "Troque o indice para ler cada etapa mensal por perspectiva financeira.",
+                }},
+                categorias: {{
+                    label: "Categorias",
+                    title: "Pressao e retorno por categoria",
+                    description: "Impacto por categoria no recorte filtrado.",
+                    cards: [
+                        {{ label: "Categorias ativas", value: categorias.length, format: "int" }},
+                        {{ label: "Maior gasto", value: categoriaTop.total_despesa, format: "currency" }},
+                        {{ label: "Ticket medio", value: categorias.reduce((acc, item) => acc + item.ticket_medio, 0) / categorias.length, format: "currency" }},
+                        {{ label: "Participacao topo", value: categoriaTop.participacao_despesa, format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "despesa", label: "Despesa por categoria", format: "currency", items: categorias.map((item) => ({{ label: item.categoria, value: item.total_despesa }})) }},
+                        {{ id: "saldo", label: "Saldo por categoria", format: "currency", items: categorias.map((item) => ({{ label: item.categoria, value: item.saldo }})) }},
+                        {{ id: "participacao", label: "Participacao na despesa", format: "percent", items: categorias.map((item) => ({{ label: item.categoria, value: item.participacao_despesa }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "categoria", label: "Categoria", format: "text" }},
+                            {{ key: "total_receita", label: "Receita", format: "currency" }},
+                            {{ key: "total_despesa", label: "Despesa", format: "currency" }},
+                            {{ key: "saldo", label: "Saldo", format: "currency" }},
+                            {{ key: "transacoes", label: "Lancamentos", format: "int" }},
+                            {{ key: "ticket_medio", label: "Ticket medio", format: "currency" }},
+                        ],
+                        rows: categorias,
+                    }},
+                    highlight: `Categoria com maior pressao de custo: ${{categoriaTop.categoria}} (${{formatValue(categoriaTop.total_despesa, "currency")}}).`,
+                }},
+                centros: {{
+                    label: "Centros de custo",
+                    title: "Carga operacional por centro",
+                    description: "Distribuicao de consumo e retorno por centro de custo.",
+                    cards: [
+                        {{ label: "Centros ativos", value: centros.length, format: "int" }},
+                        {{ label: "Maior centro de gasto", value: centroTop.total_despesa, format: "currency" }},
+                        {{ label: "Saldo medio", value: centros.reduce((acc, item) => acc + item.saldo, 0) / centros.length, format: "currency" }},
+                        {{ label: "Ticket medio", value: centros.reduce((acc, item) => acc + item.ticket_medio, 0) / centros.length, format: "currency" }},
+                    ],
+                    indices: [
+                        {{ id: "despesa", label: "Despesa por centro", format: "currency", items: centros.map((item) => ({{ label: item.centro_custo, value: item.total_despesa }})) }},
+                        {{ id: "receita", label: "Receita por centro", format: "currency", items: centros.map((item) => ({{ label: item.centro_custo, value: item.total_receita }})) }},
+                        {{ id: "saldo", label: "Saldo por centro", format: "currency", items: centros.map((item) => ({{ label: item.centro_custo, value: item.saldo }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "centro_custo", label: "Centro", format: "text" }},
+                            {{ key: "total_receita", label: "Receita", format: "currency" }},
+                            {{ key: "total_despesa", label: "Despesa", format: "currency" }},
+                            {{ key: "saldo", label: "Saldo", format: "currency" }},
+                            {{ key: "transacoes", label: "Lancamentos", format: "int" }},
+                            {{ key: "ticket_medio", label: "Ticket medio", format: "currency" }},
+                        ],
+                        rows: centros,
+                    }},
+                    highlight: `Centro com maior volume de despesa: ${{centroTop.centro_custo}} (${{formatValue(centroTop.total_despesa, "currency")}}).`,
+                }},
+                eficiencia: {{
+                    label: "Eficiencia",
+                    title: "Impacto operacional da automacao",
+                    description: "Producao por mes em horas manuais vs automacao.",
+                    cards: [
+                        {{ label: "Lancamentos tratados", value: records.length, format: "int" }},
+                        {{ label: "Horas manuais", value: eficiencia.reduce((acc, item) => acc + item.horas_manuais, 0), format: "hours" }},
+                        {{ label: "Horas automatizadas", value: eficiencia.reduce((acc, item) => acc + item.horas_automatizadas, 0), format: "hours" }},
+                        {{ label: "Horas economizadas", value: eficiencia.reduce((acc, item) => acc + item.horas_economizadas, 0), format: "hours" }},
+                        {{ label: "Reducao de tempo", value: Number(sourceData.tempos?.manual_min || 2.5) > 0 ? Number((((Number(sourceData.tempos?.manual_min || 2.5) - Number(sourceData.tempos?.auto_min || 0.3)) / Number(sourceData.tempos?.manual_min || 2.5)) * 100).toFixed(2)) : 0, format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "economia", label: "Horas economizadas por mes", format: "hours", items: eficiencia.map((item) => ({{ label: item.ano_mes, value: item.horas_economizadas }})) }},
+                        {{ id: "volume", label: "Volume de lancamentos", format: "int", items: eficiencia.map((item) => ({{ label: item.ano_mes, value: item.lancamentos }})) }},
+                        {{ id: "ganho", label: "Ganho percentual por mes", format: "percent", items: eficiencia.map((item) => ({{ label: item.ano_mes, value: item.ganho_percentual }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "lancamentos", label: "Lancamentos", format: "int" }},
+                            {{ key: "horas_manuais", label: "Horas manuais", format: "hours" }},
+                            {{ key: "horas_automatizadas", label: "Horas auto", format: "hours" }},
+                            {{ key: "horas_economizadas", label: "Horas economizadas", format: "hours" }},
+                            {{ key: "ganho_percentual", label: "Ganho", format: "percent" }},
+                        ],
+                        rows: eficiencia,
+                    }},
+                    highlight: "A produtividade fica visivel ao combinar recortes de mes, categoria e centro de custo.",
+                }},
+            }};
+
+            return {{ stageOrder, stages }};
+        }}
+
+        function preencherSelect(selectEl, valores, valorAtual, rotuloTodos) {{
+            const opcoes = [rotuloTodos, ...valores];
+            selectEl.innerHTML = opcoes
+                .map((valor, index) => `<option value="${{index === 0 ? "todos" : valor}}">${{valor}}</option>`)
+                .join("");
+            selectEl.value = valorAtual;
+        }}
+
+        function popularFiltros() {{
+            const meses = Array.from(new Set(rawRecords.map((item) => item.ano_mes))).sort();
+            const categorias = Array.from(new Set(rawRecords.map((item) => item.categoria))).sort();
+            const centros = Array.from(new Set(rawRecords.map((item) => item.centro_custo))).sort();
+
+            preencherSelect(mesFilter, meses, state.mes, "Todos os meses");
+            preencherSelect(categoriaFilter, categorias, state.categoria, "Todas as categorias");
+            preencherSelect(centroFilter, centros, state.centro, "Todos os centros");
+        }}
+
+        function filtrarRegistros() {{
+            return rawRecords.filter((item) => (
+                (state.mes === "todos" || item.ano_mes === state.mes)
+                && (state.categoria === "todos" || item.categoria === state.categoria)
+                && (state.centro === "todos" || item.centro_custo === state.centro)
+            ));
+        }}
+
+        function renderStageOptions() {{
+            stageSelect.innerHTML = "";
+            stageNav.innerHTML = "";
+
+            currentStages.stageOrder.forEach((stageId) => {{
+                const stage = currentStages.stages[stageId];
+
+                const option = document.createElement("option");
+                option.value = stageId;
+                option.textContent = stage.label;
+                stageSelect.appendChild(option);
+
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = `stage-button${{stageId === state.stageId ? " active" : ""}}`;
+                button.textContent = stage.label;
+                button.addEventListener("click", () => {{
+                    state.stageId = stageId;
+                    syncStage();
+                }});
+                stageNav.appendChild(button);
+            }});
+
+            stageSelect.value = state.stageId;
+        }}
+
+        function renderIndexOptions(stage) {{
+            indexSelect.innerHTML = "";
+            stage.indices.forEach((indexItem, position) => {{
+                const option = document.createElement("option");
+                option.value = indexItem.id;
+                option.textContent = indexItem.label;
+                indexSelect.appendChild(option);
+
+                if (!state.indexId && position === 0) {{
+                    state.indexId = indexItem.id;
+                }}
+            }});
+
+            if (!stage.indices.some((item) => item.id === state.indexId)) {{
+                state.indexId = stage.indices[0].id;
+            }}
+            indexSelect.value = state.indexId;
+        }}
+
+        function renderCards(stage) {{
+            cardsGrid.innerHTML = "";
+            stage.cards.forEach((card) => {{
+                const article = document.createElement("article");
+                article.className = "kpi";
+                article.innerHTML = `<small>${{card.label}}</small><strong>${{formatValue(card.value, card.format)}}</strong>`;
+                cardsGrid.appendChild(article);
+            }});
+        }}
+
+        function renderCanvas(selectedIndex) {{
+            const ratio = window.devicePixelRatio || 1;
+            const width = Math.max(barsCanvas.clientWidth, 320);
+            barsCanvas.width = Math.floor(width * ratio);
+            barsCanvas.height = Math.floor(chartHeight * ratio);
+            barsCanvas.style.height = `${{chartHeight}}px`;
+
+            const ctx = barsCanvas.getContext("2d");
+            ctx.scale(ratio, ratio);
+            ctx.clearRect(0, 0, width, chartHeight);
+
+            const items = selectedIndex.items.slice(0, 12);
+            const values = items.map((item) => Number(item.value) || 0);
+            const maxAbs = Math.max(...values.map((value) => Math.abs(value)), 1);
+
+            const margin = {{ top: 24, right: 16, bottom: 56, left: 56 }};
+            const chartW = width - margin.left - margin.right;
+            const chartH = chartHeight - margin.top - margin.bottom;
+            const zeroY = margin.top + chartH / 2;
+            const barWidth = chartW / Math.max(items.length, 1) * 0.62;
+
+            ctx.strokeStyle = "#c8baa9";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, zeroY);
+            ctx.lineTo(width - margin.right, zeroY);
+            ctx.stroke();
+
+            items.forEach((item, index) => {{
+                const x = margin.left + (index * chartW / items.length) + ((chartW / items.length) - barWidth) / 2;
+                const value = Number(item.value) || 0;
+                const size = Math.abs(value / maxAbs) * (chartH / 2 - 6);
+                const y = value >= 0 ? zeroY - size : zeroY;
+
+                ctx.fillStyle = value >= 0 ? "#17313e" : "#9a3412";
+                ctx.fillRect(x, y, barWidth, Math.max(size, 2));
+
+                ctx.fillStyle = "#6e6258";
+                ctx.font = "12px Aptos, Trebuchet MS, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(item.label.slice(0, 10), x + barWidth / 2, chartHeight - 24);
+
+                ctx.fillStyle = "#1b1b1b";
+                ctx.font = "11px Aptos, Trebuchet MS, sans-serif";
+                const valor = formatValue(item.value, selectedIndex.format).replace("R$\u00a0", "");
+                ctx.fillText(valor, x + barWidth / 2, value >= 0 ? y - 8 : y + Math.max(size, 2) + 14);
+            }});
+        }}
+
+        function renderTrendSvg(selectedIndex) {{
+            const items = selectedIndex.items.slice(0, 20);
+            if (!items.length) {{
+                trendSvg.innerHTML = "";
+                return;
+            }}
+
+            const width = 540;
+            const height = 120;
+            const padding = 14;
+            const values = items.map((item) => Number(item.value) || 0);
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            const span = Math.max(max - min, 1);
+            const pontos = items.map((item, index) => {{
+                const x = padding + (index * (width - padding * 2) / Math.max(items.length - 1, 1));
+                const y = height - padding - ((Number(item.value || 0) - min) / span) * (height - padding * 2);
+                return `${{x}},${{y}}`;
+            }}).join(" ");
+
+            trendSvg.innerHTML = `
+                <polyline fill="none" stroke="#e9d7c2" stroke-width="2" points="${{padding}},${{height - padding}} ${{width - padding}},${{height - padding}}"></polyline>
+                <polyline fill="none" stroke="#c46a2f" stroke-width="3" points="${{pontos}}"></polyline>
+            `;
+        }}
+
+        function renderCharts(stage, selectedIndex) {{
+            chartTitle.textContent = selectedIndex.label;
+            chartCaption.textContent = "Grafico em canvas com linha de tendencia em SVG no recorte atual.";
+            renderCanvas(selectedIndex);
+            renderTrendSvg(selectedIndex);
+
+            highlight.textContent = stage.highlight;
+        }}
+
+        function renderTable(stage) {{
+            tableHead.innerHTML = "";
+            tableBody.innerHTML = "";
+
+            const headerRow = document.createElement("tr");
+            stage.table.columns.forEach((column) => {{
+                const th = document.createElement("th");
+                th.textContent = column.label;
+                headerRow.appendChild(th);
+            }});
+            tableHead.appendChild(headerRow);
+
+            stage.table.rows.forEach((row) => {{
+                const tr = document.createElement("tr");
+                stage.table.columns.forEach((column) => {{
+                    const td = document.createElement("td");
+                    td.textContent = formatValue(row[column.key], column.format);
+                    tr.appendChild(td);
+                }});
+                tableBody.appendChild(tr);
+            }});
+        }}
+
+        function syncStage(keepIndex = false) {{
+            renderStageOptions();
+            const stage = currentStages.stages[state.stageId];
+            stageTitle.textContent = stage.title;
+            stageDescription.textContent = stage.description;
+            if (!keepIndex) {{
+                state.indexId = null;
+            }}
+            renderIndexOptions(stage);
+            renderCards(stage);
+            renderTable(stage);
+            renderCharts(stage, stage.indices.find((item) => item.id === state.indexId));
+        }}
+
+        function atualizarDashboard() {{
+            const filtrado = filtrarRegistros();
+            datasetStatus.textContent = `Lancamentos no recorte atual: ${{filtrado.length}} de ${{rawRecords.length}}.`;
+            currentStages = construirStages(filtrado);
+            if (!currentStages.stages[state.stageId]) {{
+                state.stageId = currentStages.stageOrder[0];
+                state.indexId = null;
+            }}
+            syncStage(false);
+        }}
+
+        stageSelect.addEventListener("change", (event) => {{
+            state.stageId = event.target.value;
+            syncStage(false);
+        }});
+
+        indexSelect.addEventListener("change", (event) => {{
+            state.indexId = event.target.value;
+            const stage = currentStages.stages[state.stageId];
+            renderCharts(stage, stage.indices.find((item) => item.id === state.indexId));
+        }});
+
+        mesFilter.addEventListener("change", (event) => {{
+            state.mes = event.target.value;
+            atualizarDashboard();
+        }});
+
+        categoriaFilter.addEventListener("change", (event) => {{
+            state.categoria = event.target.value;
+            atualizarDashboard();
+        }});
+
+        centroFilter.addEventListener("change", (event) => {{
+            state.centro = event.target.value;
+            atualizarDashboard();
+        }});
+
+        window.addEventListener("resize", () => {{
+            if (!currentStages) {{
+                return;
+            }}
+            const stage = currentStages.stages[state.stageId];
+            const selectedIndex = stage.indices.find((item) => item.id === state.indexId) || stage.indices[0];
+            renderCharts(stage, selectedIndex);
+        }});
+
+        async function iniciar() {{
+            try {{
+                const resposta = await fetch(DATA_URL, {{ cache: "no-store" }});
+                if (!resposta.ok) {{
+                    throw new Error(`Falha ao carregar ${{DATA_URL}}`);
+                }}
+                sourceData = await resposta.json();
+                rawRecords = Array.isArray(sourceData.records) ? sourceData.records : [];
+                popularFiltros();
+                atualizarDashboard();
+            }} catch (erro) {{
+                datasetStatus.textContent = "Nao foi possivel carregar o JSON externo. Execute o script novamente ou abra via servidor HTTP.";
+                console.error(erro);
+            }}
+        }}
+
+        iniciar();
+    </script>
 </body>
 </html>
 """
@@ -587,18 +1519,7 @@ def imprimir_painel(mensal: pd.DataFrame, indicadores: pd.DataFrame) -> None:
 
 def criar_exemplo(arquivo: Path) -> None:
     """Cria um arquivo CSV de exemplo com lancamentos ficticios."""
-    exemplo = pd.DataFrame(
-        [
-            ["01/02/2026", "Venda projeto A", "vendas", "receita", 15000.00, "comercial"],
-            ["03/02/2026", "Pagamento fornecedor X", "fornecedores", "despesa", 4200.50, "operacoes"],
-            ["10/02/2026", "Assinatura software", "tecnologia", "despesa", 899.90, "ti"],
-            ["15/02/2026", "Venda projeto B", "vendas", "receita", 8700.00, "comercial"],
-            ["05/03/2026", "Folha salarial", "pessoal", "despesa", 6800.00, "rh"],
-            ["14/03/2026", "Recebimento consultoria", "servicos", "receita", 4600.00, "consultoria"],
-            ["20/03/2026", "Energia eletrica", "infraestrutura", "despesa", 740.31, "adm"],
-        ],
-        columns=COLUNAS_PADRAO,
-    )
+    exemplo = pd.DataFrame(EXEMPLO_LANCAMENTOS, columns=COLUNAS_PADRAO)
     arquivo.parent.mkdir(parents=True, exist_ok=True)
     exemplo.to_csv(arquivo, index=False)
     logger.info("Arquivo de exemplo criado em: %s", arquivo)
@@ -705,6 +1626,7 @@ def main() -> None:
         args.logo,
     )
     arquivo_html = gerar_relatorio_executivo_html(
+        base,
         resumo_mensal,
         resumo_categoria,
         indicadores,
