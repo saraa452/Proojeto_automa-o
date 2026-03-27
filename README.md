@@ -1,8 +1,19 @@
 # Portfolio Executivo de Relatorios Financeiros
 
-Case de portfolio em Python para demonstrar automacao de rotinas operacionais financeiras, reducao de tempo manual e padronizacao de relatorios gerenciais com entrega executiva pronta para web.
+Projeto de portfolio em Python para automatizar tratamento de lancamentos financeiros, gerar relatorios gerenciais e publicar um dashboard web interativo.
 
-## Entregaveis gerados
+## O que o projeto entrega
+
+- Pipeline de limpeza e padronizacao dos lancamentos
+- Relatorios em CSV, Excel e Markdown
+- Dashboard web em HTML com:
+   - filtros por mes, categoria e centro de custo
+   - troca de etapa de analise (visao geral, mensal, categorias, centros e eficiencia)
+   - troca de indice por etapa
+   - grafico principal em canvas e tendencia complementar em SVG
+- Dados do dashboard em arquivo externo JSON para facilitar manutencao
+
+## Arquivos gerados
 
 - relatorios/01_base_padronizada.csv
 - relatorios/02_resumo_mensal.csv
@@ -10,64 +21,63 @@ Case de portfolio em Python para demonstrar automacao de rotinas operacionais fi
 - relatorios/04_indicadores_eficiencia.csv
 - relatorios/05_relatorio_executivo.md
 - relatorios/relatorio_gerencial_padronizado.xlsx
-- docs/index.html (versao web para GitHub Pages)
+- docs/index.html
+- docs/assets/dashboard-data.json
 
-## Como gerar os relatorios
+## Como executar
 
-1. Ative seu ambiente virtual.
-2. Execute o script:
-
-   /home/sara/Documentos/Projetos_gits/Analise_critério/.venv/bin/python app.py --gerar-exemplo
-
-3. Abra a versao web em docs/index.html.
-
-## Competencias demonstradas
-
-- Automacao de processos financeiros com Python
-- Tratamento, limpeza e padronizacao de dados
-- Geracao de relatorios em CSV, Excel, Markdown e HTML
-- Comunicacao executiva orientada a indicadores
-- Publicacao de portfolio tecnico no GitHub Pages
-
-## Publicar no GitHub Pages (Linux)
-
-1. Configure sua identidade Git:
+1. Ative o ambiente virtual.
+2. Gere os relatorios e o site:
 
 ```bash
-git config --global user.name "Sara"
-git config --global user.email "seu-email@exemplo.com"
+.venv/bin/python app.py
 ```
 
-1. Inicialize o Git, adicione os arquivos e faça commit:
+3. Para visualizar localmente com o JSON externo, rode um servidor HTTP na raiz do projeto:
 
 ```bash
-git add .
-git commit -m "Portfolio executivo de relatorios financeiros"
-git branch -M main
+python -m http.server 8000
 ```
 
-1. Configure o remoto e envie para GitHub:
+4. Abra no navegador:
+
+```text
+http://localhost:8000/docs/index.html
+```
+
+Observacao: abrir o HTML direto por arquivo (file://) pode bloquear o fetch do JSON em alguns navegadores.
+
+## Gerar base de exemplo
+
+Se o arquivo de entrada nao existir, voce pode criar uma base inicial automaticamente:
 
 ```bash
-git remote add origin "https://github.com/saraa452/Proojeto_automa-o.git"
-git push -u origin main
+.venv/bin/python app.py --gerar-exemplo
 ```
 
-1. No GitHub:
-   - Abra Settings > Pages
-   - Em Build and deployment, selecione Deploy from a branch
-   - Branch: main
-   - Folder: /docs
-   - Salve
+## Argumentos uteis
 
-1. A URL final fica assim:
-
+```bash
+.venv/bin/python app.py \
+   --entrada dados/lancamentos_financeiros.csv \
+   --saida relatorios \
+   --site-dir docs \
+   --titulo-relatorio "Portfolio Executivo - Sara" \
+   --nome-profissional "Sara" \
+   --cargo-profissional "Analista de Automacao Financeira" \
+   --empresa "Analise Criterio" \
+   --logo "assets/logo.svg"
 ```
+
+## Publicar no GitHub Pages
+
+1. Envie a branch main com a pasta docs atualizada.
+2. No GitHub, abra Settings > Pages.
+3. Em Build and deployment, selecione Deploy from a branch.
+4. Branch: main.
+5. Folder: /docs.
+6. Salve.
+
+URL esperada:
+
 https://saraa452.github.io/Proojeto_automa-o/
-```
-
-## Personalizacao
-
-Voce pode ajustar titulo, nome, cargo, empresa e logo com argumentos opcionais:
-
-/home/sara/Documentos/Projetos_gits/Analise_critério/.venv/bin/python app.py --titulo-relatorio "Portfolio Executivo - Sara" --nome-profissional "Sara" --cargo-profissional "Analista de Automacao Financeira" --empresa "Analise Criterio" --logo "../assets/logo.svg"
