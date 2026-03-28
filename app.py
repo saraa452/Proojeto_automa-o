@@ -1171,6 +1171,7 @@ def gerar_relatorio_executivo_html(
     )
     salvar_payload_site(payload_site, pasta_site)
     classe_saldo = "saldo-ok" if kpis["saldo_total"] >= 0 else "saldo-alerta"
+    payload_inline = json.dumps(payload_site, ensure_ascii=False).replace("</", "<\\/")
 
     html = f"""<!doctype html>
 <html lang="pt-BR">
@@ -1378,41 +1379,28 @@ def gerar_relatorio_executivo_html(
         <section class="panel">
             <div class="panel-head">
                 <div>
-                    <h2>Sobre o Projeto</h2>
-                    <p class="summary-text">Estrutura de apresentacao focada em contexto de negocio, problema, solucao e resultados.</p>
+                    <h2>Resumo Executivo</h2>
+                    <p class="summary-text">Painel reduzido para foco em indicadores-chave e decisoes gerenciais.</p>
                 </div>
             </div>
             <div class="narrative">
                 <section>
-                    <h3>Contexto de negocio</h3>
-                    <p>Este projeto foi desenvolvido para automatizar a consolidacao de dados financeiros e administrativos, reduzindo processos manuais e aumentando a confiabilidade das informacoes. A solucao integra dados de diferentes periodos e centros de custo, permitindo analise estruturada e geracao de indicadores estrategicos para apoio a tomada de decisao.</p>
+                    <h3>Objetivo</h3>
+                    <p>Concentrar o que mais importa: receita, despesa, saldo, projecao, liquidez e rentabilidade por centro de custo.</p>
                 </section>
                 <section>
-                    <h3>Problema de negocio</h3>
-                    <p>Antes da implementacao, a analise era manual, com alto risco de inconsistencias, retrabalho e baixa agilidade na geracao de relatorios. A ausencia de padronizacao dificultava comparacoes entre periodos e comprometia a visao estrategica das informacoes.</p>
-                </section>
-                <section>
-                    <h3>Solucao desenvolvida</h3>
-                    <p>Foi estruturado um fluxo automatizado de tratamento e analise de dados em etapas de transformacao, padronizacao e consolidacao. Em paralelo, foi construido um dashboard interativo para navegacao entre visoes analiticas e exploracao de indicadores sem reprocessamento.</p>
-                </section>
-                <section>
-                    <h3>Tecnologias utilizadas</h3>
+                    <h3>Leituras prioritarias</h3>
                     <ul>
-                        <li>Python para tratamento e automacao de dados</li>
-                        <li>Estrutura ETL (Extracao, Transformacao e Carga)</li>
-                        <li>Modelagem de dados e agregacoes analiticas</li>
-                        <li>Dashboard interativo (HTML, JavaScript, Canvas e SVG)</li>
-                        <li>Git e GitHub para versionamento e publicacao</li>
+                        <li>Projecao de receita e despesa para antecipar decisao comercial</li>
+                        <li>Liquidez e ciclo de caixa para planejamento de capital de giro</li>
+                        <li>Rentabilidade real por centro com alocacao de custos compartilhados</li>
                     </ul>
                 </section>
                 <section>
-                    <h3>Principais analises</h3>
+                    <h3>Analises complementares</h3>
                     <ul>
-                        <li>Receita bruta, receita liquida e descontos</li>
-                        <li>Evolucao mensal de indicadores</li>
-                        <li>Analise por categoria</li>
-                        <li>Analise por centro de custo</li>
-                        <li>Identificacao de padroes e variacoes</li>
+                        <li>Eficiencia dos descontos, mix de receita e produtividade</li>
+                        <li>Deteccao de anomalias e benchmarking entre anos</li>
                     </ul>
                 </section>
             </div>
@@ -1442,7 +1430,7 @@ def gerar_relatorio_executivo_html(
                 </div>
             </div>
             <div class="stage-nav" id="stage-nav"></div>
-            <p class="status" id="dataset-status">Carregando base externa...</p>
+            <p class="status" id="dataset-status">Carregando indicadores principais...</p>
         </section>
 
         <section class="panel">
@@ -1496,6 +1484,7 @@ def gerar_relatorio_executivo_html(
             <p class="foot">Publicacao web pronta para GitHub Pages a partir da pasta docs.</p>
         </section>
     </main>
+    <script id="embedded-data" type="application/json">{payload_inline}</script>
     <script>
         const DATA_URL = "assets/dashboard-data.json";
         const state = {{
@@ -2425,6 +2414,22 @@ def gerar_relatorio_executivo_html(
         }});
 
         async function iniciar() {{
+            const payloadEmbebido = document.getElementById("embedded-data");
+            let carregouEmbebido = false;
+
+            if (payloadEmbebido) {{
+                try {{
+                    sourceData = JSON.parse(payloadEmbebido.textContent || "{{}}");
+                    rawRecords = Array.isArray(sourceData.records) ? sourceData.records : [];
+                    popularFiltros();
+                    atualizarDashboard();
+                    carregouEmbebido = true;
+                    datasetStatus.textContent = "Indicadores principais carregados. Atualizando base externa...";
+                }} catch (erroEmbebido) {{
+                    console.error(erroEmbebido);
+                }}
+            }}
+
             try {{
                 const resposta = await fetch(DATA_URL, {{ cache: "no-store" }});
                 if (!resposta.ok) {{
@@ -2434,8 +2439,13 @@ def gerar_relatorio_executivo_html(
                 rawRecords = Array.isArray(sourceData.records) ? sourceData.records : [];
                 popularFiltros();
                 atualizarDashboard();
+                datasetStatus.textContent = "Base externa atualizada.";
             }} catch (erro) {{
-                datasetStatus.textContent = "Nao foi possivel carregar o JSON externo. Execute o script novamente ou abra via servidor HTTP.";
+                if (carregouEmbebido) {{
+                    datasetStatus.textContent = "Exibindo dados principais locais (base externa indisponivel).";
+                    return;
+                }}
+                datasetStatus.textContent = "Nao foi possivel carregar os dados do dashboard. Execute o script novamente.";
                 console.error(erro);
             }}
         }}
