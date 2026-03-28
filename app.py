@@ -14,12 +14,15 @@ Uso tipico::
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import logging
 import shutil
 from datetime import date
+from typing import Any, cast
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 
@@ -400,6 +403,477 @@ def gerar_indicadores(
     )
 
 
+def adicionar_datas_fluxo_caixa(df: pd.DataFrame) -> pd.DataFrame:
+    """Gera datas de recebimento/pagamento para analise de liquidez."""
+    base = df.copy()
+
+    prazo_recebimento = {
+        "assinaturas": 5,
+        "projetos": 30,
+        "servicos": 20,
+        "vendas": 25,
+    }
+    prazo_pagamento = {
+        "pessoal": 2,
+        "fornecedores": 30,
+        "marketing": 15,
+        "tecnologia": 20,
+        "infraestrutura": 10,
+        "operacoes": 18,
+        "descontos_comerciais": 0,
+    }
+
+    def _prazo(row: pd.Series) -> int:
+        categoria = str(row["categoria"]).lower()
+        if row["tipo"] == "receita":
+            return int(prazo_recebimento.get(categoria, 20))
+        return int(prazo_pagamento.get(categoria, 15))
+
+    base["prazo_dias"] = base.apply(_prazo, axis=1)
+    base["data_recebimento"] = pd.NaT
+    base["data_pagamento"] = pd.NaT
+
+    mask_receita = base["tipo"] == "receita"
+    mask_despesa = base["tipo"] == "despesa"
+
+    base.loc[mask_receita, "data_recebimento"] = (
+        base.loc[mask_receita, "data"] + pd.to_timedelta(base.loc[mask_receita, "prazo_dias"], unit="D")
+    )
+    base.loc[mask_despesa, "data_pagamento"] = (
+        base.loc[mask_despesa, "data"] + pd.to_timedelta(base.loc[mask_despesa, "prazo_dias"], unit="D")
+    )
+
+    base["data_caixa"] = base["data_recebimento"].fillna(base["data_pagamento"])
+    base["ano_mes_caixa"] = base["data_caixa"].dt.to_period("M").astype(str)
+    base["valor_caixa"] = np.where(base["tipo"] == "receita", base["valor"], -base["valor"])
+    return base
+
+
+def gerar_sazonalidade(df: pd.DataFrame) -> pd.DataFrame:
+    """Calcula padrao sazonal por mes calendario."""
+    mensal = gerar_resumo_mensal(df)
+    mensal["ano"] = mensal["ano_mes"].str.slice(0, 4).astype(int)
+    mensal["mes"] = mensal["ano_mes"].str.slice(5, 7).astype(int)
+
+    sazonal = (
+        mensal.groupby("mes", as_index=False)
+        .agg(
+            media_receita=("total_receita", "mean"),
+            media_despesa=("total_despesa", "mean"),
+            media_saldo=("saldo", "mean"),
+            pico_receita=("total_receita", "max"),
+            pico_despesa=("total_despesa", "max"),
+        )
+        .sort_values("mes")
+        .reset_index(drop=True)
+    )
+    sazonal["mes_nome"] = sazonal["mes"].map(
+        {
+            1: "jan",
+            2: "fev",
+            3: "mar",
+            4: "abr",
+            5: "mai",
+            6: "jun",
+            7: "jul",
+            8: "ago",
+            9: "set",
+            10: "out",
+            11: "nov",
+            12: "dez",
+        }
+    )
+    return sazonal[["mes", "mes_nome", "media_receita", "media_despesa", "media_saldo", "pico_receita", "pico_despesa"]]
+
+
+def _forecast_series_sarima_ou_fallback(
+    serie: pd.Series,
+    periods: int = 6,
+) -> tuple[pd.Series, str]:
+    """Preve serie mensal com SARIMA quando disponivel e fallback linear+sazonal."""
+    serie = serie.astype(float)
+    serie.index = pd.to_datetime(serie.index)
+    serie = serie.asfreq("MS")
+
+    try:
+        sarimax_module = importlib.import_module("statsmodels.tsa.statespace.sarimax")
+        SARIMAX = sarimax_module.SARIMAX
+        seasonal_order = (1, 1, 1, 12) if len(serie) >= 24 else (0, 0, 0, 0)
+        modelo = SARIMAX(
+            serie,
+            order=(1, 1, 1),
+            seasonal_order=seasonal_order,
+            enforce_stationarity=False,
+            enforce_invertibility=False,
+        )
+        ajuste = modelo.fit(disp=False)
+        pred = ajuste.forecast(steps=periods)
+        pred = pd.Series(np.maximum(pred.values, 0.0), index=pred.index)
+        return pred, "SARIMA"
+    except Exception:
+        pass
+
+    # Fallback deterministico para ambientes sem statsmodels.
+    idx_futuro = pd.date_range(start=serie.index.max() + pd.offsets.MonthBegin(1), periods=periods, freq="MS")
+    if len(serie) >= 2:
+        tendencia = (serie.iloc[-1] - serie.iloc[0]) / max(len(serie) - 1, 1)
+    else:
+        tendencia = 0.0
+
+    indice_dt = pd.DatetimeIndex(serie.index)
+    sazonal = serie.groupby(indice_dt.month).mean()
+    base = float(serie.iloc[-1])
+    valores = []
+    for passo, dt_ref in enumerate(idx_futuro, start=1):
+        componente_sazonal = float(sazonal.get(dt_ref.month, serie.mean()))
+        valor = max(base + tendencia * passo, 0.0)
+        valor = (valor * 0.6) + (componente_sazonal * 0.4)
+        valores.append(valor)
+    pred = pd.Series(valores, index=idx_futuro)
+    return pred, "FallbackLinearSazonal"
+
+
+def gerar_projecao_financeira(df: pd.DataFrame, periods: int = 6) -> tuple[pd.DataFrame, str]:
+    """Gera projecao mensal de receitas e despesas para os proximos meses."""
+    mensal = gerar_resumo_mensal(df)
+    historico = mensal.copy()
+    historico["data_ref"] = pd.to_datetime(historico["ano_mes"] + "-01")
+
+    serie_receita = historico.set_index("data_ref")["total_receita"]
+    serie_despesa = historico.set_index("data_ref")["total_despesa"]
+
+    prev_receita, modelo_receita = _forecast_series_sarima_ou_fallback(serie_receita, periods=periods)
+    prev_despesa, modelo_despesa = _forecast_series_sarima_ou_fallback(serie_despesa, periods=periods)
+    modelo = modelo_receita if modelo_receita == modelo_despesa else f"{modelo_receita}+{modelo_despesa}"
+
+    previsao = pd.DataFrame(
+        {
+            "data_ref": prev_receita.index,
+            "total_receita": prev_receita.values,
+            "total_despesa": prev_despesa.values,
+            "tipo": "projecao",
+        }
+    )
+    previsao["saldo"] = previsao["total_receita"] - previsao["total_despesa"]
+    previsao["ano_mes"] = previsao["data_ref"].dt.to_period("M").astype(str)
+
+    historico_view = historico[["data_ref", "ano_mes", "total_receita", "total_despesa", "saldo"]].copy()
+    historico_view["tipo"] = "historico"
+
+    combinado = pd.concat([historico_view, previsao], ignore_index=True)
+    return combinado[["ano_mes", "tipo", "total_receita", "total_despesa", "saldo"]], modelo
+
+
+def analisar_descontos(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, float]:
+    """Avalia correlacao dos descontos com receita subsequente e payback por categoria."""
+    descontos = (
+        df[(df["tipo"] == "despesa") & (df["categoria"].str.contains("desconto", case=False, na=False))]
+        .groupby("ano_mes", as_index=False)
+        .agg(descontos=("valor", "sum"))
+    )
+    receita = (
+        df[df["tipo"] == "receita"]
+        .groupby("ano_mes", as_index=False)
+        .agg(receita_mes=("valor", "sum"))
+    )
+
+    base_mes = receita.merge(descontos, on="ano_mes", how="left").fillna({"descontos": 0.0})
+    base_mes = base_mes.sort_values("ano_mes").reset_index(drop=True)
+    base_mes["receita_subsequente"] = base_mes["receita_mes"].shift(-1)
+    base_mes["delta_receita_subsequente"] = base_mes["receita_subsequente"] - base_mes["receita_mes"]
+    base_mes["payback"] = base_mes.apply(
+        lambda row: (row["delta_receita_subsequente"] / row["descontos"]) if row["descontos"] > 0 else np.nan,
+        axis=1,
+    )
+
+    correlacao = 0.0
+    amostra_corr = base_mes.dropna(subset=["receita_subsequente"])
+    if len(amostra_corr) >= 3 and amostra_corr["descontos"].std() > 0 and amostra_corr["receita_subsequente"].std() > 0:
+        correlacao = float(amostra_corr["descontos"].corr(amostra_corr["receita_subsequente"]))
+
+    receita_cat = (
+        df[df["tipo"] == "receita"]
+        .groupby(["ano_mes", "categoria"], as_index=False)
+        .agg(receita_categoria=("valor", "sum"))
+    )
+    total_receita_mes = (
+        receita_cat.groupby("ano_mes", as_index=False)
+        .agg(receita_total_mes=("receita_categoria", "sum"))
+    )
+    receita_cat = receita_cat.merge(total_receita_mes, on="ano_mes", how="left")
+    receita_cat = receita_cat.merge(descontos, on="ano_mes", how="left").fillna({"descontos": 0.0})
+    receita_cat["desconto_alocado"] = receita_cat.apply(
+        lambda row: row["descontos"] * (row["receita_categoria"] / row["receita_total_mes"]) if row["receita_total_mes"] > 0 else 0.0,
+        axis=1,
+    )
+
+    receita_cat = receita_cat.sort_values(["categoria", "ano_mes"]).reset_index(drop=True)
+    receita_cat["receita_categoria_subsequente"] = receita_cat.groupby("categoria")["receita_categoria"].shift(-1)
+    receita_cat["delta_receita_subsequente"] = (
+        receita_cat["receita_categoria_subsequente"] - receita_cat["receita_categoria"]
+    )
+
+    payback_categoria = (
+        receita_cat.groupby("categoria", as_index=False)
+        .agg(
+            desconto_alocado=("desconto_alocado", "sum"),
+            delta_receita_subsequente=("delta_receita_subsequente", "sum"),
+        )
+        .sort_values("desconto_alocado", ascending=False)
+        .reset_index(drop=True)
+    )
+    payback_categoria["payback"] = payback_categoria.apply(
+        lambda row: (row["delta_receita_subsequente"] / row["desconto_alocado"]) if row["desconto_alocado"] > 0 else np.nan,
+        axis=1,
+    )
+
+    return base_mes, payback_categoria, correlacao
+
+
+def analisar_rentabilidade_centros(df: pd.DataFrame) -> pd.DataFrame:
+    """Aloca despesas compartilhadas (RH/ADM/TI) para centros de receita."""
+    resumo = _agrupar_financeiro(df, ["centro_custo"])
+    suporte = {"rh", "adm", "ti"}
+
+    receita_centros = resumo[resumo["total_receita"] > 0][["centro_custo", "total_receita", "total_despesa"]].copy()
+    if receita_centros.empty:
+        receita_centros = resumo[["centro_custo", "total_receita", "total_despesa"]].copy()
+
+    despesa_compartilhada = float(
+        df[(df["tipo"] == "despesa") & (df["centro_custo"].isin(suporte))]["valor"].sum()
+    )
+    total_receita = float(receita_centros["total_receita"].sum())
+    receita_centros["peso_receita"] = receita_centros["total_receita"].apply(
+        lambda valor: (valor / total_receita) if total_receita > 0 else 0.0
+    )
+    receita_centros["despesa_alocada_suporte"] = receita_centros["peso_receita"] * despesa_compartilhada
+    receita_centros["despesa_total_alocada"] = (
+        receita_centros["total_despesa"] + receita_centros["despesa_alocada_suporte"]
+    )
+    receita_centros["margem_liquida"] = (
+        receita_centros["total_receita"] - receita_centros["despesa_total_alocada"]
+    )
+    receita_centros["margem_percentual"] = receita_centros.apply(
+        lambda row: (row["margem_liquida"] / row["total_receita"] * 100) if row["total_receita"] > 0 else 0.0,
+        axis=1,
+    )
+    return receita_centros.sort_values("margem_liquida", ascending=False).reset_index(drop=True)
+
+
+def analisar_mix_receita(df: pd.DataFrame) -> pd.DataFrame:
+    """Acompanha mix entre receita recorrente, projetos e demais receitas."""
+    receitas = df[df["tipo"] == "receita"].copy()
+    receitas["mix_grupo"] = "outras_receitas"
+    receitas.loc[receitas["categoria"].eq("assinaturas"), "mix_grupo"] = "recorrentes_assinaturas"
+    receitas.loc[receitas["categoria"].eq("projetos"), "mix_grupo"] = "projetos_pontuais"
+
+    mix = (
+        receitas.groupby(["ano_mes", "mix_grupo"], as_index=False)["valor"]
+        .sum()
+        .pivot(index="ano_mes", columns="mix_grupo", values="valor")
+        .fillna(0)
+        .reset_index()
+    )
+
+    for coluna in ["recorrentes_assinaturas", "projetos_pontuais", "outras_receitas"]:
+        if coluna not in mix.columns:
+            mix[coluna] = 0.0
+
+    mix["receita_total"] = (
+        mix["recorrentes_assinaturas"] + mix["projetos_pontuais"] + mix["outras_receitas"]
+    )
+    mix["share_recorrente"] = mix.apply(
+        lambda row: (row["recorrentes_assinaturas"] / row["receita_total"] * 100) if row["receita_total"] > 0 else 0.0,
+        axis=1,
+    )
+    mix["share_projetos"] = mix.apply(
+        lambda row: (row["projetos_pontuais"] / row["receita_total"] * 100) if row["receita_total"] > 0 else 0.0,
+        axis=1,
+    )
+    return mix.sort_values("ano_mes").reset_index(drop=True)
+
+
+def analisar_produtividade_pessoal(df: pd.DataFrame) -> pd.DataFrame:
+    """Relaciona despesas de pessoal com receita de projetos."""
+    pessoal = (
+        df[(df["tipo"] == "despesa") & (df["categoria"] == "pessoal")]
+        .groupby("ano_mes", as_index=False)
+        .agg(despesa_pessoal=("valor", "sum"))
+    )
+    projetos = (
+        df[(df["tipo"] == "receita") & (df["categoria"] == "projetos")]
+        .groupby("ano_mes", as_index=False)
+        .agg(receita_projetos=("valor", "sum"))
+    )
+    qtd_projetos = (
+        df[(df["tipo"] == "receita") & (df["categoria"] == "projetos")]
+        .groupby("ano_mes", as_index=False)
+        .size()
+        .rename(columns={"size": "qtd_projetos"})
+    )
+
+    produtividade = (
+        projetos.merge(pessoal, on="ano_mes", how="outer")
+        .merge(qtd_projetos, on="ano_mes", how="left")
+        .fillna({"receita_projetos": 0.0, "despesa_pessoal": 0.0, "qtd_projetos": 0})
+        .sort_values("ano_mes")
+        .reset_index(drop=True)
+    )
+    produtividade["produtividade_receita_por_pessoal"] = produtividade.apply(
+        lambda row: (row["receita_projetos"] / row["despesa_pessoal"]) if row["despesa_pessoal"] > 0 else np.nan,
+        axis=1,
+    )
+    produtividade["custo_pessoal_por_projeto"] = produtividade.apply(
+        lambda row: (row["despesa_pessoal"] / row["qtd_projetos"]) if row["qtd_projetos"] > 0 else np.nan,
+        axis=1,
+    )
+    return produtividade
+
+
+def detectar_anomalias(df: pd.DataFrame) -> pd.DataFrame:
+    """Identifica lancamentos atipicos por tipo com base em z-score robusto."""
+    base = df.copy()
+    base["valor_abs"] = base["valor"].abs()
+
+    anomalias: list[pd.DataFrame] = []
+    for tipo in ["receita", "despesa"]:
+        grupo = base[base["tipo"] == tipo].copy()
+        if grupo.empty:
+            continue
+        mediana = float(grupo["valor_abs"].median())
+        mad = float((grupo["valor_abs"] - mediana).abs().median())
+        if mad == 0:
+            continue
+        grupo["z_robusto"] = 0.6745 * (grupo["valor_abs"] - mediana) / mad
+        grupo = grupo[grupo["z_robusto"].abs() >= 2.8]
+        anomalias.append(grupo)
+
+    if not anomalias:
+        return pd.DataFrame(
+            columns=["data", "ano_mes", "descricao", "categoria", "tipo", "valor", "centro_custo", "z_robusto"]
+        )
+
+    consolidado = pd.concat(anomalias, ignore_index=True)
+    return consolidado[
+        ["data", "ano_mes", "descricao", "categoria", "tipo", "valor", "centro_custo", "z_robusto"]
+    ].sort_values("z_robusto", ascending=False)
+
+
+def gerar_benchmarking_yoy(df: pd.DataFrame) -> pd.DataFrame:
+    """Compara meses equivalentes entre anos para crescimento organico."""
+    mensal = gerar_resumo_mensal(df)
+    mensal["ano"] = mensal["ano_mes"].str.slice(0, 4).astype(int)
+    mensal["mes"] = mensal["ano_mes"].str.slice(5, 7).astype(int)
+
+    atual = mensal.copy()
+    anterior = mensal.copy()
+    anterior["ano"] = anterior["ano"] + 1
+
+    comparativo = atual.merge(
+        anterior[["ano", "mes", "total_receita", "total_despesa", "saldo"]],
+        on=["ano", "mes"],
+        how="left",
+        suffixes=("_atual", "_ano_anterior"),
+    )
+    comparativo = comparativo.dropna(subset=["total_receita_ano_anterior"]).reset_index(drop=True)
+
+    for campo in ["total_receita", "total_despesa", "saldo"]:
+        comparativo[f"crescimento_{campo}"] = comparativo.apply(
+            lambda row: (
+                (row[f"{campo}_atual"] - row[f"{campo}_ano_anterior"])
+                / row[f"{campo}_ano_anterior"]
+                * 100
+            )
+            if pd.notna(row[f"{campo}_ano_anterior"]) and row[f"{campo}_ano_anterior"] != 0
+            else np.nan,
+            axis=1,
+        )
+
+    comparativo["ano_mes"] = comparativo["ano"].astype(str) + "-" + comparativo["mes"].astype(str).str.zfill(2)
+    return comparativo[
+        [
+            "ano_mes",
+            "total_receita_atual",
+            "total_receita_ano_anterior",
+            "crescimento_total_receita",
+            "total_despesa_atual",
+            "total_despesa_ano_anterior",
+            "crescimento_total_despesa",
+            "saldo_atual",
+            "saldo_ano_anterior",
+            "crescimento_saldo",
+        ]
+    ].sort_values("ano_mes")
+
+
+def analisar_fluxo_caixa(df_com_fluxo: pd.DataFrame) -> pd.DataFrame:
+    """Calcula visao de liquidez e necessidade de capital de giro."""
+    fluxo = (
+        df_com_fluxo.groupby(["ano_mes_caixa", "tipo"], as_index=False)["valor"]
+        .sum()
+        .pivot(index="ano_mes_caixa", columns="tipo", values="valor")
+        .fillna(0)
+        .reset_index()
+    )
+
+    if "receita" not in fluxo.columns:
+        fluxo["receita"] = 0.0
+    if "despesa" not in fluxo.columns:
+        fluxo["despesa"] = 0.0
+
+    fluxo = fluxo.rename(columns={"ano_mes_caixa": "ano_mes", "receita": "entradas", "despesa": "saidas"})
+    fluxo["saldo_caixa"] = fluxo["entradas"] - fluxo["saidas"]
+    fluxo["saldo_acumulado"] = fluxo["saldo_caixa"].cumsum()
+
+    prazo_recebimento = df_com_fluxo[df_com_fluxo["tipo"] == "receita"]["prazo_dias"].mean()
+    prazo_pagamento = df_com_fluxo[df_com_fluxo["tipo"] == "despesa"]["prazo_dias"].mean()
+    ciclo_caixa = float((prazo_recebimento or 0.0) - (prazo_pagamento or 0.0))
+    fluxo["ciclo_caixa_dias"] = round(ciclo_caixa, 2)
+    fluxo["necessidade_capital_giro"] = fluxo["saldo_acumulado"].apply(lambda v: abs(v) if v < 0 else 0.0)
+    return fluxo.sort_values("ano_mes").reset_index(drop=True)
+
+
+def gerar_analises_avancadas(df: pd.DataFrame) -> dict[str, Any]:
+    """Orquestra todas as analises adicionais para o dashboard e relatorios."""
+    base_fluxo = adicionar_datas_fluxo_caixa(df)
+    sazonalidade = gerar_sazonalidade(df)
+    projecao, modelo_previsao = gerar_projecao_financeira(df)
+    descontos_mensal, payback_categoria, correlacao_descontos = analisar_descontos(df)
+    rentabilidade = analisar_rentabilidade_centros(df)
+    mix_receita = analisar_mix_receita(df)
+    produtividade = analisar_produtividade_pessoal(df)
+    anomalias = detectar_anomalias(df)
+    benchmarking = gerar_benchmarking_yoy(df)
+    liquidez = analisar_fluxo_caixa(base_fluxo)
+
+    pico_receita = sazonalidade.sort_values("media_receita", ascending=False).head(1)
+    pico_despesa = sazonalidade.sort_values("media_despesa", ascending=False).head(1)
+
+    insights = {
+        "modelo_previsao": modelo_previsao,
+        "correlacao_descontos_receita_subsequente": round(correlacao_descontos, 4),
+        "pico_receita_mes": pico_receita.iloc[0]["mes_nome"] if not pico_receita.empty else "n/a",
+        "pico_despesa_mes": pico_despesa.iloc[0]["mes_nome"] if not pico_despesa.empty else "n/a",
+        "descontos_total": float(descontos_mensal["descontos"].sum()) if not descontos_mensal.empty else 0.0,
+        "despesa_pessoal_total": float(df[df["categoria"].eq("pessoal")]["valor"].sum()),
+    }
+
+    return {
+        "base_fluxo": base_fluxo,
+        "sazonalidade": sazonalidade,
+        "projecao": projecao,
+        "descontos_mensal": descontos_mensal,
+        "payback_categoria": payback_categoria,
+        "rentabilidade": rentabilidade,
+        "mix_receita": mix_receita,
+        "produtividade": produtividade,
+        "anomalias": anomalias,
+        "benchmarking": benchmarking,
+        "liquidez": liquidez,
+        "insights": insights,
+    }
+
+
 def _extrair_kpis(mensal: pd.DataFrame, indicadores: pd.DataFrame) -> dict[str, float]:
     """Extrai os KPIs principais em um dicionario."""
     mapa = dict(zip(indicadores["indicador"], indicadores["valor"]))
@@ -434,6 +908,7 @@ def montar_payload_site(
     mensal: pd.DataFrame,
     categoria: pd.DataFrame,
     indicadores: pd.DataFrame,
+    analises: dict[str, Any],
 ) -> dict[str, object]:
     """Monta os dados-base serializados para o dashboard interativo."""
     registros = base.copy()
@@ -441,11 +916,41 @@ def montar_payload_site(
     registros["valor"] = registros["valor"].astype(float).round(2)
     registros["valor_assinado"] = registros["valor_assinado"].astype(float).round(2)
 
+    if "data_recebimento" in registros.columns:
+        registros["data_recebimento"] = pd.to_datetime(registros["data_recebimento"], errors="coerce").dt.strftime("%Y-%m-%d")
+    if "data_pagamento" in registros.columns:
+        registros["data_pagamento"] = pd.to_datetime(registros["data_pagamento"], errors="coerce").dt.strftime("%Y-%m-%d")
+    if "data_caixa" in registros.columns:
+        registros["data_caixa"] = pd.to_datetime(registros["data_caixa"], errors="coerce").dt.strftime("%Y-%m-%d")
+
+    def _to_records(df: pd.DataFrame) -> list[dict[str, Any]]:
+        if df.empty:
+            return []
+        safe = df.copy()
+        for col in safe.columns:
+            if pd.api.types.is_datetime64_any_dtype(safe[col]):
+                safe[col] = safe[col].dt.strftime("%Y-%m-%d")
+        registros_json = safe.replace({np.nan: None}).to_dict(orient="records")
+        return cast(list[dict[str, Any]], registros_json)
+
     return {
         "generatedAt": date.today().isoformat(),
         "tempos": {
             "manual_min": TEMPO_MANUAL_MIN,
             "auto_min": TEMPO_AUTO_MIN,
+        },
+        "insights": analises.get("insights", {}),
+        "analytics": {
+            "sazonalidade": _to_records(analises.get("sazonalidade", pd.DataFrame())),
+            "projecao": _to_records(analises.get("projecao", pd.DataFrame())),
+            "descontos_mensal": _to_records(analises.get("descontos_mensal", pd.DataFrame())),
+            "payback_categoria": _to_records(analises.get("payback_categoria", pd.DataFrame())),
+            "rentabilidade": _to_records(analises.get("rentabilidade", pd.DataFrame())),
+            "mix_receita": _to_records(analises.get("mix_receita", pd.DataFrame())),
+            "produtividade": _to_records(analises.get("produtividade", pd.DataFrame())),
+            "anomalias": _to_records(analises.get("anomalias", pd.DataFrame())),
+            "benchmarking": _to_records(analises.get("benchmarking", pd.DataFrame())),
+            "liquidez": _to_records(analises.get("liquidez", pd.DataFrame())),
         },
         "records": registros[
             [
@@ -457,6 +962,12 @@ def montar_payload_site(
                 "valor",
                 "centro_custo",
                 "valor_assinado",
+                "prazo_dias",
+                "data_recebimento",
+                "data_pagamento",
+                "data_caixa",
+                "ano_mes_caixa",
+                "valor_caixa",
             ]
         ].to_dict(orient="records"),
     }
@@ -496,6 +1007,7 @@ def gerar_relatorio_executivo_markdown(
     mensal: pd.DataFrame,
     categoria: pd.DataFrame,
     indicadores: pd.DataFrame,
+    analises: dict[str, Any],
     pasta_saida: Path,
     titulo: str,
     nome_profissional: str,
@@ -508,6 +1020,7 @@ def gerar_relatorio_executivo_markdown(
     arquivo_md = pasta_saida / "05_relatorio_executivo.md"
 
     kpis = _extrair_kpis(mensal, indicadores)
+    insights = analises.get("insights", {})
     top_desp = _top_despesas_por_categoria(categoria)
     hoje = date.today().strftime("%d/%m/%Y")
 
@@ -564,27 +1077,62 @@ def gerar_relatorio_executivo_markdown(
         "|---|---:|---:|---:|",
         *linhas_mensal,
         "",
-        "## 4. Top 5 Categorias de Despesa",
+        "## 4. Sazonalidade e Projecao",
+        f"- Modelo de previsao utilizado: {insights.get('modelo_previsao', 'n/a')}",
+        f"- Mes com pico medio de receita: {insights.get('pico_receita_mes', 'n/a')}",
+        f"- Mes com pico medio de despesa: {insights.get('pico_despesa_mes', 'n/a')}",
+        "",
+        "## 5. Eficiencia dos Descontos",
+        f"- Descontos totais no periodo: {formatar_moeda_brl(float(insights.get('descontos_total', 0.0)))}",
+        (
+            "- Correlacao entre descontos e receita do mes subsequente: "
+            f"{float(insights.get('correlacao_descontos_receita_subsequente', 0.0)):.4f}"
+        ),
+        "",
+        "## 6. Rentabilidade e Mix",
+        "- Rentabilidade por centro de custo considera alocacao de despesas compartilhadas (RH, ADM e TI).",
+        "- Mix de receita acompanha recorrencia (assinaturas) versus projetos pontuais.",
+        "",
+        "## 7. Produtividade, Anomalias e Benchmarking",
+        (
+            "- Despesa total de pessoal no periodo: "
+            f"{formatar_moeda_brl(float(insights.get('despesa_pessoal_total', 0.0)))}"
+        ),
+        "- Deteccao de anomalias aplicada com z-score robusto por tipo de lancamento.",
+        "- Benchmarking interno compara meses equivalentes entre anos consecutivos.",
+        "",
+        "## 8. Liquidez e Fluxo de Caixa",
+        "- Datas de pagamento e recebimento foram geradas para estimar ciclo de caixa e capital de giro.",
+        "",
+        "## 9. Top 5 Categorias de Despesa",
         *linhas_despesas,
         "",
-        "## 5. Resultado do Projeto",
+        "## 10. Resultado do Projeto",
         (
             "A solucao reduz dependencia de consolidacoes manuais, aumenta a confiabilidade "
             "dos dados e acelera a geracao de visoes executivas para acompanhamento financeiro."
         ),
         "",
-        "## 6. Competencias Demonstradas",
+        "## 11. Competencias Demonstradas",
         "- Automacao de rotinas operacionais com Python",
         "- Padronizacao de relatorios gerenciais",
         "- Tratamento e validacao de dados financeiros",
         "- Geracao de entregaveis executivos em multiplos formatos",
         "- Preparacao de publicacao web para portfolio profissional",
         "",
-        "## 7. Entregaveis",
+        "## 12. Entregaveis",
         "- 01_base_padronizada.csv",
         "- 02_resumo_mensal.csv",
         "- 03_resumo_categoria.csv",
         "- 04_indicadores_eficiencia.csv",
+        "- 06_projecao_mensal.csv",
+        "- 07_descontos_eficiencia.csv",
+        "- 08_rentabilidade_centro_custo.csv",
+        "- 09_mix_receita.csv",
+        "- 10_produtividade_pessoal_projetos.csv",
+        "- 11_anomalias.csv",
+        "- 12_benchmarking_yoy.csv",
+        "- 13_fluxo_caixa_liquidez.csv",
         "- 05_relatorio_executivo.md",
         "- docs/index.html",
     ]
@@ -599,6 +1147,7 @@ def gerar_relatorio_executivo_html(
     mensal: pd.DataFrame,
     categoria: pd.DataFrame,
     indicadores: pd.DataFrame,
+    analises: dict[str, Any],
     pasta_site: Path,
     titulo: str,
     nome_profissional: str,
@@ -618,6 +1167,7 @@ def gerar_relatorio_executivo_html(
         mensal=mensal,
         categoria=categoria,
         indicadores=indicadores,
+        analises=analises,
     )
     salvar_payload_site(payload_site, pasta_site)
     classe_saldo = "saldo-ok" if kpis["saldo_total"] >= 0 else "saldo-alerta"
@@ -1355,6 +1905,274 @@ def gerar_relatorio_executivo_html(
                 }},
             }};
 
+            const analytics = sourceData.analytics || {{}};
+
+            if (Array.isArray(analytics.sazonalidade) && analytics.sazonalidade.length) {{
+                stageOrder.push("sazonalidade");
+                const saz = analytics.sazonalidade;
+                const picoReceita = saz.reduce((a, b) => Number(b.media_receita || 0) > Number(a.media_receita || 0) ? b : a, saz[0]);
+                stages.sazonalidade = {{
+                    label: "Sazonalidade",
+                    title: "Picos sazonais e planejamento comercial",
+                    description: "Identifica meses de pico para direcionar campanhas e alocacao de recursos.",
+                    cards: [
+                        {{ label: "Pico medio de receita", value: Number(picoReceita.media_receita || 0), format: "currency" }},
+                        {{ label: "Mes de pico", value: picoReceita.mes_nome || "n/a", format: "text" }},
+                        {{ label: "Media de saldo", value: saz.reduce((acc, item) => acc + Number(item.media_saldo || 0), 0) / saz.length, format: "currency" }},
+                    ],
+                    indices: [
+                        {{ id: "media_receita", label: "Media de receita por mes", format: "currency", items: saz.map((item) => ({{ label: item.mes_nome, value: item.media_receita }})) }},
+                        {{ id: "media_despesa", label: "Media de despesa por mes", format: "currency", items: saz.map((item) => ({{ label: item.mes_nome, value: item.media_despesa }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "mes_nome", label: "Mes", format: "text" }},
+                            {{ key: "media_receita", label: "Media receita", format: "currency" }},
+                            {{ key: "media_despesa", label: "Media despesa", format: "currency" }},
+                            {{ key: "media_saldo", label: "Media saldo", format: "currency" }},
+                        ],
+                        rows: saz,
+                    }},
+                    highlight: "Use os meses de pico para reforcar capacidade comercial e operacao de entrega.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.projecao) && analytics.projecao.length) {{
+                stageOrder.push("projecao");
+                const proj = analytics.projecao;
+                const futuros = proj.filter((item) => item.tipo === "projecao");
+                const saldoPrev = futuros.reduce((acc, item) => acc + Number(item.saldo || 0), 0);
+                stages.projecao = {{
+                    label: "Projecao",
+                    title: "Previsao de receitas e despesas",
+                    description: "Serie temporal para apoiar previsao dos proximos meses.",
+                    cards: [
+                        {{ label: "Meses projetados", value: futuros.length, format: "int" }},
+                        {{ label: "Saldo previsto", value: saldoPrev, format: "currency" }},
+                        {{ label: "Modelo", value: sourceData.insights?.modelo_previsao || "n/a", format: "text" }},
+                    ],
+                    indices: [
+                        {{ id: "receita_prev", label: "Receita (hist + proj)", format: "currency", items: proj.map((item) => ({{ label: item.ano_mes, value: item.total_receita }})) }},
+                        {{ id: "despesa_prev", label: "Despesa (hist + proj)", format: "currency", items: proj.map((item) => ({{ label: item.ano_mes, value: item.total_despesa }})) }},
+                        {{ id: "saldo_prev", label: "Saldo (hist + proj)", format: "currency", items: proj.map((item) => ({{ label: item.ano_mes, value: item.saldo }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "tipo", label: "Serie", format: "text" }},
+                            {{ key: "total_receita", label: "Receita", format: "currency" }},
+                            {{ key: "total_despesa", label: "Despesa", format: "currency" }},
+                            {{ key: "saldo", label: "Saldo", format: "currency" }},
+                        ],
+                        rows: proj,
+                    }},
+                    highlight: "Compare historico e projecao para antecipar ajustes de caixa e metas comerciais.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.descontos_mensal) && analytics.descontos_mensal.length) {{
+                stageOrder.push("descontos");
+                const desc = analytics.descontos_mensal;
+                stages.descontos = {{
+                    label: "Descontos",
+                    title: "Eficiencia dos descontos comerciais",
+                    description: "Correlacao com receita subsequente e payback medio por periodo.",
+                    cards: [
+                        {{ label: "Descontos totais", value: desc.reduce((acc, item) => acc + Number(item.descontos || 0), 0), format: "currency" }},
+                        {{ label: "Correlacao", value: Number(sourceData.insights?.correlacao_descontos_receita_subsequente || 0) * 100, format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "desc_mes", label: "Descontos por mes", format: "currency", items: desc.map((item) => ({{ label: item.ano_mes, value: item.descontos }})) }},
+                        {{ id: "payback_mes", label: "Payback mensal", format: "int", items: desc.map((item) => ({{ label: item.ano_mes, value: item.payback }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "descontos", label: "Descontos", format: "currency" }},
+                            {{ key: "receita_mes", label: "Receita", format: "currency" }},
+                            {{ key: "receita_subsequente", label: "Receita seguinte", format: "currency" }},
+                            {{ key: "payback", label: "Payback", format: "int" }},
+                        ],
+                        rows: desc,
+                    }},
+                    highlight: "Payback acima de 1 indica retorno maior do que o desconto no periodo seguinte.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.rentabilidade) && analytics.rentabilidade.length) {{
+                stageOrder.push("rentabilidade");
+                const rent = analytics.rentabilidade;
+                stages.rentabilidade = {{
+                    label: "Rentabilidade",
+                    title: "Margem liquida por centro de custo",
+                    description: "Inclui alocacao de despesas compartilhadas (RH, ADM e TI).",
+                    cards: [
+                        {{ label: "Centros analisados", value: rent.length, format: "int" }},
+                        {{ label: "Maior margem liquida", value: Number(rent[0].margem_liquida || 0), format: "currency" }},
+                    ],
+                    indices: [
+                        {{ id: "margem", label: "Margem liquida por centro", format: "currency", items: rent.map((item) => ({{ label: item.centro_custo, value: item.margem_liquida }})) }},
+                        {{ id: "margem_pct", label: "Margem percentual", format: "percent", items: rent.map((item) => ({{ label: item.centro_custo, value: item.margem_percentual }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "centro_custo", label: "Centro", format: "text" }},
+                            {{ key: "total_receita", label: "Receita", format: "currency" }},
+                            {{ key: "despesa_total_alocada", label: "Despesa total", format: "currency" }},
+                            {{ key: "margem_liquida", label: "Margem", format: "currency" }},
+                            {{ key: "margem_percentual", label: "Margem %", format: "percent" }},
+                        ],
+                        rows: rent,
+                    }},
+                    highlight: "Centros de alta receita podem perder margem apos absorver custos de suporte.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.mix_receita) && analytics.mix_receita.length) {{
+                stageOrder.push("mix_receita");
+                const mix = analytics.mix_receita;
+                stages.mix_receita = {{
+                    label: "Mix de receita",
+                    title: "Recorrencia versus projetos pontuais",
+                    description: "Projetos aceleram crescimento e assinaturas estabilizam previsibilidade.",
+                    cards: [
+                        {{ label: "Share medio recorrente", value: mix.reduce((a, i) => a + Number(i.share_recorrente || 0), 0) / mix.length, format: "percent" }},
+                        {{ label: "Share medio projetos", value: mix.reduce((a, i) => a + Number(i.share_projetos || 0), 0) / mix.length, format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "share_rec", label: "Share recorrente", format: "percent", items: mix.map((item) => ({{ label: item.ano_mes, value: item.share_recorrente }})) }},
+                        {{ id: "share_proj", label: "Share projetos", format: "percent", items: mix.map((item) => ({{ label: item.ano_mes, value: item.share_projetos }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "recorrentes_assinaturas", label: "Recorrente", format: "currency" }},
+                            {{ key: "projetos_pontuais", label: "Projetos", format: "currency" }},
+                            {{ key: "share_recorrente", label: "Share recorrente", format: "percent" }},
+                            {{ key: "share_projetos", label: "Share projetos", format: "percent" }},
+                        ],
+                        rows: mix,
+                    }},
+                    highlight: "Equilibrar mix melhora previsibilidade sem limitar expansao por projetos.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.produtividade) && analytics.produtividade.length) {{
+                stageOrder.push("produtividade");
+                const prod = analytics.produtividade;
+                stages.produtividade = {{
+                    label: "Produtividade",
+                    title: "Custo de pessoal por projeto",
+                    description: "Relaciona despesa de pessoal com receita gerada em projetos.",
+                    cards: [
+                        {{ label: "Despesa pessoal total", value: prod.reduce((a, i) => a + Number(i.despesa_pessoal || 0), 0), format: "currency" }},
+                        {{ label: "Receita projetos total", value: prod.reduce((a, i) => a + Number(i.receita_projetos || 0), 0), format: "currency" }},
+                    ],
+                    indices: [
+                        {{ id: "ratio_prod", label: "Receita/Despesa pessoal", format: "int", items: prod.map((item) => ({{ label: item.ano_mes, value: item.produtividade_receita_por_pessoal }})) }},
+                        {{ id: "custo_proj", label: "Custo pessoal por projeto", format: "currency", items: prod.map((item) => ({{ label: item.ano_mes, value: item.custo_pessoal_por_projeto }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "receita_projetos", label: "Receita projetos", format: "currency" }},
+                            {{ key: "despesa_pessoal", label: "Despesa pessoal", format: "currency" }},
+                            {{ key: "qtd_projetos", label: "Qtde projetos", format: "int" }},
+                            {{ key: "custo_pessoal_por_projeto", label: "Custo/projeto", format: "currency" }},
+                        ],
+                        rows: prod,
+                    }},
+                    highlight: "A produtividade sobe quando receita de projetos cresce mais que custo de pessoal.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.anomalias) && analytics.anomalias.length) {{
+                stageOrder.push("anomalias");
+                const ano = analytics.anomalias;
+                stages.anomalias = {{
+                    label: "Anomalias",
+                    title: "Lancamentos atipicos",
+                    description: "Valores fora do padrao podem indicar erro operacional ou oportunidade de revisao.",
+                    cards: [
+                        {{ label: "Qtde anomalias", value: ano.length, format: "int" }},
+                        {{ label: "Maior valor atipico", value: Math.max(...ano.map((i) => Number(i.valor || 0))), format: "currency" }},
+                    ],
+                    indices: [
+                        {{ id: "anomalia_valor", label: "Valor anomalo", format: "currency", items: ano.map((item) => ({{ label: item.ano_mes, value: item.valor }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "data", label: "Data", format: "text" }},
+                            {{ key: "descricao", label: "Descricao", format: "text" }},
+                            {{ key: "categoria", label: "Categoria", format: "text" }},
+                            {{ key: "tipo", label: "Tipo", format: "text" }},
+                            {{ key: "valor", label: "Valor", format: "currency" }},
+                        ],
+                        rows: ano,
+                    }},
+                    highlight: "Anomalias devem ser auditadas para evitar distorcoes no resultado gerencial.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.benchmarking) && analytics.benchmarking.length) {{
+                stageOrder.push("benchmarking");
+                const bench = analytics.benchmarking;
+                stages.benchmarking = {{
+                    label: "Benchmarking",
+                    title: "Comparacao de meses equivalentes (YoY)",
+                    description: "Mede crescimento organico entre anos para o mesmo mes calendario.",
+                    cards: [
+                        {{ label: "Meses comparaveis", value: bench.length, format: "int" }},
+                        {{ label: "Crescimento medio receita", value: bench.reduce((a, i) => a + Number(i.crescimento_total_receita || 0), 0) / bench.length, format: "percent" }},
+                    ],
+                    indices: [
+                        {{ id: "yoy_receita", label: "Crescimento receita YoY", format: "percent", items: bench.map((item) => ({{ label: item.ano_mes, value: item.crescimento_total_receita }})) }},
+                        {{ id: "yoy_saldo", label: "Crescimento saldo YoY", format: "percent", items: bench.map((item) => ({{ label: item.ano_mes, value: item.crescimento_saldo }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "total_receita_atual", label: "Receita atual", format: "currency" }},
+                            {{ key: "total_receita_ano_anterior", label: "Receita ano anterior", format: "currency" }},
+                            {{ key: "crescimento_total_receita", label: "Cresc. receita", format: "percent" }},
+                            {{ key: "crescimento_saldo", label: "Cresc. saldo", format: "percent" }},
+                        ],
+                        rows: bench,
+                    }},
+                    highlight: "O benchmarking YoY reduz efeito sazonal e melhora leitura de crescimento real.",
+                }};
+            }}
+
+            if (Array.isArray(analytics.liquidez) && analytics.liquidez.length) {{
+                stageOrder.push("liquidez");
+                const liq = analytics.liquidez;
+                stages.liquidez = {{
+                    label: "Liquidez",
+                    title: "Fluxo de caixa e capital de giro",
+                    description: "Leitura de entradas, saidas e ciclo de caixa com datas de pagamento/recebimento.",
+                    cards: [
+                        {{ label: "Saldo caixa acumulado", value: Number(liq[liq.length - 1].saldo_acumulado || 0), format: "currency" }},
+                        {{ label: "Ciclo de caixa (dias)", value: Number(liq[0].ciclo_caixa_dias || 0), format: "int" }},
+                        {{ label: "Pico capital de giro", value: Math.max(...liq.map((i) => Number(i.necessidade_capital_giro || 0))), format: "currency" }},
+                    ],
+                    indices: [
+                        {{ id: "saldo_caixa", label: "Saldo de caixa mensal", format: "currency", items: liq.map((item) => ({{ label: item.ano_mes, value: item.saldo_caixa }})) }},
+                        {{ id: "acumulado", label: "Saldo acumulado", format: "currency", items: liq.map((item) => ({{ label: item.ano_mes, value: item.saldo_acumulado }})) }},
+                    ],
+                    table: {{
+                        columns: [
+                            {{ key: "ano_mes", label: "Mes", format: "text" }},
+                            {{ key: "entradas", label: "Entradas", format: "currency" }},
+                            {{ key: "saidas", label: "Saidas", format: "currency" }},
+                            {{ key: "saldo_caixa", label: "Saldo caixa", format: "currency" }},
+                            {{ key: "saldo_acumulado", label: "Saldo acumulado", format: "currency" }},
+                        ],
+                        rows: liq,
+                    }},
+                    highlight: "A serie de caixa mostra janelas de pressao para antecipar capital de giro.",
+                }};
+            }}
+
             return {{ stageOrder, stages }};
         }}
 
@@ -1638,6 +2456,7 @@ def salvar_relatorios(
     mensal: pd.DataFrame,
     categoria: pd.DataFrame,
     indicadores: pd.DataFrame,
+    analises: dict[str, Any],
     pasta_saida: Path,
 ) -> bool:
     """Exporta DataFrames para CSV e, opcionalmente, para Excel."""
@@ -1648,6 +2467,17 @@ def salvar_relatorios(
         "02_resumo_mensal.csv": mensal,
         "03_resumo_categoria.csv": categoria,
         "04_indicadores_eficiencia.csv": indicadores,
+        "06_projecao_mensal.csv": analises["projecao"],
+        "07_descontos_eficiencia.csv": analises["descontos_mensal"],
+        "07b_payback_descontos_categoria.csv": analises["payback_categoria"],
+        "08_rentabilidade_centro_custo.csv": analises["rentabilidade"],
+        "09_mix_receita.csv": analises["mix_receita"],
+        "10_produtividade_pessoal_projetos.csv": analises["produtividade"],
+        "11_anomalias.csv": analises["anomalias"],
+        "12_benchmarking_yoy.csv": analises["benchmarking"],
+        "13_fluxo_caixa_liquidez.csv": analises["liquidez"],
+        "14_base_fluxo_com_datas.csv": analises["base_fluxo"],
+        "15_sazonalidade_mensal.csv": analises["sazonalidade"],
     }
     for nome, df in arquivos_csv.items():
         df.to_csv(pasta_saida / nome, index=False)
@@ -1659,6 +2489,9 @@ def salvar_relatorios(
             mensal.to_excel(writer, sheet_name="resumo_mensal", index=False)
             categoria.to_excel(writer, sheet_name="resumo_categoria", index=False)
             indicadores.to_excel(writer, sheet_name="indicadores", index=False)
+            analises["projecao"].to_excel(writer, sheet_name="projecao", index=False)
+            analises["rentabilidade"].to_excel(writer, sheet_name="rentabilidade", index=False)
+            analises["liquidez"].to_excel(writer, sheet_name="liquidez", index=False)
         logger.info("Arquivo Excel gerado: %s", arquivo_excel)
         return True
     except ModuleNotFoundError:
@@ -1768,12 +2601,15 @@ def main() -> None:
     resumo_mensal = gerar_resumo_mensal(base)
     resumo_categoria = gerar_resumo_categoria(base)
     indicadores = gerar_indicadores(base)
+    analises = gerar_analises_avancadas(base)
+    base_fluxo = analises["base_fluxo"]
 
     excel_gerado = salvar_relatorios(
         base,
         resumo_mensal,
         resumo_categoria,
         indicadores,
+        analises,
         pasta_saida,
     )
 
@@ -1781,6 +2617,7 @@ def main() -> None:
         resumo_mensal,
         resumo_categoria,
         indicadores,
+        analises,
         pasta_saida,
         args.titulo_relatorio,
         args.nome_profissional,
@@ -1789,10 +2626,11 @@ def main() -> None:
         args.logo,
     )
     arquivo_html = gerar_relatorio_executivo_html(
-        base,
+        base_fluxo,
         resumo_mensal,
         resumo_categoria,
         indicadores,
+        analises,
         pasta_site,
         args.titulo_relatorio,
         args.nome_profissional,
@@ -1809,6 +2647,17 @@ def main() -> None:
         pasta_saida / "02_resumo_mensal.csv",
         pasta_saida / "03_resumo_categoria.csv",
         pasta_saida / "04_indicadores_eficiencia.csv",
+        pasta_saida / "06_projecao_mensal.csv",
+        pasta_saida / "07_descontos_eficiencia.csv",
+        pasta_saida / "07b_payback_descontos_categoria.csv",
+        pasta_saida / "08_rentabilidade_centro_custo.csv",
+        pasta_saida / "09_mix_receita.csv",
+        pasta_saida / "10_produtividade_pessoal_projetos.csv",
+        pasta_saida / "11_anomalias.csv",
+        pasta_saida / "12_benchmarking_yoy.csv",
+        pasta_saida / "13_fluxo_caixa_liquidez.csv",
+        pasta_saida / "14_base_fluxo_com_datas.csv",
+        pasta_saida / "15_sazonalidade_mensal.csv",
         arquivo_md,
         arquivo_html,
     ]:

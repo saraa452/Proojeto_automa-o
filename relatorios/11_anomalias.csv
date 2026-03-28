@@ -1,0 +1,8 @@
+data,ano_mes,descricao,categoria,tipo,valor,centro_custo,z_robusto
+2027-05-21,2027-05,Folha e encargos maio,pessoal,despesa,7890.0,rh,4.082847857444851
+2027-02-22,2027-02,Folha operacional fevereiro,pessoal,despesa,7680.0,rh,3.9419391056728594
+2026-11-17,2026-11,Folha e encargos novembro,pessoal,despesa,7420.0,rh,3.767480651098013
+2026-08-27,2026-08,Folha variavel e bonus,pessoal,despesa,7210.0,rh,3.6265718993260214
+2026-07-15,2026-07,Recrutamento especializado,pessoal,despesa,6840.0,rh,3.3783040985848936
+2026-05-28,2026-05,Beneficios e encargos,pessoal,despesa,6335.2,rh,3.0395862990872695
+2026-03-27,2026-03,Folha salarial,pessoal,despesa,6120.0,rh,2.895188378223781

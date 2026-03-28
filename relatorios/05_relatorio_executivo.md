@@ -47,27 +47,56 @@ Demonstrar dominio em automacao de processos financeiros, consolidacao de dados 
 | 2027-05 | R$ 39.400,00 | R$ 11.650,00 | R$ 27.750,00 |
 | 2027-06 | R$ 35.900,00 | R$ 7.160,00 | R$ 28.740,00 |
 
-## 4. Top 5 Categorias de Despesa
+## 4. Sazonalidade e Projecao
+- Modelo de previsao utilizado: SARIMA
+- Mes com pico medio de receita: nov
+- Mes com pico medio de despesa: jul
+
+## 5. Eficiencia dos Descontos
+- Descontos totais no periodo: R$ 10.595,00
+- Correlacao entre descontos e receita do mes subsequente: 0.8533
+
+## 6. Rentabilidade e Mix
+- Rentabilidade por centro de custo considera alocacao de despesas compartilhadas (RH, ADM e TI).
+- Mix de receita acompanha recorrencia (assinaturas) versus projetos pontuais.
+
+## 7. Produtividade, Anomalias e Benchmarking
+- Despesa total de pessoal no periodo: R$ 57.785,20
+- Deteccao de anomalias aplicada com z-score robusto por tipo de lancamento.
+- Benchmarking interno compara meses equivalentes entre anos consecutivos.
+
+## 8. Liquidez e Fluxo de Caixa
+- Datas de pagamento e recebimento foram geradas para estimar ciclo de caixa e capital de giro.
+
+## 9. Top 5 Categorias de Despesa
 - pessoal: R$ 57.785,20
 - marketing: R$ 22.344,65
 - fornecedores: R$ 16.880,80
 - operacoes: R$ 15.495,80
 - tecnologia: R$ 12.562,45
 
-## 5. Resultado do Projeto
+## 10. Resultado do Projeto
 A solucao reduz dependencia de consolidacoes manuais, aumenta a confiabilidade dos dados e acelera a geracao de visoes executivas para acompanhamento financeiro.
 
-## 6. Competencias Demonstradas
+## 11. Competencias Demonstradas
 - Automacao de rotinas operacionais com Python
 - Padronizacao de relatorios gerenciais
 - Tratamento e validacao de dados financeiros
 - Geracao de entregaveis executivos em multiplos formatos
 - Preparacao de publicacao web para portfolio profissional
 
-## 7. Entregaveis
+## 12. Entregaveis
 - 01_base_padronizada.csv
 - 02_resumo_mensal.csv
 - 03_resumo_categoria.csv
 - 04_indicadores_eficiencia.csv
+- 06_projecao_mensal.csv
+- 07_descontos_eficiencia.csv
+- 08_rentabilidade_centro_custo.csv
+- 09_mix_receita.csv
+- 10_produtividade_pessoal_projetos.csv
+- 11_anomalias.csv
+- 12_benchmarking_yoy.csv
+- 13_fluxo_caixa_liquidez.csv
 - 05_relatorio_executivo.md
 - docs/index.html

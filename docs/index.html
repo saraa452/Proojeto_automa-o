@@ -731,6 +731,274 @@
                 },
             };
 
+            const analytics = sourceData.analytics || {};
+
+            if (Array.isArray(analytics.sazonalidade) && analytics.sazonalidade.length) {
+                stageOrder.push("sazonalidade");
+                const saz = analytics.sazonalidade;
+                const picoReceita = saz.reduce((a, b) => Number(b.media_receita || 0) > Number(a.media_receita || 0) ? b : a, saz[0]);
+                stages.sazonalidade = {
+                    label: "Sazonalidade",
+                    title: "Picos sazonais e planejamento comercial",
+                    description: "Identifica meses de pico para direcionar campanhas e alocacao de recursos.",
+                    cards: [
+                        { label: "Pico medio de receita", value: Number(picoReceita.media_receita || 0), format: "currency" },
+                        { label: "Mes de pico", value: picoReceita.mes_nome || "n/a", format: "text" },
+                        { label: "Media de saldo", value: saz.reduce((acc, item) => acc + Number(item.media_saldo || 0), 0) / saz.length, format: "currency" },
+                    ],
+                    indices: [
+                        { id: "media_receita", label: "Media de receita por mes", format: "currency", items: saz.map((item) => ({ label: item.mes_nome, value: item.media_receita })) },
+                        { id: "media_despesa", label: "Media de despesa por mes", format: "currency", items: saz.map((item) => ({ label: item.mes_nome, value: item.media_despesa })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "mes_nome", label: "Mes", format: "text" },
+                            { key: "media_receita", label: "Media receita", format: "currency" },
+                            { key: "media_despesa", label: "Media despesa", format: "currency" },
+                            { key: "media_saldo", label: "Media saldo", format: "currency" },
+                        ],
+                        rows: saz,
+                    },
+                    highlight: "Use os meses de pico para reforcar capacidade comercial e operacao de entrega.",
+                };
+            }
+
+            if (Array.isArray(analytics.projecao) && analytics.projecao.length) {
+                stageOrder.push("projecao");
+                const proj = analytics.projecao;
+                const futuros = proj.filter((item) => item.tipo === "projecao");
+                const saldoPrev = futuros.reduce((acc, item) => acc + Number(item.saldo || 0), 0);
+                stages.projecao = {
+                    label: "Projecao",
+                    title: "Previsao de receitas e despesas",
+                    description: "Serie temporal para apoiar previsao dos proximos meses.",
+                    cards: [
+                        { label: "Meses projetados", value: futuros.length, format: "int" },
+                        { label: "Saldo previsto", value: saldoPrev, format: "currency" },
+                        { label: "Modelo", value: sourceData.insights?.modelo_previsao || "n/a", format: "text" },
+                    ],
+                    indices: [
+                        { id: "receita_prev", label: "Receita (hist + proj)", format: "currency", items: proj.map((item) => ({ label: item.ano_mes, value: item.total_receita })) },
+                        { id: "despesa_prev", label: "Despesa (hist + proj)", format: "currency", items: proj.map((item) => ({ label: item.ano_mes, value: item.total_despesa })) },
+                        { id: "saldo_prev", label: "Saldo (hist + proj)", format: "currency", items: proj.map((item) => ({ label: item.ano_mes, value: item.saldo })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "ano_mes", label: "Mes", format: "text" },
+                            { key: "tipo", label: "Serie", format: "text" },
+                            { key: "total_receita", label: "Receita", format: "currency" },
+                            { key: "total_despesa", label: "Despesa", format: "currency" },
+                            { key: "saldo", label: "Saldo", format: "currency" },
+                        ],
+                        rows: proj,
+                    },
+                    highlight: "Compare historico e projecao para antecipar ajustes de caixa e metas comerciais.",
+                };
+            }
+
+            if (Array.isArray(analytics.descontos_mensal) && analytics.descontos_mensal.length) {
+                stageOrder.push("descontos");
+                const desc = analytics.descontos_mensal;
+                stages.descontos = {
+                    label: "Descontos",
+                    title: "Eficiencia dos descontos comerciais",
+                    description: "Correlacao com receita subsequente e payback medio por periodo.",
+                    cards: [
+                        { label: "Descontos totais", value: desc.reduce((acc, item) => acc + Number(item.descontos || 0), 0), format: "currency" },
+                        { label: "Correlacao", value: Number(sourceData.insights?.correlacao_descontos_receita_subsequente || 0) * 100, format: "percent" },
+                    ],
+                    indices: [
+                        { id: "desc_mes", label: "Descontos por mes", format: "currency", items: desc.map((item) => ({ label: item.ano_mes, value: item.descontos })) },
+                        { id: "payback_mes", label: "Payback mensal", format: "int", items: desc.map((item) => ({ label: item.ano_mes, value: item.payback })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "ano_mes", label: "Mes", format: "text" },
+                            { key: "descontos", label: "Descontos", format: "currency" },
+                            { key: "receita_mes", label: "Receita", format: "currency" },
+                            { key: "receita_subsequente", label: "Receita seguinte", format: "currency" },
+                            { key: "payback", label: "Payback", format: "int" },
+                        ],
+                        rows: desc,
+                    },
+                    highlight: "Payback acima de 1 indica retorno maior do que o desconto no periodo seguinte.",
+                };
+            }
+
+            if (Array.isArray(analytics.rentabilidade) && analytics.rentabilidade.length) {
+                stageOrder.push("rentabilidade");
+                const rent = analytics.rentabilidade;
+                stages.rentabilidade = {
+                    label: "Rentabilidade",
+                    title: "Margem liquida por centro de custo",
+                    description: "Inclui alocacao de despesas compartilhadas (RH, ADM e TI).",
+                    cards: [
+                        { label: "Centros analisados", value: rent.length, format: "int" },
+                        { label: "Maior margem liquida", value: Number(rent[0].margem_liquida || 0), format: "currency" },
+                    ],
+                    indices: [
+                        { id: "margem", label: "Margem liquida por centro", format: "currency", items: rent.map((item) => ({ label: item.centro_custo, value: item.margem_liquida })) },
+                        { id: "margem_pct", label: "Margem percentual", format: "percent", items: rent.map((item) => ({ label: item.centro_custo, value: item.margem_percentual })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "centro_custo", label: "Centro", format: "text" },
+                            { key: "total_receita", label: "Receita", format: "currency" },
+                            { key: "despesa_total_alocada", label: "Despesa total", format: "currency" },
+                            { key: "margem_liquida", label: "Margem", format: "currency" },
+                            { key: "margem_percentual", label: "Margem %", format: "percent" },
+                        ],
+                        rows: rent,
+                    },
+                    highlight: "Centros de alta receita podem perder margem apos absorver custos de suporte.",
+                };
+            }
+
+            if (Array.isArray(analytics.mix_receita) && analytics.mix_receita.length) {
+                stageOrder.push("mix_receita");
+                const mix = analytics.mix_receita;
+                stages.mix_receita = {
+                    label: "Mix de receita",
+                    title: "Recorrencia versus projetos pontuais",
+                    description: "Projetos aceleram crescimento e assinaturas estabilizam previsibilidade.",
+                    cards: [
+                        { label: "Share medio recorrente", value: mix.reduce((a, i) => a + Number(i.share_recorrente || 0), 0) / mix.length, format: "percent" },
+                        { label: "Share medio projetos", value: mix.reduce((a, i) => a + Number(i.share_projetos || 0), 0) / mix.length, format: "percent" },
+                    ],
+                    indices: [
+                        { id: "share_rec", label: "Share recorrente", format: "percent", items: mix.map((item) => ({ label: item.ano_mes, value: item.share_recorrente })) },
+                        { id: "share_proj", label: "Share projetos", format: "percent", items: mix.map((item) => ({ label: item.ano_mes, value: item.share_projetos })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "ano_mes", label: "Mes", format: "text" },
+                            { key: "recorrentes_assinaturas", label: "Recorrente", format: "currency" },
+                            { key: "projetos_pontuais", label: "Projetos", format: "currency" },
+                            { key: "share_recorrente", label: "Share recorrente", format: "percent" },
+                            { key: "share_projetos", label: "Share projetos", format: "percent" },
+                        ],
+                        rows: mix,
+                    },
+                    highlight: "Equilibrar mix melhora previsibilidade sem limitar expansao por projetos.",
+                };
+            }
+
+            if (Array.isArray(analytics.produtividade) && analytics.produtividade.length) {
+                stageOrder.push("produtividade");
+                const prod = analytics.produtividade;
+                stages.produtividade = {
+                    label: "Produtividade",
+                    title: "Custo de pessoal por projeto",
+                    description: "Relaciona despesa de pessoal com receita gerada em projetos.",
+                    cards: [
+                        { label: "Despesa pessoal total", value: prod.reduce((a, i) => a + Number(i.despesa_pessoal || 0), 0), format: "currency" },
+                        { label: "Receita projetos total", value: prod.reduce((a, i) => a + Number(i.receita_projetos || 0), 0), format: "currency" },
+                    ],
+                    indices: [
+                        { id: "ratio_prod", label: "Receita/Despesa pessoal", format: "int", items: prod.map((item) => ({ label: item.ano_mes, value: item.produtividade_receita_por_pessoal })) },
+                        { id: "custo_proj", label: "Custo pessoal por projeto", format: "currency", items: prod.map((item) => ({ label: item.ano_mes, value: item.custo_pessoal_por_projeto })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "ano_mes", label: "Mes", format: "text" },
+                            { key: "receita_projetos", label: "Receita projetos", format: "currency" },
+                            { key: "despesa_pessoal", label: "Despesa pessoal", format: "currency" },
+                            { key: "qtd_projetos", label: "Qtde projetos", format: "int" },
+                            { key: "custo_pessoal_por_projeto", label: "Custo/projeto", format: "currency" },
+                        ],
+                        rows: prod,
+                    },
+                    highlight: "A produtividade sobe quando receita de projetos cresce mais que custo de pessoal.",
+                };
+            }
+
+            if (Array.isArray(analytics.anomalias) && analytics.anomalias.length) {
+                stageOrder.push("anomalias");
+                const ano = analytics.anomalias;
+                stages.anomalias = {
+                    label: "Anomalias",
+                    title: "Lancamentos atipicos",
+                    description: "Valores fora do padrao podem indicar erro operacional ou oportunidade de revisao.",
+                    cards: [
+                        { label: "Qtde anomalias", value: ano.length, format: "int" },
+                        { label: "Maior valor atipico", value: Math.max(...ano.map((i) => Number(i.valor || 0))), format: "currency" },
+                    ],
+                    indices: [
+                        { id: "anomalia_valor", label: "Valor anomalo", format: "currency", items: ano.map((item) => ({ label: item.ano_mes, value: item.valor })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "data", label: "Data", format: "text" },
+                            { key: "descricao", label: "Descricao", format: "text" },
+                            { key: "categoria", label: "Categoria", format: "text" },
+                            { key: "tipo", label: "Tipo", format: "text" },
+                            { key: "valor", label: "Valor", format: "currency" },
+                        ],
+                        rows: ano,
+                    },
+                    highlight: "Anomalias devem ser auditadas para evitar distorcoes no resultado gerencial.",
+                };
+            }
+
+            if (Array.isArray(analytics.benchmarking) && analytics.benchmarking.length) {
+                stageOrder.push("benchmarking");
+                const bench = analytics.benchmarking;
+                stages.benchmarking = {
+                    label: "Benchmarking",
+                    title: "Comparacao de meses equivalentes (YoY)",
+                    description: "Mede crescimento organico entre anos para o mesmo mes calendario.",
+                    cards: [
+                        { label: "Meses comparaveis", value: bench.length, format: "int" },
+                        { label: "Crescimento medio receita", value: bench.reduce((a, i) => a + Number(i.crescimento_total_receita || 0), 0) / bench.length, format: "percent" },
+                    ],
+                    indices: [
+                        { id: "yoy_receita", label: "Crescimento receita YoY", format: "percent", items: bench.map((item) => ({ label: item.ano_mes, value: item.crescimento_total_receita })) },
+                        { id: "yoy_saldo", label: "Crescimento saldo YoY", format: "percent", items: bench.map((item) => ({ label: item.ano_mes, value: item.crescimento_saldo })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "ano_mes", label: "Mes", format: "text" },
+                            { key: "total_receita_atual", label: "Receita atual", format: "currency" },
+                            { key: "total_receita_ano_anterior", label: "Receita ano anterior", format: "currency" },
+                            { key: "crescimento_total_receita", label: "Cresc. receita", format: "percent" },
+                            { key: "crescimento_saldo", label: "Cresc. saldo", format: "percent" },
+                        ],
+                        rows: bench,
+                    },
+                    highlight: "O benchmarking YoY reduz efeito sazonal e melhora leitura de crescimento real.",
+                };
+            }
+
+            if (Array.isArray(analytics.liquidez) && analytics.liquidez.length) {
+                stageOrder.push("liquidez");
+                const liq = analytics.liquidez;
+                stages.liquidez = {
+                    label: "Liquidez",
+                    title: "Fluxo de caixa e capital de giro",
+                    description: "Leitura de entradas, saidas e ciclo de caixa com datas de pagamento/recebimento.",
+                    cards: [
+                        { label: "Saldo caixa acumulado", value: Number(liq[liq.length - 1].saldo_acumulado || 0), format: "currency" },
+                        { label: "Ciclo de caixa (dias)", value: Number(liq[0].ciclo_caixa_dias || 0), format: "int" },
+                        { label: "Pico capital de giro", value: Math.max(...liq.map((i) => Number(i.necessidade_capital_giro || 0))), format: "currency" },
+                    ],
+                    indices: [
+                        { id: "saldo_caixa", label: "Saldo de caixa mensal", format: "currency", items: liq.map((item) => ({ label: item.ano_mes, value: item.saldo_caixa })) },
+                        { id: "acumulado", label: "Saldo acumulado", format: "currency", items: liq.map((item) => ({ label: item.ano_mes, value: item.saldo_acumulado })) },
+                    ],
+                    table: {
+                        columns: [
+                            { key: "ano_mes", label: "Mes", format: "text" },
+                            { key: "entradas", label: "Entradas", format: "currency" },
+                            { key: "saidas", label: "Saidas", format: "currency" },
+                            { key: "saldo_caixa", label: "Saldo caixa", format: "currency" },
+                            { key: "saldo_acumulado", label: "Saldo acumulado", format: "currency" },
+                        ],
+                        rows: liq,
+                    },
+                    highlight: "A serie de caixa mostra janelas de pressao para antecipar capital de giro.",
+                };
+            }
+
             return { stageOrder, stages };
         }
 

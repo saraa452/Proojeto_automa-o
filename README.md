@@ -6,11 +6,18 @@ Projeto de portfolio em Python para automatizar tratamento de lancamentos financ
 
 - Pipeline de limpeza e padronizacao dos lancamentos
 - Relatorios em CSV, Excel e Markdown
+- Analises avancadas: sazonalidade e projecao de receitas/despesas
+- Analises avancadas: eficiencia de descontos e payback por categoria
+- Analises avancadas: rentabilidade com alocacao de custos compartilhados
+- Analises avancadas: mix de receita recorrente vs projetos
+- Analises avancadas: produtividade (pessoal x projetos)
+- Analises avancadas: deteccao de anomalias e benchmarking YoY
+- Analises avancadas: liquidez e fluxo de caixa com datas de recebimento/pagamento estimadas
 - Dashboard web em HTML com:
-   - filtros por mes, categoria e centro de custo
-   - troca de etapa de analise (visao geral, mensal, categorias, centros e eficiencia)
-   - troca de indice por etapa
-   - grafico principal em canvas e tendencia complementar em SVG
+- filtros por mes, categoria e centro de custo
+- troca de etapa de analise (visao geral, mensal, categorias, centros e eficiencia)
+- troca de indice por etapa
+- grafico principal em canvas e tendencia complementar em SVG
 - Dados do dashboard em arquivo externo JSON para facilitar manutencao
 
 ## Arquivos gerados
@@ -20,6 +27,17 @@ Projeto de portfolio em Python para automatizar tratamento de lancamentos financ
 - relatorios/03_resumo_categoria.csv
 - relatorios/04_indicadores_eficiencia.csv
 - relatorios/05_relatorio_executivo.md
+- relatorios/06_projecao_mensal.csv
+- relatorios/07_descontos_eficiencia.csv
+- relatorios/07b_payback_descontos_categoria.csv
+- relatorios/08_rentabilidade_centro_custo.csv
+- relatorios/09_mix_receita.csv
+- relatorios/10_produtividade_pessoal_projetos.csv
+- relatorios/11_anomalias.csv
+- relatorios/12_benchmarking_yoy.csv
+- relatorios/13_fluxo_caixa_liquidez.csv
+- relatorios/14_base_fluxo_com_datas.csv
+- relatorios/15_sazonalidade_mensal.csv
 - relatorios/relatorio_gerencial_padronizado.xlsx
 - docs/index.html
 - docs/assets/dashboard-data.json
@@ -27,19 +45,19 @@ Projeto de portfolio em Python para automatizar tratamento de lancamentos financ
 ## Como executar
 
 1. Ative o ambiente virtual.
-2. Gere os relatorios e o site:
+1. Gere os relatorios e o site:
 
 ```bash
 .venv/bin/python app.py
 ```
 
-3. Para visualizar localmente com o JSON externo, rode um servidor HTTP na raiz do projeto:
+1. Para visualizar localmente com o JSON externo, rode um servidor HTTP na raiz do projeto:
 
 ```bash
 python -m http.server 8000
 ```
 
-4. Abra no navegador:
+1. Abra no navegador:
 
 ```text
 http://localhost:8000/docs/index.html
@@ -80,4 +98,4 @@ Se o arquivo de entrada nao existir, voce pode criar uma base inicial automatica
 
 URL esperada:
 
-https://saraa452.github.io/Proojeto_automa-o/
+<https://saraa452.github.io/Proojeto_automa-o/>

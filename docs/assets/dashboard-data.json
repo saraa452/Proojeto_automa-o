@@ -4,6 +4,1131 @@
     "manual_min": 2.5,
     "auto_min": 0.3
   },
+  "insights": {
+    "modelo_previsao": "SARIMA",
+    "correlacao_descontos_receita_subsequente": 0.8533,
+    "pico_receita_mes": "nov",
+    "pico_despesa_mes": "jul",
+    "descontos_total": 10595.0,
+    "despesa_pessoal_total": 57785.2
+  },
+  "analytics": {
+    "sazonalidade": [
+      {
+        "mes": 1,
+        "mes_nome": "jan",
+        "media_receita": 28250.0,
+        "media_despesa": 7245.375,
+        "media_saldo": 21004.625,
+        "pico_receita": 35500.0,
+        "pico_despesa": 8590.75
+      },
+      {
+        "mes": 2,
+        "mes_nome": "fev",
+        "media_receita": 25500.0,
+        "media_despesa": 9420.525,
+        "media_saldo": 16079.475,
+        "pico_receita": 36700.0,
+        "pico_despesa": 10280.0
+      },
+      {
+        "mes": 3,
+        "mes_nome": "mar",
+        "media_receita": 26100.0,
+        "media_despesa": 7775.35,
+        "media_saldo": 18324.65,
+        "pico_receita": 32700.0,
+        "pico_despesa": 10200.7
+      },
+      {
+        "mes": 4,
+        "mes_nome": "abr",
+        "media_receita": 26250.0,
+        "media_despesa": 6288.225,
+        "media_saldo": 19961.775,
+        "pico_receita": 33800.0,
+        "pico_despesa": 7536.45
+      },
+      {
+        "mes": 5,
+        "mes_nome": "mai",
+        "media_receita": 26700.0,
+        "media_despesa": 10724.375,
+        "media_saldo": 15975.625,
+        "pico_receita": 39400.0,
+        "pico_despesa": 11650.0
+      },
+      {
+        "mes": 6,
+        "mes_nome": "jun",
+        "media_receita": 30500.0,
+        "media_despesa": 7715.4,
+        "media_saldo": 22784.6,
+        "pico_receita": 35900.0,
+        "pico_despesa": 8270.8
+      },
+      {
+        "mes": 7,
+        "mes_nome": "jul",
+        "media_receita": 22550.0,
+        "media_despesa": 11431.05,
+        "media_saldo": 11118.95,
+        "pico_receita": 22550.0,
+        "pico_despesa": 11431.05
+      },
+      {
+        "mes": 8,
+        "mes_nome": "ago",
+        "media_receita": 25600.0,
+        "media_despesa": 10985.25,
+        "media_saldo": 14614.75,
+        "pico_receita": 25600.0,
+        "pico_despesa": 10985.25
+      },
+      {
+        "mes": 9,
+        "mes_nome": "set",
+        "media_receita": 29400.0,
+        "media_despesa": 5040.0,
+        "media_saldo": 24360.0,
+        "pico_receita": 29400.0,
+        "pico_despesa": 5040.0
+      },
+      {
+        "mes": 10,
+        "mes_nome": "out",
+        "media_receita": 25500.0,
+        "media_despesa": 4490.0,
+        "media_saldo": 21010.0,
+        "pico_receita": 25500.0,
+        "pico_despesa": 4490.0
+      },
+      {
+        "mes": 11,
+        "mes_nome": "nov",
+        "media_receita": 31900.0,
+        "media_despesa": 9760.0,
+        "media_saldo": 22140.0,
+        "pico_receita": 31900.0,
+        "pico_despesa": 9760.0
+      },
+      {
+        "mes": 12,
+        "mes_nome": "dez",
+        "media_receita": 29200.0,
+        "media_despesa": 5620.0,
+        "media_saldo": 23580.0,
+        "pico_receita": 29200.0,
+        "pico_despesa": 5620.0
+      }
+    ],
+    "projecao": [
+      {
+        "ano_mes": "2026-01",
+        "tipo": "historico",
+        "total_receita": 21000.0,
+        "total_despesa": 8590.75,
+        "saldo": 12409.25
+      },
+      {
+        "ano_mes": "2026-02",
+        "tipo": "historico",
+        "total_receita": 14300.0,
+        "total_despesa": 8561.05,
+        "saldo": 5738.950000000001
+      },
+      {
+        "ano_mes": "2026-03",
+        "tipo": "historico",
+        "total_receita": 19500.0,
+        "total_despesa": 10200.7,
+        "saldo": 9299.3
+      },
+      {
+        "ano_mes": "2026-04",
+        "tipo": "historico",
+        "total_receita": 18700.0,
+        "total_despesa": 7536.45,
+        "saldo": 11163.55
+      },
+      {
+        "ano_mes": "2026-05",
+        "tipo": "historico",
+        "total_receita": 14000.0,
+        "total_despesa": 9798.75,
+        "saldo": 4201.25
+      },
+      {
+        "ano_mes": "2026-06",
+        "tipo": "historico",
+        "total_receita": 25100.0,
+        "total_despesa": 8270.8,
+        "saldo": 16829.2
+      },
+      {
+        "ano_mes": "2026-07",
+        "tipo": "historico",
+        "total_receita": 22550.0,
+        "total_despesa": 11431.05,
+        "saldo": 11118.95
+      },
+      {
+        "ano_mes": "2026-08",
+        "tipo": "historico",
+        "total_receita": 25600.0,
+        "total_despesa": 10985.25,
+        "saldo": 14614.75
+      },
+      {
+        "ano_mes": "2026-09",
+        "tipo": "historico",
+        "total_receita": 29400.0,
+        "total_despesa": 5040.0,
+        "saldo": 24360.0
+      },
+      {
+        "ano_mes": "2026-10",
+        "tipo": "historico",
+        "total_receita": 25500.0,
+        "total_despesa": 4490.0,
+        "saldo": 21010.0
+      },
+      {
+        "ano_mes": "2026-11",
+        "tipo": "historico",
+        "total_receita": 31900.0,
+        "total_despesa": 9760.0,
+        "saldo": 22140.0
+      },
+      {
+        "ano_mes": "2026-12",
+        "tipo": "historico",
+        "total_receita": 29200.0,
+        "total_despesa": 5620.0,
+        "saldo": 23580.0
+      },
+      {
+        "ano_mes": "2027-01",
+        "tipo": "historico",
+        "total_receita": 35500.0,
+        "total_despesa": 5900.0,
+        "saldo": 29600.0
+      },
+      {
+        "ano_mes": "2027-02",
+        "tipo": "historico",
+        "total_receita": 36700.0,
+        "total_despesa": 10280.0,
+        "saldo": 26420.0
+      },
+      {
+        "ano_mes": "2027-03",
+        "tipo": "historico",
+        "total_receita": 32700.0,
+        "total_despesa": 5350.0,
+        "saldo": 27350.0
+      },
+      {
+        "ano_mes": "2027-04",
+        "tipo": "historico",
+        "total_receita": 33800.0,
+        "total_despesa": 5040.0,
+        "saldo": 28760.0
+      },
+      {
+        "ano_mes": "2027-05",
+        "tipo": "historico",
+        "total_receita": 39400.0,
+        "total_despesa": 11650.0,
+        "saldo": 27750.0
+      },
+      {
+        "ano_mes": "2027-06",
+        "tipo": "historico",
+        "total_receita": 35900.0,
+        "total_despesa": 7160.0,
+        "saldo": 28740.0
+      },
+      {
+        "ano_mes": "2027-07",
+        "tipo": "projecao",
+        "total_receita": 37236.10138532019,
+        "total_despesa": 8171.2152755806455,
+        "saldo": 29064.886109739542
+      },
+      {
+        "ano_mes": "2027-08",
+        "tipo": "projecao",
+        "total_receita": 36760.87138682465,
+        "total_despesa": 7999.660141654248,
+        "saldo": 28761.2112451704
+      },
+      {
+        "ano_mes": "2027-09",
+        "tipo": "projecao",
+        "total_receita": 36929.90313392964,
+        "total_despesa": 8028.764887881113,
+        "saldo": 28901.13824604853
+      },
+      {
+        "ano_mes": "2027-10",
+        "tipo": "projecao",
+        "total_receita": 36869.781231651126,
+        "total_despesa": 8023.82719681036,
+        "saldo": 28845.954034840768
+      },
+      {
+        "ano_mes": "2027-11",
+        "tipo": "projecao",
+        "total_receita": 36891.1656354421,
+        "total_despesa": 8024.664888124352,
+        "saldo": 28866.500747317747
+      },
+      {
+        "ano_mes": "2027-12",
+        "tipo": "projecao",
+        "total_receita": 36883.55954334979,
+        "total_despesa": 8024.52277175306,
+        "saldo": 28859.03677159673
+      }
+    ],
+    "descontos_mensal": [
+      {
+        "ano_mes": "2026-01",
+        "receita_mes": 21000.0,
+        "descontos": 420.0,
+        "receita_subsequente": 14300.0,
+        "delta_receita_subsequente": -6700.0,
+        "payback": -15.952380952380953
+      },
+      {
+        "ano_mes": "2026-02",
+        "receita_mes": 14300.0,
+        "descontos": 390.0,
+        "receita_subsequente": 19500.0,
+        "delta_receita_subsequente": 5200.0,
+        "payback": 13.333333333333334
+      },
+      {
+        "ano_mes": "2026-03",
+        "receita_mes": 19500.0,
+        "descontos": 430.0,
+        "receita_subsequente": 18700.0,
+        "delta_receita_subsequente": -800.0,
+        "payback": -1.8604651162790697
+      },
+      {
+        "ano_mes": "2026-04",
+        "receita_mes": 18700.0,
+        "descontos": 410.0,
+        "receita_subsequente": 14000.0,
+        "delta_receita_subsequente": -4700.0,
+        "payback": -11.463414634146341
+      },
+      {
+        "ano_mes": "2026-05",
+        "receita_mes": 14000.0,
+        "descontos": 395.0,
+        "receita_subsequente": 25100.0,
+        "delta_receita_subsequente": 11100.0,
+        "payback": 28.10126582278481
+      },
+      {
+        "ano_mes": "2026-06",
+        "receita_mes": 25100.0,
+        "descontos": 460.0,
+        "receita_subsequente": 22550.0,
+        "delta_receita_subsequente": -2550.0,
+        "payback": -5.543478260869565
+      },
+      {
+        "ano_mes": "2026-07",
+        "receita_mes": 22550.0,
+        "descontos": 450.0,
+        "receita_subsequente": 25600.0,
+        "delta_receita_subsequente": 3050.0,
+        "payback": 6.777777777777778
+      },
+      {
+        "ano_mes": "2026-08",
+        "receita_mes": 25600.0,
+        "descontos": 470.0,
+        "receita_subsequente": 29400.0,
+        "delta_receita_subsequente": 3800.0,
+        "payback": 8.085106382978724
+      },
+      {
+        "ano_mes": "2026-09",
+        "receita_mes": 29400.0,
+        "descontos": 520.0,
+        "receita_subsequente": 25500.0,
+        "delta_receita_subsequente": -3900.0,
+        "payback": -7.5
+      },
+      {
+        "ano_mes": "2026-10",
+        "receita_mes": 25500.0,
+        "descontos": 580.0,
+        "receita_subsequente": 31900.0,
+        "delta_receita_subsequente": 6400.0,
+        "payback": 11.03448275862069
+      },
+      {
+        "ano_mes": "2026-11",
+        "receita_mes": 31900.0,
+        "descontos": 760.0,
+        "receita_subsequente": 29200.0,
+        "delta_receita_subsequente": -2700.0,
+        "payback": -3.5526315789473686
+      },
+      {
+        "ano_mes": "2026-12",
+        "receita_mes": 29200.0,
+        "descontos": 820.0,
+        "receita_subsequente": 35500.0,
+        "delta_receita_subsequente": 6300.0,
+        "payback": 7.682926829268292
+      },
+      {
+        "ano_mes": "2027-01",
+        "receita_mes": 35500.0,
+        "descontos": 690.0,
+        "receita_subsequente": 36700.0,
+        "delta_receita_subsequente": 1200.0,
+        "payback": 1.7391304347826086
+      },
+      {
+        "ano_mes": "2027-02",
+        "receita_mes": 36700.0,
+        "descontos": 710.0,
+        "receita_subsequente": 32700.0,
+        "delta_receita_subsequente": -4000.0,
+        "payback": -5.633802816901408
+      },
+      {
+        "ano_mes": "2027-03",
+        "receita_mes": 32700.0,
+        "descontos": 730.0,
+        "receita_subsequente": 33800.0,
+        "delta_receita_subsequente": 1100.0,
+        "payback": 1.5068493150684932
+      },
+      {
+        "ano_mes": "2027-04",
+        "receita_mes": 33800.0,
+        "descontos": 760.0,
+        "receita_subsequente": 39400.0,
+        "delta_receita_subsequente": 5600.0,
+        "payback": 7.368421052631579
+      },
+      {
+        "ano_mes": "2027-05",
+        "receita_mes": 39400.0,
+        "descontos": 780.0,
+        "receita_subsequente": 35900.0,
+        "delta_receita_subsequente": -3500.0,
+        "payback": -4.487179487179487
+      },
+      {
+        "ano_mes": "2027-06",
+        "receita_mes": 35900.0,
+        "descontos": 820.0,
+        "receita_subsequente": null,
+        "delta_receita_subsequente": null,
+        "payback": null
+      }
+    ],
+    "payback_categoria": [
+      {
+        "categoria": "projetos",
+        "desconto_alocado": 6523.26084701012,
+        "delta_receita_subsequente": 14200.0,
+        "payback": 2.1768254149316206
+      },
+      {
+        "categoria": "assinaturas",
+        "desconto_alocado": 1997.8237179116074,
+        "delta_receita_subsequente": 4900.0,
+        "payback": 2.452668849643118
+      },
+      {
+        "categoria": "servicos",
+        "desconto_alocado": 1541.5202861095945,
+        "delta_receita_subsequente": 3900.0,
+        "payback": 2.529969949239273
+      },
+      {
+        "categoria": "vendas",
+        "desconto_alocado": 532.3951489686783,
+        "delta_receita_subsequente": -2100.0,
+        "payback": -3.9444386449951416
+      }
+    ],
+    "rentabilidade": [
+      {
+        "centro_custo": "consultoria",
+        "total_receita": 312700.0,
+        "total_despesa": 0.0,
+        "peso_receita": 0.6371879775853285,
+        "despesa_alocada_suporte": 45914.84174223128,
+        "despesa_total_alocada": 45914.84174223128,
+        "margem_liquida": 266785.1582577687,
+        "margem_percentual": 85.31664798777382
+      },
+      {
+        "centro_custo": "comercial",
+        "total_receita": 119600.0,
+        "total_despesa": 15225.55,
+        "peso_receita": 0.24370860927152319,
+        "despesa_alocada_suporte": 17561.28900662252,
+        "despesa_total_alocada": 32786.83900662252,
+        "margem_liquida": 86813.16099337747,
+        "margem_percentual": 72.58625501118517
+      },
+      {
+        "centro_custo": "educacao",
+        "total_receita": 33700.0,
+        "total_despesa": 0.0,
+        "peso_receita": 0.06867040244523688,
+        "despesa_alocada_suporte": 4948.289628120224,
+        "despesa_total_alocada": 4948.289628120224,
+        "margem_liquida": 28751.710371879777,
+        "margem_percentual": 85.31664798777382
+      },
+      {
+        "centro_custo": "sucesso_cliente",
+        "total_receita": 24750.0,
+        "total_despesa": 0.0,
+        "peso_receita": 0.05043301069791136,
+        "despesa_alocada_suporte": 3634.129623025981,
+        "despesa_total_alocada": 3634.129623025981,
+        "margem_liquida": 21115.87037697402,
+        "margem_percentual": 85.31664798777382
+      }
+    ],
+    "mix_receita": [
+      {
+        "ano_mes": "2026-01",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 12600.0,
+        "recorrentes_assinaturas": 8400.0,
+        "receita_total": 21000.0,
+        "share_recorrente": 40.0,
+        "share_projetos": 60.0
+      },
+      {
+        "ano_mes": "2026-02",
+        "outras_receitas": 5200.0,
+        "projetos_pontuais": 0.0,
+        "recorrentes_assinaturas": 9100.0,
+        "receita_total": 14300.0,
+        "share_recorrente": 63.63636363636363,
+        "share_projetos": 0.0
+      },
+      {
+        "ano_mes": "2026-03",
+        "outras_receitas": 4650.0,
+        "projetos_pontuais": 14850.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 19500.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 76.15384615384615
+      },
+      {
+        "ano_mes": "2026-04",
+        "outras_receitas": 18700.0,
+        "projetos_pontuais": 0.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 18700.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 0.0
+      },
+      {
+        "ano_mes": "2026-05",
+        "outras_receitas": 14000.0,
+        "projetos_pontuais": 0.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 14000.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 0.0
+      },
+      {
+        "ano_mes": "2026-06",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 16300.0,
+        "recorrentes_assinaturas": 8800.0,
+        "receita_total": 25100.0,
+        "share_recorrente": 35.0597609561753,
+        "share_projetos": 64.9402390438247
+      },
+      {
+        "ano_mes": "2026-07",
+        "outras_receitas": 5400.0,
+        "projetos_pontuais": 17150.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 22550.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 76.05321507760532
+      },
+      {
+        "ano_mes": "2026-08",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 15400.0,
+        "recorrentes_assinaturas": 10200.0,
+        "receita_total": 25600.0,
+        "share_recorrente": 39.84375,
+        "share_projetos": 60.15625
+      },
+      {
+        "ano_mes": "2026-09",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 18200.0,
+        "recorrentes_assinaturas": 11200.0,
+        "receita_total": 29400.0,
+        "share_recorrente": 38.095238095238095,
+        "share_projetos": 61.904761904761905
+      },
+      {
+        "ano_mes": "2026-10",
+        "outras_receitas": 6100.0,
+        "projetos_pontuais": 19400.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 25500.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 76.07843137254902
+      },
+      {
+        "ano_mes": "2026-11",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 20100.0,
+        "recorrentes_assinaturas": 11800.0,
+        "receita_total": 31900.0,
+        "share_recorrente": 36.990595611285265,
+        "share_projetos": 63.00940438871473
+      },
+      {
+        "ano_mes": "2026-12",
+        "outras_receitas": 6900.0,
+        "projetos_pontuais": 22300.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 29200.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 76.36986301369863
+      },
+      {
+        "ano_mes": "2027-01",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 23100.0,
+        "recorrentes_assinaturas": 12400.0,
+        "receita_total": 35500.0,
+        "share_recorrente": 34.92957746478873,
+        "share_projetos": 65.07042253521126
+      },
+      {
+        "ano_mes": "2027-02",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 23800.0,
+        "recorrentes_assinaturas": 12900.0,
+        "receita_total": 36700.0,
+        "share_recorrente": 35.14986376021799,
+        "share_projetos": 64.85013623978202
+      },
+      {
+        "ano_mes": "2027-03",
+        "outras_receitas": 8200.0,
+        "projetos_pontuais": 24500.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 32700.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 74.92354740061162
+      },
+      {
+        "ano_mes": "2027-04",
+        "outras_receitas": 8600.0,
+        "projetos_pontuais": 25200.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 33800.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 74.55621301775149
+      },
+      {
+        "ano_mes": "2027-05",
+        "outras_receitas": 0.0,
+        "projetos_pontuais": 26100.0,
+        "recorrentes_assinaturas": 13300.0,
+        "receita_total": 39400.0,
+        "share_recorrente": 33.756345177664976,
+        "share_projetos": 66.24365482233503
+      },
+      {
+        "ano_mes": "2027-06",
+        "outras_receitas": 9100.0,
+        "projetos_pontuais": 26800.0,
+        "recorrentes_assinaturas": 0.0,
+        "receita_total": 35900.0,
+        "share_recorrente": 0.0,
+        "share_projetos": 74.65181058495823
+      }
+    ],
+    "produtividade": [
+      {
+        "ano_mes": "2026-01",
+        "receita_projetos": 12600.0,
+        "despesa_pessoal": 5400.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 2.3333333333333335,
+        "custo_pessoal_por_projeto": 5400.0
+      },
+      {
+        "ano_mes": "2026-02",
+        "receita_projetos": 0.0,
+        "despesa_pessoal": 2890.0,
+        "qtd_projetos": 0.0,
+        "produtividade_receita_por_pessoal": 0.0,
+        "custo_pessoal_por_projeto": null
+      },
+      {
+        "ano_mes": "2026-03",
+        "receita_projetos": 14850.0,
+        "despesa_pessoal": 6120.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 2.426470588235294,
+        "custo_pessoal_por_projeto": 6120.0
+      },
+      {
+        "ano_mes": "2026-05",
+        "receita_projetos": 0.0,
+        "despesa_pessoal": 6335.2,
+        "qtd_projetos": 0.0,
+        "produtividade_receita_por_pessoal": 0.0,
+        "custo_pessoal_por_projeto": null
+      },
+      {
+        "ano_mes": "2026-06",
+        "receita_projetos": 16300.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2026-07",
+        "receita_projetos": 17150.0,
+        "despesa_pessoal": 6840.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 2.507309941520468,
+        "custo_pessoal_por_projeto": 6840.0
+      },
+      {
+        "ano_mes": "2026-08",
+        "receita_projetos": 15400.0,
+        "despesa_pessoal": 7210.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 2.1359223300970873,
+        "custo_pessoal_por_projeto": 7210.0
+      },
+      {
+        "ano_mes": "2026-09",
+        "receita_projetos": 18200.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2026-10",
+        "receita_projetos": 19400.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2026-11",
+        "receita_projetos": 20100.0,
+        "despesa_pessoal": 7420.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 2.7088948787061993,
+        "custo_pessoal_por_projeto": 7420.0
+      },
+      {
+        "ano_mes": "2026-12",
+        "receita_projetos": 22300.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2027-01",
+        "receita_projetos": 23100.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2027-02",
+        "receita_projetos": 23800.0,
+        "despesa_pessoal": 7680.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 3.0989583333333335,
+        "custo_pessoal_por_projeto": 7680.0
+      },
+      {
+        "ano_mes": "2027-03",
+        "receita_projetos": 24500.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2027-04",
+        "receita_projetos": 25200.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      },
+      {
+        "ano_mes": "2027-05",
+        "receita_projetos": 26100.0,
+        "despesa_pessoal": 7890.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": 3.307984790874525,
+        "custo_pessoal_por_projeto": 7890.0
+      },
+      {
+        "ano_mes": "2027-06",
+        "receita_projetos": 26800.0,
+        "despesa_pessoal": 0.0,
+        "qtd_projetos": 1.0,
+        "produtividade_receita_por_pessoal": null,
+        "custo_pessoal_por_projeto": 0.0
+      }
+    ],
+    "anomalias": [
+      {
+        "data": "2027-05-21",
+        "ano_mes": "2027-05",
+        "descricao": "Folha e encargos maio",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 7890.0,
+        "centro_custo": "rh",
+        "z_robusto": 4.082847857444851
+      },
+      {
+        "data": "2027-02-22",
+        "ano_mes": "2027-02",
+        "descricao": "Folha operacional fevereiro",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 7680.0,
+        "centro_custo": "rh",
+        "z_robusto": 3.9419391056728594
+      },
+      {
+        "data": "2026-11-17",
+        "ano_mes": "2026-11",
+        "descricao": "Folha e encargos novembro",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 7420.0,
+        "centro_custo": "rh",
+        "z_robusto": 3.767480651098013
+      },
+      {
+        "data": "2026-08-27",
+        "ano_mes": "2026-08",
+        "descricao": "Folha variavel e bonus",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 7210.0,
+        "centro_custo": "rh",
+        "z_robusto": 3.6265718993260214
+      },
+      {
+        "data": "2026-07-15",
+        "ano_mes": "2026-07",
+        "descricao": "Recrutamento especializado",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 6840.0,
+        "centro_custo": "rh",
+        "z_robusto": 3.3783040985848936
+      },
+      {
+        "data": "2026-05-28",
+        "ano_mes": "2026-05",
+        "descricao": "Beneficios e encargos",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 6335.2,
+        "centro_custo": "rh",
+        "z_robusto": 3.0395862990872695
+      },
+      {
+        "data": "2026-03-27",
+        "ano_mes": "2026-03",
+        "descricao": "Folha salarial",
+        "categoria": "pessoal",
+        "tipo": "despesa",
+        "valor": 6120.0,
+        "centro_custo": "rh",
+        "z_robusto": 2.895188378223781
+      }
+    ],
+    "benchmarking": [
+      {
+        "ano_mes": "2027-01",
+        "total_receita_atual": 35500.0,
+        "total_receita_ano_anterior": 21000.0,
+        "crescimento_total_receita": 69.04761904761905,
+        "total_despesa_atual": 5900.0,
+        "total_despesa_ano_anterior": 8590.75,
+        "crescimento_total_despesa": -31.321479498297588,
+        "saldo_atual": 29600.0,
+        "saldo_ano_anterior": 12409.25,
+        "crescimento_saldo": 138.53174043556217
+      },
+      {
+        "ano_mes": "2027-02",
+        "total_receita_atual": 36700.0,
+        "total_receita_ano_anterior": 14300.0,
+        "crescimento_total_receita": 156.64335664335664,
+        "total_despesa_atual": 10280.0,
+        "total_despesa_ano_anterior": 8561.05,
+        "crescimento_total_despesa": 20.07872866061991,
+        "saldo_atual": 26420.0,
+        "saldo_ano_anterior": 5738.950000000001,
+        "crescimento_saldo": 360.3629583808884
+      },
+      {
+        "ano_mes": "2027-03",
+        "total_receita_atual": 32700.0,
+        "total_receita_ano_anterior": 19500.0,
+        "crescimento_total_receita": 67.6923076923077,
+        "total_despesa_atual": 5350.0,
+        "total_despesa_ano_anterior": 10200.7,
+        "crescimento_total_despesa": -47.55261893791603,
+        "saldo_atual": 27350.0,
+        "saldo_ano_anterior": 9299.3,
+        "crescimento_saldo": 194.10815867861024
+      },
+      {
+        "ano_mes": "2027-04",
+        "total_receita_atual": 33800.0,
+        "total_receita_ano_anterior": 18700.0,
+        "crescimento_total_receita": 80.74866310160428,
+        "total_despesa_atual": 5040.0,
+        "total_despesa_ano_anterior": 7536.45,
+        "crescimento_total_despesa": -33.125012439543816,
+        "saldo_atual": 28760.0,
+        "saldo_ano_anterior": 11163.55,
+        "crescimento_saldo": 157.62414285778272
+      },
+      {
+        "ano_mes": "2027-05",
+        "total_receita_atual": 39400.0,
+        "total_receita_ano_anterior": 14000.0,
+        "crescimento_total_receita": 181.42857142857142,
+        "total_despesa_atual": 11650.0,
+        "total_despesa_ano_anterior": 9798.75,
+        "crescimento_total_despesa": 18.892715907641282,
+        "saldo_atual": 27750.0,
+        "saldo_ano_anterior": 4201.25,
+        "crescimento_saldo": 560.5177030645641
+      },
+      {
+        "ano_mes": "2027-06",
+        "total_receita_atual": 35900.0,
+        "total_receita_ano_anterior": 25100.0,
+        "crescimento_total_receita": 43.02788844621514,
+        "total_despesa_atual": 7160.0,
+        "total_despesa_ano_anterior": 8270.8,
+        "crescimento_total_despesa": -13.43038158340184,
+        "saldo_atual": 28740.0,
+        "saldo_ano_anterior": 16829.2,
+        "crescimento_saldo": 70.77460604187958
+      }
+    ],
+    "liquidez": [
+      {
+        "ano_mes": "2026-01",
+        "saidas": 7670.45,
+        "entradas": 8400.0,
+        "saldo_caixa": 729.5500000000002,
+        "saldo_acumulado": 729.5500000000002,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-02",
+        "saidas": 4200.3,
+        "entradas": 21700.0,
+        "saldo_caixa": 17499.7,
+        "saldo_acumulado": 18229.25,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-03",
+        "saidas": 14141.15,
+        "entradas": 9850.0,
+        "saldo_caixa": -4291.15,
+        "saldo_acumulado": 13938.1,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-04",
+        "saidas": 1750.6,
+        "entradas": 21750.0,
+        "saldo_caixa": 19999.4,
+        "saldo_acumulado": 33937.5,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-05",
+        "saidas": 15945.05,
+        "entradas": 25800.0,
+        "saldo_caixa": 9854.95,
+        "saldo_acumulado": 43792.45,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-06",
+        "saidas": 1440.15,
+        "entradas": 8800.0,
+        "saldo_caixa": 7359.85,
+        "saldo_acumulado": 51152.299999999996,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-07",
+        "saidas": 15100.8,
+        "entradas": 21700.0,
+        "saldo_caixa": 6599.200000000001,
+        "saldo_acumulado": 57751.5,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-08",
+        "saidas": 13141.05,
+        "entradas": 27350.0,
+        "saldo_caixa": 14208.95,
+        "saldo_acumulado": 71960.45,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-09",
+        "saidas": 2505.25,
+        "entradas": 26600.0,
+        "saldo_caixa": 24094.75,
+        "saldo_acumulado": 96055.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-10",
+        "saidas": 5100.0,
+        "entradas": 18200.0,
+        "saldo_caixa": 13100.0,
+        "saldo_acumulado": 109155.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-11",
+        "saidas": 12090.0,
+        "entradas": 37300.0,
+        "saldo_caixa": 25210.0,
+        "saldo_acumulado": 134365.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2026-12",
+        "saidas": 4880.0,
+        "entradas": 27000.0,
+        "saldo_caixa": 22120.0,
+        "saldo_acumulado": 156485.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-01",
+        "saidas": 3010.0,
+        "entradas": 34700.0,
+        "saldo_caixa": 31690.0,
+        "saldo_acumulado": 188175.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-02",
+        "saidas": 13600.0,
+        "entradas": 36000.0,
+        "saldo_caixa": 22400.0,
+        "saldo_acumulado": 210575.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-03",
+        "saidas": 2620.0,
+        "entradas": 32000.0,
+        "saldo_caixa": 29380.0,
+        "saldo_acumulado": 239955.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-04",
+        "saidas": 7070.0,
+        "entradas": 33100.0,
+        "saldo_caixa": 26030.0,
+        "saldo_acumulado": 265985.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-05",
+        "saidas": 14240.0,
+        "entradas": 38500.0,
+        "saldo_caixa": 24260.0,
+        "saldo_acumulado": 290245.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-06",
+        "saidas": 820.0,
+        "entradas": 35200.0,
+        "saldo_caixa": 34380.0,
+        "saldo_acumulado": 324625.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      },
+      {
+        "ano_mes": "2027-07",
+        "saidas": 6340.0,
+        "entradas": 26800.0,
+        "saldo_caixa": 20460.0,
+        "saldo_acumulado": 345085.2,
+        "ciclo_caixa_dias": 10.39,
+        "necessidade_capital_giro": 0.0
+      }
+    ]
+  },
   "records": [
     {
       "data": "2026-01-08",
@@ -13,7 +1138,13 @@
       "tipo": "receita",
       "valor": 8400.0,
       "centro_custo": "comercial",
-      "valor_assinado": 8400.0
+      "valor_assinado": 8400.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2026-01-13",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-01-13",
+      "ano_mes_caixa": "2026-01",
+      "valor_caixa": 8400.0
     },
     {
       "data": "2026-01-12",
@@ -23,7 +1154,13 @@
       "tipo": "receita",
       "valor": 12600.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 12600.0
+      "valor_assinado": 12600.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-02-11",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-02-11",
+      "ano_mes_caixa": "2026-02",
+      "valor_caixa": 12600.0
     },
     {
       "data": "2026-01-15",
@@ -33,7 +1170,13 @@
       "tipo": "despesa",
       "valor": 1850.45,
       "centro_custo": "marketing",
-      "valor_assinado": -1850.45
+      "valor_assinado": -1850.45,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-01-30",
+      "data_caixa": "2026-01-30",
+      "ano_mes_caixa": "2026-01",
+      "valor_caixa": -1850.45
     },
     {
       "data": "2026-01-20",
@@ -43,7 +1186,13 @@
       "tipo": "despesa",
       "valor": 920.3,
       "centro_custo": "ti",
-      "valor_assinado": -920.3
+      "valor_assinado": -920.3,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-02-09",
+      "data_caixa": "2026-02-09",
+      "ano_mes_caixa": "2026-02",
+      "valor_caixa": -920.3
     },
     {
       "data": "2026-01-28",
@@ -53,7 +1202,13 @@
       "tipo": "despesa",
       "valor": 5400.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -5400.0
+      "valor_assinado": -5400.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-01-30",
+      "data_caixa": "2026-01-30",
+      "ano_mes_caixa": "2026-01",
+      "valor_caixa": -5400.0
     },
     {
       "data": "2026-01-30",
@@ -63,7 +1218,13 @@
       "tipo": "despesa",
       "valor": 420.0,
       "centro_custo": "comercial",
-      "valor_assinado": -420.0
+      "valor_assinado": -420.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-01-30",
+      "data_caixa": "2026-01-30",
+      "ano_mes_caixa": "2026-01",
+      "valor_caixa": -420.0
     },
     {
       "data": "2026-02-05",
@@ -73,7 +1234,13 @@
       "tipo": "receita",
       "valor": 9100.0,
       "centro_custo": "comercial",
-      "valor_assinado": 9100.0
+      "valor_assinado": 9100.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2026-02-10",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-02-10",
+      "ano_mes_caixa": "2026-02",
+      "valor_caixa": 9100.0
     },
     {
       "data": "2026-02-09",
@@ -83,7 +1250,13 @@
       "tipo": "receita",
       "valor": 5200.0,
       "centro_custo": "educacao",
-      "valor_assinado": 5200.0
+      "valor_assinado": 5200.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-03-01",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-03-01",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": 5200.0
     },
     {
       "data": "2026-02-13",
@@ -93,7 +1266,13 @@
       "tipo": "despesa",
       "valor": 4100.8,
       "centro_custo": "operacoes",
-      "valor_assinado": -4100.8
+      "valor_assinado": -4100.8,
+      "prazo_dias": 30,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-03-15",
+      "data_caixa": "2026-03-15",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": -4100.8
     },
     {
       "data": "2026-02-18",
@@ -103,7 +1282,13 @@
       "tipo": "despesa",
       "valor": 1180.25,
       "centro_custo": "ti",
-      "valor_assinado": -1180.25
+      "valor_assinado": -1180.25,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-03-10",
+      "data_caixa": "2026-03-10",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": -1180.25
     },
     {
       "data": "2026-02-26",
@@ -113,7 +1298,13 @@
       "tipo": "despesa",
       "valor": 2890.0,
       "centro_custo": "comercial",
-      "valor_assinado": -2890.0
+      "valor_assinado": -2890.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-02-28",
+      "data_caixa": "2026-02-28",
+      "ano_mes_caixa": "2026-02",
+      "valor_caixa": -2890.0
     },
     {
       "data": "2026-02-27",
@@ -123,7 +1314,13 @@
       "tipo": "despesa",
       "valor": 390.0,
       "centro_custo": "comercial",
-      "valor_assinado": -390.0
+      "valor_assinado": -390.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-02-27",
+      "data_caixa": "2026-02-27",
+      "ano_mes_caixa": "2026-02",
+      "valor_caixa": -390.0
     },
     {
       "data": "2026-03-04",
@@ -133,7 +1330,13 @@
       "tipo": "receita",
       "valor": 14850.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 14850.0
+      "valor_assinado": 14850.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-04-03",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-04-03",
+      "ano_mes_caixa": "2026-04",
+      "valor_caixa": 14850.0
     },
     {
       "data": "2026-03-11",
@@ -143,7 +1346,13 @@
       "tipo": "receita",
       "valor": 4650.0,
       "centro_custo": "sucesso_cliente",
-      "valor_assinado": 4650.0
+      "valor_assinado": 4650.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-03-31",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-03-31",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": 4650.0
     },
     {
       "data": "2026-03-14",
@@ -153,7 +1362,13 @@
       "tipo": "despesa",
       "valor": 2310.1,
       "centro_custo": "marketing",
-      "valor_assinado": -2310.1
+      "valor_assinado": -2310.1,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-03-29",
+      "data_caixa": "2026-03-29",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": -2310.1
     },
     {
       "data": "2026-03-19",
@@ -163,7 +1378,13 @@
       "tipo": "despesa",
       "valor": 1340.6,
       "centro_custo": "ti",
-      "valor_assinado": -1340.6
+      "valor_assinado": -1340.6,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-04-08",
+      "data_caixa": "2026-04-08",
+      "ano_mes_caixa": "2026-04",
+      "valor_caixa": -1340.6
     },
     {
       "data": "2026-03-27",
@@ -173,7 +1394,13 @@
       "tipo": "despesa",
       "valor": 6120.0,
       "centro_custo": "rh",
-      "valor_assinado": -6120.0
+      "valor_assinado": -6120.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-03-29",
+      "data_caixa": "2026-03-29",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": -6120.0
     },
     {
       "data": "2026-03-30",
@@ -183,7 +1410,13 @@
       "tipo": "despesa",
       "valor": 430.0,
       "centro_custo": "comercial",
-      "valor_assinado": -430.0
+      "valor_assinado": -430.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-03-30",
+      "data_caixa": "2026-03-30",
+      "ano_mes_caixa": "2026-03",
+      "valor_caixa": -430.0
     },
     {
       "data": "2026-04-02",
@@ -193,7 +1426,13 @@
       "tipo": "receita",
       "valor": 6900.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 6900.0
+      "valor_assinado": 6900.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-04-22",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-04-22",
+      "ano_mes_caixa": "2026-04",
+      "valor_caixa": 6900.0
     },
     {
       "data": "2026-04-08",
@@ -203,7 +1442,13 @@
       "tipo": "receita",
       "valor": 11800.0,
       "centro_custo": "comercial",
-      "valor_assinado": 11800.0
+      "valor_assinado": 11800.0,
+      "prazo_dias": 25,
+      "data_recebimento": "2026-05-03",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-05-03",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": 11800.0
     },
     {
       "data": "2026-04-15",
@@ -213,7 +1458,13 @@
       "tipo": "despesa",
       "valor": 1740.55,
       "centro_custo": "comercial",
-      "valor_assinado": -1740.55
+      "valor_assinado": -1740.55,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-05-03",
+      "data_caixa": "2026-05-03",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": -1740.55
     },
     {
       "data": "2026-04-18",
@@ -223,7 +1474,13 @@
       "tipo": "despesa",
       "valor": 4525.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -4525.0
+      "valor_assinado": -4525.0,
+      "prazo_dias": 30,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-05-18",
+      "data_caixa": "2026-05-18",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": -4525.0
     },
     {
       "data": "2026-04-24",
@@ -233,7 +1490,13 @@
       "tipo": "despesa",
       "valor": 860.9,
       "centro_custo": "adm",
-      "valor_assinado": -860.9
+      "valor_assinado": -860.9,
+      "prazo_dias": 10,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-05-04",
+      "data_caixa": "2026-05-04",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": -860.9
     },
     {
       "data": "2026-04-29",
@@ -243,7 +1506,13 @@
       "tipo": "despesa",
       "valor": 410.0,
       "centro_custo": "comercial",
-      "valor_assinado": -410.0
+      "valor_assinado": -410.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-04-29",
+      "data_caixa": "2026-04-29",
+      "ano_mes_caixa": "2026-04",
+      "valor_caixa": -410.0
     },
     {
       "data": "2026-05-06",
@@ -253,7 +1522,13 @@
       "tipo": "receita",
       "valor": 9700.0,
       "centro_custo": "comercial",
-      "valor_assinado": 9700.0
+      "valor_assinado": 9700.0,
+      "prazo_dias": 25,
+      "data_recebimento": "2026-05-31",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-05-31",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": 9700.0
     },
     {
       "data": "2026-05-10",
@@ -263,7 +1538,13 @@
       "tipo": "receita",
       "valor": 4300.0,
       "centro_custo": "educacao",
-      "valor_assinado": 4300.0
+      "valor_assinado": 4300.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-05-30",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-05-30",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": 4300.0
     },
     {
       "data": "2026-05-13",
@@ -273,7 +1554,13 @@
       "tipo": "despesa",
       "valor": 2088.4,
       "centro_custo": "marketing",
-      "valor_assinado": -2088.4
+      "valor_assinado": -2088.4,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-05-28",
+      "data_caixa": "2026-05-28",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": -2088.4
     },
     {
       "data": "2026-05-19",
@@ -283,7 +1570,13 @@
       "tipo": "despesa",
       "valor": 980.15,
       "centro_custo": "ti",
-      "valor_assinado": -980.15
+      "valor_assinado": -980.15,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-06-08",
+      "data_caixa": "2026-06-08",
+      "ano_mes_caixa": "2026-06",
+      "valor_caixa": -980.15
     },
     {
       "data": "2026-05-28",
@@ -293,7 +1586,13 @@
       "tipo": "despesa",
       "valor": 6335.2,
       "centro_custo": "rh",
-      "valor_assinado": -6335.2
+      "valor_assinado": -6335.2,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-05-30",
+      "data_caixa": "2026-05-30",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": -6335.2
     },
     {
       "data": "2026-05-30",
@@ -303,7 +1602,13 @@
       "tipo": "despesa",
       "valor": 395.0,
       "centro_custo": "comercial",
-      "valor_assinado": -395.0
+      "valor_assinado": -395.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-05-30",
+      "data_caixa": "2026-05-30",
+      "ano_mes_caixa": "2026-05",
+      "valor_caixa": -395.0
     },
     {
       "data": "2026-06-03",
@@ -313,7 +1618,13 @@
       "tipo": "receita",
       "valor": 16300.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 16300.0
+      "valor_assinado": 16300.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-07-03",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-07-03",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": 16300.0
     },
     {
       "data": "2026-06-09",
@@ -323,7 +1634,13 @@
       "tipo": "receita",
       "valor": 8800.0,
       "centro_custo": "comercial",
-      "valor_assinado": 8800.0
+      "valor_assinado": 8800.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2026-06-14",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-06-14",
+      "ano_mes_caixa": "2026-06",
+      "valor_caixa": 8800.0
     },
     {
       "data": "2026-06-12",
@@ -333,7 +1650,13 @@
       "tipo": "despesa",
       "valor": 3895.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -3895.0
+      "valor_assinado": -3895.0,
+      "prazo_dias": 30,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-07-12",
+      "data_caixa": "2026-07-12",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": -3895.0
     },
     {
       "data": "2026-06-17",
@@ -343,7 +1666,13 @@
       "tipo": "despesa",
       "valor": 1125.8,
       "centro_custo": "ti",
-      "valor_assinado": -1125.8
+      "valor_assinado": -1125.8,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-07-07",
+      "data_caixa": "2026-07-07",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": -1125.8
     },
     {
       "data": "2026-06-26",
@@ -353,7 +1682,13 @@
       "tipo": "despesa",
       "valor": 2790.0,
       "centro_custo": "adm",
-      "valor_assinado": -2790.0
+      "valor_assinado": -2790.0,
+      "prazo_dias": 10,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-07-06",
+      "data_caixa": "2026-07-06",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": -2790.0
     },
     {
       "data": "2026-06-29",
@@ -363,7 +1698,13 @@
       "tipo": "despesa",
       "valor": 460.0,
       "centro_custo": "comercial",
-      "valor_assinado": -460.0
+      "valor_assinado": -460.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-06-29",
+      "data_caixa": "2026-06-29",
+      "ano_mes_caixa": "2026-06",
+      "valor_caixa": -460.0
     },
     {
       "data": "2026-07-07",
@@ -373,7 +1714,13 @@
       "tipo": "receita",
       "valor": 17150.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 17150.0
+      "valor_assinado": 17150.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-08-06",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-08-06",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": 17150.0
     },
     {
       "data": "2026-07-11",
@@ -383,7 +1730,13 @@
       "tipo": "receita",
       "valor": 5400.0,
       "centro_custo": "sucesso_cliente",
-      "valor_assinado": 5400.0
+      "valor_assinado": 5400.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-07-31",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-07-31",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": 5400.0
     },
     {
       "data": "2026-07-15",
@@ -393,7 +1746,13 @@
       "tipo": "despesa",
       "valor": 6840.0,
       "centro_custo": "rh",
-      "valor_assinado": -6840.0
+      "valor_assinado": -6840.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-07-17",
+      "data_caixa": "2026-07-17",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": -6840.0
     },
     {
       "data": "2026-07-21",
@@ -403,7 +1762,13 @@
       "tipo": "despesa",
       "valor": 2645.7,
       "centro_custo": "marketing",
-      "valor_assinado": -2645.7
+      "valor_assinado": -2645.7,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-08-05",
+      "data_caixa": "2026-08-05",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": -2645.7
     },
     {
       "data": "2026-07-29",
@@ -413,7 +1778,13 @@
       "tipo": "despesa",
       "valor": 1495.35,
       "centro_custo": "ti",
-      "valor_assinado": -1495.35
+      "valor_assinado": -1495.35,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-08-18",
+      "data_caixa": "2026-08-18",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": -1495.35
     },
     {
       "data": "2026-07-30",
@@ -423,7 +1794,13 @@
       "tipo": "despesa",
       "valor": 450.0,
       "centro_custo": "comercial",
-      "valor_assinado": -450.0
+      "valor_assinado": -450.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-07-30",
+      "data_caixa": "2026-07-30",
+      "ano_mes_caixa": "2026-07",
+      "valor_caixa": -450.0
     },
     {
       "data": "2026-08-05",
@@ -433,7 +1810,13 @@
       "tipo": "receita",
       "valor": 10200.0,
       "centro_custo": "comercial",
-      "valor_assinado": 10200.0
+      "valor_assinado": 10200.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2026-08-10",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-08-10",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": 10200.0
     },
     {
       "data": "2026-08-08",
@@ -443,7 +1826,13 @@
       "tipo": "receita",
       "valor": 15400.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 15400.0
+      "valor_assinado": 15400.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-09-07",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-09-07",
+      "ano_mes_caixa": "2026-09",
+      "valor_caixa": 15400.0
     },
     {
       "data": "2026-08-14",
@@ -453,7 +1842,13 @@
       "tipo": "despesa",
       "valor": 1985.25,
       "centro_custo": "operacoes",
-      "valor_assinado": -1985.25
+      "valor_assinado": -1985.25,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-09-01",
+      "data_caixa": "2026-09-01",
+      "ano_mes_caixa": "2026-09",
+      "valor_caixa": -1985.25
     },
     {
       "data": "2026-08-20",
@@ -463,7 +1858,13 @@
       "tipo": "despesa",
       "valor": 1320.0,
       "centro_custo": "adm",
-      "valor_assinado": -1320.0
+      "valor_assinado": -1320.0,
+      "prazo_dias": 10,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-08-30",
+      "data_caixa": "2026-08-30",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": -1320.0
     },
     {
       "data": "2026-08-27",
@@ -473,7 +1874,13 @@
       "tipo": "despesa",
       "valor": 7210.0,
       "centro_custo": "rh",
-      "valor_assinado": -7210.0
+      "valor_assinado": -7210.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-08-29",
+      "data_caixa": "2026-08-29",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": -7210.0
     },
     {
       "data": "2026-08-29",
@@ -483,7 +1890,13 @@
       "tipo": "despesa",
       "valor": 470.0,
       "centro_custo": "comercial",
-      "valor_assinado": -470.0
+      "valor_assinado": -470.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-08-29",
+      "data_caixa": "2026-08-29",
+      "ano_mes_caixa": "2026-08",
+      "valor_caixa": -470.0
     },
     {
       "data": "2026-09-03",
@@ -493,7 +1906,13 @@
       "tipo": "receita",
       "valor": 18200.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 18200.0
+      "valor_assinado": 18200.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-10-03",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-10-03",
+      "ano_mes_caixa": "2026-10",
+      "valor_caixa": 18200.0
     },
     {
       "data": "2026-09-09",
@@ -503,7 +1922,13 @@
       "tipo": "receita",
       "valor": 11200.0,
       "centro_custo": "comercial",
-      "valor_assinado": 11200.0
+      "valor_assinado": 11200.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2026-09-14",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-09-14",
+      "ano_mes_caixa": "2026-09",
+      "valor_caixa": 11200.0
     },
     {
       "data": "2026-09-16",
@@ -513,7 +1938,13 @@
       "tipo": "despesa",
       "valor": 2380.0,
       "centro_custo": "marketing",
-      "valor_assinado": -2380.0
+      "valor_assinado": -2380.0,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-10-01",
+      "data_caixa": "2026-10-01",
+      "ano_mes_caixa": "2026-10",
+      "valor_caixa": -2380.0
     },
     {
       "data": "2026-09-22",
@@ -523,7 +1954,13 @@
       "tipo": "despesa",
       "valor": 2140.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -2140.0
+      "valor_assinado": -2140.0,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-10-10",
+      "data_caixa": "2026-10-10",
+      "ano_mes_caixa": "2026-10",
+      "valor_caixa": -2140.0
     },
     {
       "data": "2026-09-29",
@@ -533,7 +1970,13 @@
       "tipo": "despesa",
       "valor": 520.0,
       "centro_custo": "comercial",
-      "valor_assinado": -520.0
+      "valor_assinado": -520.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-09-29",
+      "data_caixa": "2026-09-29",
+      "ano_mes_caixa": "2026-09",
+      "valor_caixa": -520.0
     },
     {
       "data": "2026-10-07",
@@ -543,7 +1986,13 @@
       "tipo": "receita",
       "valor": 19400.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 19400.0
+      "valor_assinado": 19400.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-11-06",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-11-06",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": 19400.0
     },
     {
       "data": "2026-10-12",
@@ -553,7 +2002,13 @@
       "tipo": "receita",
       "valor": 6100.0,
       "centro_custo": "sucesso_cliente",
-      "valor_assinado": 6100.0
+      "valor_assinado": 6100.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-11-01",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-11-01",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": 6100.0
     },
     {
       "data": "2026-10-18",
@@ -563,7 +2018,13 @@
       "tipo": "despesa",
       "valor": 1650.0,
       "centro_custo": "ti",
-      "valor_assinado": -1650.0
+      "valor_assinado": -1650.0,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-11-07",
+      "data_caixa": "2026-11-07",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": -1650.0
     },
     {
       "data": "2026-10-24",
@@ -573,7 +2034,13 @@
       "tipo": "despesa",
       "valor": 2260.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -2260.0
+      "valor_assinado": -2260.0,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-11-11",
+      "data_caixa": "2026-11-11",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": -2260.0
     },
     {
       "data": "2026-10-30",
@@ -583,7 +2050,13 @@
       "tipo": "despesa",
       "valor": 580.0,
       "centro_custo": "comercial",
-      "valor_assinado": -580.0
+      "valor_assinado": -580.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-10-30",
+      "data_caixa": "2026-10-30",
+      "ano_mes_caixa": "2026-10",
+      "valor_caixa": -580.0
     },
     {
       "data": "2026-11-05",
@@ -593,7 +2066,13 @@
       "tipo": "receita",
       "valor": 20100.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 20100.0
+      "valor_assinado": 20100.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2026-12-05",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-12-05",
+      "ano_mes_caixa": "2026-12",
+      "valor_caixa": 20100.0
     },
     {
       "data": "2026-11-11",
@@ -603,7 +2082,13 @@
       "tipo": "receita",
       "valor": 11800.0,
       "centro_custo": "comercial",
-      "valor_assinado": 11800.0
+      "valor_assinado": 11800.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2026-11-16",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-11-16",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": 11800.0
     },
     {
       "data": "2026-11-17",
@@ -613,7 +2098,13 @@
       "tipo": "despesa",
       "valor": 7420.0,
       "centro_custo": "rh",
-      "valor_assinado": -7420.0
+      "valor_assinado": -7420.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-11-19",
+      "data_caixa": "2026-11-19",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": -7420.0
     },
     {
       "data": "2026-11-23",
@@ -623,7 +2114,13 @@
       "tipo": "despesa",
       "valor": 1580.0,
       "centro_custo": "adm",
-      "valor_assinado": -1580.0
+      "valor_assinado": -1580.0,
+      "prazo_dias": 10,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-12-03",
+      "data_caixa": "2026-12-03",
+      "ano_mes_caixa": "2026-12",
+      "valor_caixa": -1580.0
     },
     {
       "data": "2026-11-29",
@@ -633,7 +2130,13 @@
       "tipo": "despesa",
       "valor": 760.0,
       "centro_custo": "comercial",
-      "valor_assinado": -760.0
+      "valor_assinado": -760.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-11-29",
+      "data_caixa": "2026-11-29",
+      "ano_mes_caixa": "2026-11",
+      "valor_caixa": -760.0
     },
     {
       "data": "2026-12-04",
@@ -643,7 +2146,13 @@
       "tipo": "receita",
       "valor": 22300.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 22300.0
+      "valor_assinado": 22300.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-01-03",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-01-03",
+      "ano_mes_caixa": "2027-01",
+      "valor_caixa": 22300.0
     },
     {
       "data": "2026-12-10",
@@ -653,7 +2162,13 @@
       "tipo": "receita",
       "valor": 6900.0,
       "centro_custo": "educacao",
-      "valor_assinado": 6900.0
+      "valor_assinado": 6900.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2026-12-30",
+      "data_pagamento": NaN,
+      "data_caixa": "2026-12-30",
+      "ano_mes_caixa": "2026-12",
+      "valor_caixa": 6900.0
     },
     {
       "data": "2026-12-16",
@@ -663,7 +2178,13 @@
       "tipo": "despesa",
       "valor": 2480.0,
       "centro_custo": "marketing",
-      "valor_assinado": -2480.0
+      "valor_assinado": -2480.0,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-12-31",
+      "data_caixa": "2026-12-31",
+      "ano_mes_caixa": "2026-12",
+      "valor_caixa": -2480.0
     },
     {
       "data": "2026-12-22",
@@ -673,7 +2194,13 @@
       "tipo": "despesa",
       "valor": 2320.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -2320.0
+      "valor_assinado": -2320.0,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-01-09",
+      "data_caixa": "2027-01-09",
+      "ano_mes_caixa": "2027-01",
+      "valor_caixa": -2320.0
     },
     {
       "data": "2026-12-29",
@@ -683,7 +2210,13 @@
       "tipo": "despesa",
       "valor": 820.0,
       "centro_custo": "comercial",
-      "valor_assinado": -820.0
+      "valor_assinado": -820.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2026-12-29",
+      "data_caixa": "2026-12-29",
+      "ano_mes_caixa": "2026-12",
+      "valor_caixa": -820.0
     },
     {
       "data": "2027-01-08",
@@ -693,7 +2226,13 @@
       "tipo": "receita",
       "valor": 12400.0,
       "centro_custo": "comercial",
-      "valor_assinado": 12400.0
+      "valor_assinado": 12400.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2027-01-13",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-01-13",
+      "ano_mes_caixa": "2027-01",
+      "valor_caixa": 12400.0
     },
     {
       "data": "2027-01-13",
@@ -703,7 +2242,13 @@
       "tipo": "receita",
       "valor": 23100.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 23100.0
+      "valor_assinado": 23100.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-02-12",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-02-12",
+      "ano_mes_caixa": "2027-02",
+      "valor_caixa": 23100.0
     },
     {
       "data": "2027-01-19",
@@ -713,7 +2258,13 @@
       "tipo": "despesa",
       "valor": 2750.0,
       "centro_custo": "marketing",
-      "valor_assinado": -2750.0
+      "valor_assinado": -2750.0,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-02-03",
+      "data_caixa": "2027-02-03",
+      "ano_mes_caixa": "2027-02",
+      "valor_caixa": -2750.0
     },
     {
       "data": "2027-01-24",
@@ -723,7 +2274,13 @@
       "tipo": "despesa",
       "valor": 2460.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -2460.0
+      "valor_assinado": -2460.0,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-02-11",
+      "data_caixa": "2027-02-11",
+      "ano_mes_caixa": "2027-02",
+      "valor_caixa": -2460.0
     },
     {
       "data": "2027-01-30",
@@ -733,7 +2290,13 @@
       "tipo": "despesa",
       "valor": 690.0,
       "centro_custo": "comercial",
-      "valor_assinado": -690.0
+      "valor_assinado": -690.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-01-30",
+      "data_caixa": "2027-01-30",
+      "ano_mes_caixa": "2027-01",
+      "valor_caixa": -690.0
     },
     {
       "data": "2027-02-06",
@@ -743,7 +2306,13 @@
       "tipo": "receita",
       "valor": 12900.0,
       "centro_custo": "comercial",
-      "valor_assinado": 12900.0
+      "valor_assinado": 12900.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2027-02-11",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-02-11",
+      "ano_mes_caixa": "2027-02",
+      "valor_caixa": 12900.0
     },
     {
       "data": "2027-02-10",
@@ -753,7 +2322,13 @@
       "tipo": "receita",
       "valor": 23800.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 23800.0
+      "valor_assinado": 23800.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-03-12",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-03-12",
+      "ano_mes_caixa": "2027-03",
+      "valor_caixa": 23800.0
     },
     {
       "data": "2027-02-16",
@@ -763,7 +2338,13 @@
       "tipo": "despesa",
       "valor": 1890.0,
       "centro_custo": "ti",
-      "valor_assinado": -1890.0
+      "valor_assinado": -1890.0,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-03-08",
+      "data_caixa": "2027-03-08",
+      "ano_mes_caixa": "2027-03",
+      "valor_caixa": -1890.0
     },
     {
       "data": "2027-02-22",
@@ -773,7 +2354,13 @@
       "tipo": "despesa",
       "valor": 7680.0,
       "centro_custo": "rh",
-      "valor_assinado": -7680.0
+      "valor_assinado": -7680.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-02-24",
+      "data_caixa": "2027-02-24",
+      "ano_mes_caixa": "2027-02",
+      "valor_caixa": -7680.0
     },
     {
       "data": "2027-02-27",
@@ -783,7 +2370,13 @@
       "tipo": "despesa",
       "valor": 710.0,
       "centro_custo": "comercial",
-      "valor_assinado": -710.0
+      "valor_assinado": -710.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-02-27",
+      "data_caixa": "2027-02-27",
+      "ano_mes_caixa": "2027-02",
+      "valor_caixa": -710.0
     },
     {
       "data": "2027-03-05",
@@ -793,7 +2386,13 @@
       "tipo": "receita",
       "valor": 8200.0,
       "centro_custo": "educacao",
-      "valor_assinado": 8200.0
+      "valor_assinado": 8200.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2027-03-25",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-03-25",
+      "ano_mes_caixa": "2027-03",
+      "valor_caixa": 8200.0
     },
     {
       "data": "2027-03-11",
@@ -803,7 +2402,13 @@
       "tipo": "receita",
       "valor": 24500.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 24500.0
+      "valor_assinado": 24500.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-04-10",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-04-10",
+      "ano_mes_caixa": "2027-04",
+      "valor_caixa": 24500.0
     },
     {
       "data": "2027-03-17",
@@ -813,7 +2418,13 @@
       "tipo": "despesa",
       "valor": 2860.0,
       "centro_custo": "marketing",
-      "valor_assinado": -2860.0
+      "valor_assinado": -2860.0,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-04-01",
+      "data_caixa": "2027-04-01",
+      "ano_mes_caixa": "2027-04",
+      "valor_caixa": -2860.0
     },
     {
       "data": "2027-03-23",
@@ -823,7 +2434,13 @@
       "tipo": "despesa",
       "valor": 1760.0,
       "centro_custo": "adm",
-      "valor_assinado": -1760.0
+      "valor_assinado": -1760.0,
+      "prazo_dias": 10,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-04-02",
+      "data_caixa": "2027-04-02",
+      "ano_mes_caixa": "2027-04",
+      "valor_caixa": -1760.0
     },
     {
       "data": "2027-03-29",
@@ -833,7 +2450,13 @@
       "tipo": "despesa",
       "valor": 730.0,
       "centro_custo": "comercial",
-      "valor_assinado": -730.0
+      "valor_assinado": -730.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-03-29",
+      "data_caixa": "2027-03-29",
+      "ano_mes_caixa": "2027-03",
+      "valor_caixa": -730.0
     },
     {
       "data": "2027-04-07",
@@ -843,7 +2466,13 @@
       "tipo": "receita",
       "valor": 8600.0,
       "centro_custo": "sucesso_cliente",
-      "valor_assinado": 8600.0
+      "valor_assinado": 8600.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2027-04-27",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-04-27",
+      "ano_mes_caixa": "2027-04",
+      "valor_caixa": 8600.0
     },
     {
       "data": "2027-04-12",
@@ -853,7 +2482,13 @@
       "tipo": "receita",
       "valor": 25200.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 25200.0
+      "valor_assinado": 25200.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-05-12",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-05-12",
+      "ano_mes_caixa": "2027-05",
+      "valor_caixa": 25200.0
     },
     {
       "data": "2027-04-18",
@@ -863,7 +2498,13 @@
       "tipo": "despesa",
       "valor": 1690.0,
       "centro_custo": "adm",
-      "valor_assinado": -1690.0
+      "valor_assinado": -1690.0,
+      "prazo_dias": 10,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-04-28",
+      "data_caixa": "2027-04-28",
+      "ano_mes_caixa": "2027-04",
+      "valor_caixa": -1690.0
     },
     {
       "data": "2027-04-24",
@@ -873,7 +2514,13 @@
       "tipo": "despesa",
       "valor": 2590.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -2590.0
+      "valor_assinado": -2590.0,
+      "prazo_dias": 18,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-05-12",
+      "data_caixa": "2027-05-12",
+      "ano_mes_caixa": "2027-05",
+      "valor_caixa": -2590.0
     },
     {
       "data": "2027-04-29",
@@ -883,7 +2530,13 @@
       "tipo": "despesa",
       "valor": 760.0,
       "centro_custo": "comercial",
-      "valor_assinado": -760.0
+      "valor_assinado": -760.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-04-29",
+      "data_caixa": "2027-04-29",
+      "ano_mes_caixa": "2027-04",
+      "valor_caixa": -760.0
     },
     {
       "data": "2027-05-06",
@@ -893,7 +2546,13 @@
       "tipo": "receita",
       "valor": 13300.0,
       "centro_custo": "comercial",
-      "valor_assinado": 13300.0
+      "valor_assinado": 13300.0,
+      "prazo_dias": 5,
+      "data_recebimento": "2027-05-11",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-05-11",
+      "ano_mes_caixa": "2027-05",
+      "valor_caixa": 13300.0
     },
     {
       "data": "2027-05-10",
@@ -903,7 +2562,13 @@
       "tipo": "receita",
       "valor": 26100.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 26100.0
+      "valor_assinado": 26100.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-06-09",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-06-09",
+      "ano_mes_caixa": "2027-06",
+      "valor_caixa": 26100.0
     },
     {
       "data": "2027-05-16",
@@ -913,7 +2578,13 @@
       "tipo": "despesa",
       "valor": 2980.0,
       "centro_custo": "marketing",
-      "valor_assinado": -2980.0
+      "valor_assinado": -2980.0,
+      "prazo_dias": 15,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-05-31",
+      "data_caixa": "2027-05-31",
+      "ano_mes_caixa": "2027-05",
+      "valor_caixa": -2980.0
     },
     {
       "data": "2027-05-21",
@@ -923,7 +2594,13 @@
       "tipo": "despesa",
       "valor": 7890.0,
       "centro_custo": "rh",
-      "valor_assinado": -7890.0
+      "valor_assinado": -7890.0,
+      "prazo_dias": 2,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-05-23",
+      "data_caixa": "2027-05-23",
+      "ano_mes_caixa": "2027-05",
+      "valor_caixa": -7890.0
     },
     {
       "data": "2027-05-28",
@@ -933,7 +2610,13 @@
       "tipo": "despesa",
       "valor": 780.0,
       "centro_custo": "comercial",
-      "valor_assinado": -780.0
+      "valor_assinado": -780.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-05-28",
+      "data_caixa": "2027-05-28",
+      "ano_mes_caixa": "2027-05",
+      "valor_caixa": -780.0
     },
     {
       "data": "2027-06-04",
@@ -943,7 +2626,13 @@
       "tipo": "receita",
       "valor": 9100.0,
       "centro_custo": "educacao",
-      "valor_assinado": 9100.0
+      "valor_assinado": 9100.0,
+      "prazo_dias": 20,
+      "data_recebimento": "2027-06-24",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-06-24",
+      "ano_mes_caixa": "2027-06",
+      "valor_caixa": 9100.0
     },
     {
       "data": "2027-06-09",
@@ -953,7 +2642,13 @@
       "tipo": "receita",
       "valor": 26800.0,
       "centro_custo": "consultoria",
-      "valor_assinado": 26800.0
+      "valor_assinado": 26800.0,
+      "prazo_dias": 30,
+      "data_recebimento": "2027-07-09",
+      "data_pagamento": NaN,
+      "data_caixa": "2027-07-09",
+      "ano_mes_caixa": "2027-07",
+      "valor_caixa": 26800.0
     },
     {
       "data": "2027-06-15",
@@ -963,7 +2658,13 @@
       "tipo": "despesa",
       "valor": 1980.0,
       "centro_custo": "ti",
-      "valor_assinado": -1980.0
+      "valor_assinado": -1980.0,
+      "prazo_dias": 20,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-07-05",
+      "data_caixa": "2027-07-05",
+      "ano_mes_caixa": "2027-07",
+      "valor_caixa": -1980.0
     },
     {
       "data": "2027-06-22",
@@ -973,7 +2674,13 @@
       "tipo": "despesa",
       "valor": 4360.0,
       "centro_custo": "operacoes",
-      "valor_assinado": -4360.0
+      "valor_assinado": -4360.0,
+      "prazo_dias": 30,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-07-22",
+      "data_caixa": "2027-07-22",
+      "ano_mes_caixa": "2027-07",
+      "valor_caixa": -4360.0
     },
     {
       "data": "2027-06-29",
@@ -983,7 +2690,13 @@
       "tipo": "despesa",
       "valor": 820.0,
       "centro_custo": "comercial",
-      "valor_assinado": -820.0
+      "valor_assinado": -820.0,
+      "prazo_dias": 0,
+      "data_recebimento": NaN,
+      "data_pagamento": "2027-06-29",
+      "data_caixa": "2027-06-29",
+      "ano_mes_caixa": "2027-06",
+      "valor_caixa": -820.0
     }
   ]
 }
