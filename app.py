@@ -912,6 +912,8 @@ def montar_payload_site(
 ) -> dict[str, object]:
     """Monta os dados-base serializados para o dashboard interativo."""
     registros = base.copy()
+    meses_recentes = sorted(registros["ano_mes"].dropna().unique())[-12:]
+    registros = registros[registros["ano_mes"].isin(meses_recentes)].copy()
     registros["data"] = registros["data"].dt.strftime("%Y-%m-%d")
     registros["valor"] = registros["valor"].astype(float).round(2)
     registros["valor_assinado"] = registros["valor_assinado"].astype(float).round(2)
@@ -941,16 +943,10 @@ def montar_payload_site(
         },
         "insights": analises.get("insights", {}),
         "analytics": {
-            "sazonalidade": _to_records(analises.get("sazonalidade", pd.DataFrame())),
-            "projecao": _to_records(analises.get("projecao", pd.DataFrame())),
-            "descontos_mensal": _to_records(analises.get("descontos_mensal", pd.DataFrame())),
-            "payback_categoria": _to_records(analises.get("payback_categoria", pd.DataFrame())),
-            "rentabilidade": _to_records(analises.get("rentabilidade", pd.DataFrame())),
-            "mix_receita": _to_records(analises.get("mix_receita", pd.DataFrame())),
-            "produtividade": _to_records(analises.get("produtividade", pd.DataFrame())),
-            "anomalias": _to_records(analises.get("anomalias", pd.DataFrame())),
-            "benchmarking": _to_records(analises.get("benchmarking", pd.DataFrame())),
-            "liquidez": _to_records(analises.get("liquidez", pd.DataFrame())),
+            "projecao": _to_records(analises.get("projecao", pd.DataFrame()).tail(18)),
+            "descontos_mensal": _to_records(analises.get("descontos_mensal", pd.DataFrame()).tail(12)),
+            "rentabilidade": _to_records(analises.get("rentabilidade", pd.DataFrame()).head(8)),
+            "liquidez": _to_records(analises.get("liquidez", pd.DataFrame()).tail(12)),
         },
         "records": registros[
             [
@@ -1695,14 +1691,15 @@ def gerar_relatorio_executivo_html(
             if (!records.length) {{
                 const vazio = criarStageVazio();
                 return {{
-                    stageOrder: ["visao_geral", "mensal", "receitas", "categorias", "centros", "eficiencia"],
+                    stageOrder: ["visao_geral", "mensal", "receitas", "projecao", "descontos", "rentabilidade", "liquidez"],
                     stages: {{
                         visao_geral: vazio,
                         mensal: vazio,
                         receitas: vazio,
-                        categorias: vazio,
-                        centros: vazio,
-                        eficiencia: vazio,
+                        projecao: vazio,
+                        descontos: vazio,
+                        rentabilidade: vazio,
+                        liquidez: vazio,
                     }},
                 }};
             }}
@@ -1721,7 +1718,7 @@ def gerar_relatorio_executivo_html(
             const categoriaTop = categorias[0];
             const centroTop = centros[0];
 
-            const stageOrder = ["visao_geral", "mensal", "receitas", "categorias", "centros", "eficiencia"];
+            const stageOrder = ["visao_geral", "mensal", "receitas"];
             const stages = {{
                 visao_geral: {{
                     label: "Visao geral",
@@ -2162,7 +2159,17 @@ def gerar_relatorio_executivo_html(
                 }};
             }}
 
-            return {{ stageOrder, stages }};
+            const etapasEssenciais = [
+                "visao_geral",
+                "mensal",
+                "receitas",
+                "projecao",
+                "descontos",
+                "rentabilidade",
+                "liquidez",
+            ];
+            const stageOrderFiltrado = stageOrder.filter((id) => etapasEssenciais.includes(id));
+            return {{ stageOrder: stageOrderFiltrado, stages }};
         }}
 
         function preencherSelect(selectEl, valores, valorAtual, rotuloTodos) {{
