@@ -17,6 +17,7 @@ import argparse
 import importlib
 import json
 import logging
+import math
 import shutil
 from datetime import date
 from typing import Any, cast
@@ -903,6 +904,17 @@ def _top_despesas_por_categoria(categoria: pd.DataFrame, n: int = 5) -> pd.DataF
     return pd.DataFrame(registros, columns=top.columns).reset_index(drop=True)
 
 
+def _sanitize_nan(obj: Any) -> Any:
+    """Substitui float NaN/Inf por None recursivamente para gerar JSON valido."""
+    if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+        return None
+    if isinstance(obj, dict):
+        return {k: _sanitize_nan(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_nan(v) for v in obj]
+    return obj
+
+
 def montar_payload_site(
     base: pd.DataFrame,
     mensal: pd.DataFrame,
@@ -948,7 +960,7 @@ def montar_payload_site(
             "rentabilidade": _to_records(analises.get("rentabilidade", pd.DataFrame()).head(8)),
             "liquidez": _to_records(analises.get("liquidez", pd.DataFrame()).tail(12)),
         },
-        "records": registros[
+        "records": _to_records(registros[
             [
                 "data",
                 "ano_mes",
@@ -965,8 +977,9 @@ def montar_payload_site(
                 "ano_mes_caixa",
                 "valor_caixa",
             ]
-        ].to_dict(orient="records"),
+        ]),
     }
+    return _sanitize_nan(payload)
 
 
 def salvar_payload_site(payload: dict[str, object], pasta_site: Path) -> Path:
